@@ -1,0 +1,12 @@
+/node_modules
+/build
+/dist
+/public/index.html
+/public/favicon.ico
+/public/logo192.png
+/public/logo512.png
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
