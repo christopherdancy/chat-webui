@@ -1,50 +1,35 @@
 // import { generateHTML } from '../templates/helloWorld';
 
-// Vercel API integration for deployment
-// import axios from 'axios';
+import axios from 'axios';
+
+// Backend API URL - adjust based on your deployment
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 // For the POC, we'll simulate deployment without actually deploying
 // In a real implementation, this would connect to Netlify, Vercel, or another hosting service API
 export async function deployWebsite(websiteConfig) {
   try {
-    // Generate the deployable HTML from the website config
+    // Sanitize the site name for the URL
+    const siteName = websiteConfig.header.title.toLowerCase().replace(/[^a-z0-9]/g, '-');
+    
+    // Generate the deployable HTML
     const html = generateDeployableHTML(websiteConfig);
     
-    // In a real implementation, you would:
-    // 1. Create a new deployment via Vercel API
-    // 2. Upload the generated files
-    // 3. Return the deployment URL
-    
-    // For this example, we'll simulate the API call
-    const response = await simulateVercelDeployment(html);
+    // Call the backend API
+    const response = await axios.post(`${API_URL}/api/deploy`, {
+      html: html,
+      siteName: siteName
+    });
     
     return {
       success: true,
-      url: response.url,
-      deploymentId: response.id
+      url: response.data.url,
+      deploymentId: response.data.id
     };
   } catch (error) {
-    console.error('Deployment failed:', error);
-    throw new Error('Failed to deploy website');
+    console.error('Deployment failed:', error.response?.data || error.message);
+    throw new Error('Failed to deploy website: ' + (error.response?.data?.error || error.message));
   }
-}
-
-// In a real implementation, this would use the Vercel API
-async function simulateVercelDeployment(html) {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 3000));
-  
-  // Generate a random deployment ID and URL
-  const deploymentId = Math.random().toString(36).substring(2, 15);
-  const url = `https://${deploymentId}.vercel.app`;
-  
-  console.log('Deployed HTML:', html);
-  
-  return {
-    id: deploymentId,
-    url: url,
-    readyState: 'READY'
-  };
 }
 
 // Generate a complete HTML file from the website configuration

@@ -5,10 +5,12 @@ function DeployButton({ websiteConfig }) {
   const [isDeploying, setIsDeploying] = useState(false);
   const [deployStatus, setDeployStatus] = useState(null);
   const [deployUrl, setDeployUrl] = useState('');
+  const [error, setError] = useState(null);
   
   const handleDeploy = async () => {
     setIsDeploying(true);
     setDeployStatus('Deploying your website...');
+    setError(null);
     
     try {
       // Call the deployment service
@@ -19,7 +21,8 @@ function DeployButton({ websiteConfig }) {
       setDeployUrl(result.url);
     } catch (error) {
       console.error('Deployment failed:', error);
-      setDeployStatus('Deployment failed. Please try again.');
+      setDeployStatus('Deployment failed');
+      setError(error.message || 'An unknown error occurred');
     } finally {
       setIsDeploying(false);
     }
@@ -36,8 +39,9 @@ function DeployButton({ websiteConfig }) {
       </button>
       
       {deployStatus && (
-        <div className="deploy-status">
+        <div className={`deploy-status ${error ? 'deploy-error' : ''}`}>
           {deployStatus}
+          {error && <p className="error-details">{error}</p>}
         </div>
       )}
       
@@ -47,6 +51,9 @@ function DeployButton({ websiteConfig }) {
           <a href={deployUrl} target="_blank" rel="noopener noreferrer">
             {deployUrl}
           </a>
+          <p className="deploy-note">
+            (It may take a few moments for the site to become available)
+          </p>
         </div>
       )}
     </div>
