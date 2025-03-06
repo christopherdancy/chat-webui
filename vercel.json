@@ -7,9 +7,5 @@
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/(.*)", "dest": "/index.html" }
-  ],
-  "env": {
-    "VERCEL_TOKEN": "@vercel_token",
-    "VERCEL_TEAM_ID": "@vercel_team_id"
-  }
+  ]
 } 
