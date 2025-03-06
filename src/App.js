@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Chat from './components/Chat';
 import WebsitePreview from './components/WebsitePreview';
 import DeployButton from './components/DeployButton';
@@ -16,17 +16,28 @@ function App() {
     }
   });
   
+  useEffect(() => {
+    // Basic error boundary for the entire app
+    window.onerror = (message, source, lineno, colno, error) => {
+      console.error('Global error:', error);
+      setError(`Error: ${message}`);
+      return true;
+    };
+
+    // Log that the app has loaded
+    console.log('App loaded successfully');
+  }, []);
+
   const handlePreviewUpdate = (updatedConfig) => {
     setWebsiteConfig(updatedConfig);
   };
   
   if (error) {
     return (
-      <div className="app-container">
-        <header className="app-header">
-          <h1>Error Loading Application</h1>
-          <p>{error}</p>
-        </header>
+      <div style={{ padding: '20px', color: 'red' }}>
+        <h1>Something went wrong</h1>
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()}>Reload</button>
       </div>
     );
   }
