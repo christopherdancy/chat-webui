@@ -3,7 +3,9 @@
 import axios from 'axios';
 
 // Backend API URL - adjust based on your deployment
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? '/api' 
+  : 'http://localhost:3001/api';
 
 // For the POC, we'll simulate deployment without actually deploying
 // In a real implementation, this would connect to Netlify, Vercel, or another hosting service API
@@ -16,7 +18,7 @@ export async function deployWebsite(websiteConfig) {
     const html = generateDeployableHTML(websiteConfig);
     
     // Call the backend API
-    const response = await axios.post(`${API_URL}/api/deploy`, {
+    const response = await axios.post(`${API_URL}/deploy`, {
       html: html,
       siteName: siteName
     });
