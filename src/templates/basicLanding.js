@@ -46,20 +46,20 @@ const basicTemplate = {
     subtitle: "What we offer",
     backgroundColor: "#f8f9fa",
     textColor: "#333333",
-    image: "https://source.unsplash.com/random/600x400/?team",
+    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
     items: [
       {
-        icon: "ni ni-settings-gear-65",
+        icon: "fas fa-cog",
         title: "Customized Solutions",
         description: "Tailored specifically to your business needs."
       },
       {
-        icon: "ni ni-html5",
+        icon: "fas fa-code",
         title: "Modern Technology",
         description: "Using the latest tools and frameworks."
       },
       {
-        icon: "ni ni-satisfied",
+        icon: "fas fa-smile",
         title: "Dedicated Support",
         description: "Our team is always ready to help you succeed."
       }
@@ -68,11 +68,11 @@ const basicTemplate = {
   callToAction: {
     title: "Ready to get started?",
     subtitle: "Contact us today to transform your business",
-    backgroundColor: "#5e72e4",
+    backgroundColor: "#4a90e2",
     textColor: "#ffffff",
     buttonText: "Contact Us",
     buttonColor: "#ffffff",
-    buttonTextColor: "#5e72e4"
+    buttonTextColor: "#4a90e2"
   },
   footer: {
     text: "© 2025 YourBrand. All rights reserved.",
@@ -140,7 +140,7 @@ export function generateHTML(config) {
       background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('${config.hero.backgroundImage}');
       background-size: cover;
       background-position: center;
-      padding: 4rem 0;
+      padding: 5rem 0;
       position: relative;
       overflow: hidden;
     }
@@ -222,7 +222,7 @@ export function generateHTML(config) {
       margin-right: auto;
     }
     
-    .benefits .benefit-icon {
+    .benefits .icon {
       height: 70px;
       width: 70px;
       border-radius: 50%;
@@ -230,6 +230,9 @@ export function generateHTML(config) {
       align-items: center;
       justify-content: center;
       margin-bottom: 1.5rem;
+      margin-left: auto;
+      margin-right: auto;
+      background-color: rgba(0, 0, 0, 0.05);
     }
     
     .benefits .feature-card {
@@ -237,6 +240,7 @@ export function generateHTML(config) {
       border-radius: 0.5rem;
       transition: transform 0.3s, box-shadow 0.3s;
       height: 100%;
+      text-align: center;
     }
     
     .benefits .feature-card:hover {
@@ -246,27 +250,53 @@ export function generateHTML(config) {
     
     /* Features Section */
     .features {
-      padding: 4rem 0;
+      padding: 5rem 0;
       background-color: ${config.features.backgroundColor};
     }
 
     .features .section-title {
       text-align: left;
+      margin-bottom: 2rem;
     }
     
     .features .feature-item {
       display: flex;
       margin-bottom: 2rem;
+      align-items: flex-start;
     }
     
     .features .feature-icon {
-      margin-right: 1.5rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
       min-width: 50px;
+      color: ${config.header.backgroundColor};
+      font-size: 2rem;
+    }
+    
+    .features .feature-content h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    
+    .features .feature-content p {
+      color: #6c757d;
+      margin-bottom: 0;
     }
     
     .features img {
-      border-radius: 0.5rem;
+      border-radius: 8px;
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      max-height: 500px;
+    }
+    
+    .features .img-container {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
     }
     
     /* Call to Action */
@@ -386,7 +416,7 @@ export function generateHTML(config) {
     }
     
     .section-title p {
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: #6c757d;
       max-width: 700px;
     }
@@ -404,13 +434,13 @@ export function generateHTML(config) {
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">Home</a>
+            <a class="nav-link" href="#benefits">Benefits</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#features">Features</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#benefits">Benefits</a>
+            <a class="nav-link" href="#footer">Contact</a>
           </li>
         </ul>
       </div>
@@ -446,7 +476,7 @@ export function generateHTML(config) {
           <div class="col-md-4 mb-4">
             <div class="feature-card shadow-sm">
               <div class="icon" style="background-color: ${item.iconColor}20;">
-                <i class="${item.icon} text-${item.iconColor.replace('#', '')}" style="color: ${item.iconColor}; font-size: 1.5rem;"></i>
+                <i class="${item.icon}" style="color: ${item.iconColor}; font-size: 1.5rem;"></i>
               </div>
               <div class="section-title">
                 <h4>${item.title}</h4>
@@ -462,21 +492,24 @@ export function generateHTML(config) {
   <!-- Features Section -->
   <section id="features" class="features">
     <div class="container">
-      <div class="section-title mb-4">
+      <div class="section-title">
         <h2>${config.features.title}</h2>
         <p>${config.features.subtitle}</p>
       </div>
-      <div class="row align-items-center">
-        <div class="col-lg-6 mb-4 mb-lg-0">
-          <img src="${config.features.image}" alt="Features" class="img-fluid">
+      
+      <div class="row">
+        <div class="col-lg-6 mb-4">
+          <div class="img-container">
+            <img src="${config.features.image}" alt="Features" class="img-fluid">
+          </div>
         </div>
         <div class="col-lg-6">
           ${config.features.items.map(item => `
             <div class="feature-item">
               <div class="feature-icon">
-                <i class="${item.icon}" style="font-size: 2rem; color: ${config.header.backgroundColor};"></i>
+                <i class="${item.icon}" style="color: ${config.header.backgroundColor};"></i>
               </div>
-              <div class="section-title">
+              <div class="feature-content">
                 <h4>${item.title}</h4>
                 <p>${item.description}</p>
               </div>
@@ -499,7 +532,7 @@ export function generateHTML(config) {
   </section>
 
   <!-- Footer -->
-  <footer>
+  <footer id="footer">
     <div class="container">
       <div class="row">
         <div class="col-lg-4 mb-4 mb-lg-0">
@@ -526,9 +559,6 @@ export function generateHTML(config) {
           <p><i class="fas fa-phone mr-2"></i> (123) 456-7890</p>
           <p><i class="fas fa-envelope mr-2"></i> info@yourbrand.com</p>
         </div>
-      </div>
-      <div class="copyright">
-        <p>${config.footer.text}</p>
       </div>
     </div>
   </footer>
