@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { generateHTML } from '../templates/helloWorld';
+import { generateHTML } from '../templates/basicLanding';
 
 const WebsitePreview = ({ config }) => {
   const iframeRef = useRef(null);
