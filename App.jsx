@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import Chat from './components/Chat';
 import WebsitePreview from './components/WebsitePreview';
 import DeployButton from './components/DeployButton';
-import helloWorldTemplate from './templates/helloWorld';
+import basicTemplate from './templates/basicLanding';
 import './styles.css';
 
 function App() {
   const [error, setError] = useState(null);
   const [websiteConfig, setWebsiteConfig] = useState(() => {
     try {
-      return helloWorldTemplate;
+      return basicTemplate;
     } catch (err) {
       setError('Failed to load template');
       return {};

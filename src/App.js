@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Chat from './components/Chat';
 import WebsitePreview from './components/WebsitePreview';
 import DeployButton from './components/DeployButton';
-import helloWorldTemplate from './templates/helloWorld';
+import basicTemplate from './templates/basicLanding';
 import './styles.css';
 
 function App() {
   const [error, setError] = useState(null);
   const [websiteConfig, setWebsiteConfig] = useState(() => {
     try {
-      return helloWorldTemplate;
+      return basicTemplate;
     } catch (err) {
       setError('Failed to load template');
       return {};
@@ -50,15 +50,17 @@ function App() {
       </header>
       
       <main className="app-content">
-        <div className="left-panel">
+        <div className="left-panel" style={{ height: 'calc(100vh - 150px)', display: 'flex', flexDirection: 'column' }}>
           <Chat 
             onPreviewUpdate={handlePreviewUpdate}
             websiteConfig={websiteConfig}
           />
         </div>
         
-        <div className="right-panel">
-          <WebsitePreview config={websiteConfig} />
+        <div className="right-panel" style={{ height: 'calc(100vh - 150px)', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ flex: 1, overflow: 'auto', minHeight: '500px' }}>
+            <WebsitePreview config={websiteConfig} />
+          </div>
           <DeployButton websiteConfig={websiteConfig} />
         </div>
       </main>

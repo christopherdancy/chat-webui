@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { generateHTML } from '../templates/helloWorld';
+import { generateHTML } from '../templates/basicLanding';
 
 const WebsitePreview = ({ config }) => {
   const iframeRef = useRef(null);
@@ -19,9 +19,9 @@ const WebsitePreview = ({ config }) => {
   }, [config]);
   
   return (
-    <div className="website-preview">
+    <div className="website-preview-container" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <h2>Website Preview</h2>
-      <div className="preview-container">
+      <div className="preview-content" style={{ overflow: 'auto', border: '1px solid #ddd', borderRadius: '4px' }}>
         <iframe 
           ref={iframeRef}
           title="Website Preview"
