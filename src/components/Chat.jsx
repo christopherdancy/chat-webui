@@ -51,7 +51,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
 
   return (
     <div className="chat-container">
-      <div className="chat-messages">
+      <div className="chat-messages" style={{ height: '400px', overflowY: 'auto' }}>
         <div className="system-message">
           Welcome to Website Chat Editor! Describe changes you'd like to make to your website.
         </div>
