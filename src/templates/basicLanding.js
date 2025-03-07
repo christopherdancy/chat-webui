@@ -173,6 +173,13 @@ export function generateHTML(config) {
   <link href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
+    :root {
+      --primary-color: ${processedConfig.global.primaryColor};
+      --secondary-color: ${processedConfig.global.secondaryColor};
+      --text-color: ${processedConfig.global.textColor};
+      --accent-color: ${processedConfig.global.accentColor};
+    }
+    
     body {
       font-family: ${processedConfig.global.fontFamily};
       margin: 0;
@@ -244,11 +251,15 @@ export function generateHTML(config) {
       font-size: 0.9rem;
       box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
       transition: all 0.3s;
+      background-color: ${processedConfig.hero.buttonColor};
+      color: ${processedConfig.hero.buttonTextColor || '#ffffff'};
+      border: none;
     }
     
     .hero .btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+      opacity: 0.9;
     }
     
     .hero-shape {
@@ -299,7 +310,12 @@ export function generateHTML(config) {
       margin-bottom: 1.5rem;
       margin-left: auto;
       margin-right: auto;
-      background-color: rgba(0, 0, 0, 0.05);
+      background-color: ${processedConfig.global.primaryColor}20;
+    }
+    
+    .benefits .icon i {
+      color: ${processedConfig.global.primaryColor};
+      font-size: 1.5rem;
     }
     
     .benefits .feature-card {
@@ -330,19 +346,19 @@ export function generateHTML(config) {
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
-      color: #333;
+      color: ${processedConfig.features.textColor};
     }
     
     .features .section-title p {
       font-size: 1.2rem;
-      color: #6c757d;
-      margin-bottom: 2rem;
+      color: ${processedConfig.features.textColor};
+      opacity: 0.8;
     }
     
     .features .feature-item {
       display: flex;
-      margin-bottom: 2.5rem;
-      align-items: center;
+      margin-bottom: 2rem;
+      align-items: flex-start;
     }
     
     .features .feature-icon {
@@ -359,97 +375,124 @@ export function generateHTML(config) {
       color: ${processedConfig.global.primaryColor};
     }
     
-    .features .feature-content {
-      flex: 1;
-    }
-    
     .features .feature-content h4 {
-      font-size: 1.5rem;
       margin-bottom: 0.5rem;
       font-weight: 600;
-      color: #333;
+      color: ${processedConfig.features.textColor};
     }
     
     .features .feature-content p {
-      font-size: 1.1rem;
-      color: #6c757d;
+      color: ${processedConfig.features.textColor};
+      opacity: 0.8;
       margin-bottom: 0;
-      line-height: 1.6;
-    }
-    
-    .features img {
-      border-radius: 8px;
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
     
     /* Call to Action */
     .cta {
-      padding: 5rem 0;
       background-color: ${processedConfig.callToAction.backgroundColor};
       color: ${processedConfig.callToAction.textColor};
+      padding: 4rem 0;
       text-align: center;
     }
-
+    
     .cta .section-title {
       margin-bottom: 2rem;
     }
-
+    
+    .cta .section-title h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: ${processedConfig.callToAction.textColor};
+    }
+    
     .cta .section-title p {
-      color: white;
-      margin-left: auto;
-      margin-right: auto;
+      font-size: 1.2rem;
+      color: ${processedConfig.callToAction.textColor};
+      opacity: 0.9;
+      margin-bottom: 2rem;
+    }
+    
+    .cta .btn {
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.9rem;
+      background-color: ${processedConfig.callToAction.buttonColor};
+      color: ${processedConfig.callToAction.buttonTextColor};
+      border: none;
+      box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s;
+    }
+    
+    .cta .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+      opacity: 0.9;
     }
     
     /* Footer */
-    footer {
+    #footer {
       background-color: ${processedConfig.footer.backgroundColor};
       color: ${processedConfig.footer.textColor};
       padding: 4rem 0 2rem;
     }
     
-    footer h5 {
-      color: #fff;
-      margin-bottom: 1.5rem;
+    #footer h5 {
       font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: ${processedConfig.footer.textColor};
     }
     
-    footer .social-links a {
-      display: inline-block;
-      width: 36px;
-      height: 36px;
-      background-color: rgba(255, 255, 255, 0.1);
+    #footer p {
+      color: ${processedConfig.footer.textColor};
+      opacity: 0.8;
+    }
+    
+    .footer-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .footer-links li {
+      margin-bottom: 0.75rem;
+    }
+    
+    .footer-links a {
+      color: ${processedConfig.footer.textColor};
+      opacity: 0.8;
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+    
+    .footer-links a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    
+    .social-links {
+      margin-top: 1.5rem;
+    }
+    
+    .social-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      line-height: 36px;
-      text-align: center;
-      margin-right: 10px;
-      color: #fff;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: ${processedConfig.footer.textColor};
+      margin-right: 0.75rem;
       transition: all 0.3s;
     }
     
-    footer .social-links a:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-    
-    footer .footer-links {
-      list-style: none;
-      padding-left: 0;
-    }
-    
-    footer .footer-links li {
-      margin-bottom: 10px;
-    }
-    
-    footer .footer-links a {
-      color: rgba(255, 255, 255, 0.7);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    
-    footer .footer-links a:hover {
-      color: #fff;
+    .social-links a:hover {
+      background-color: ${processedConfig.global.primaryColor};
+      transform: translateY(-3px);
     }
     
     .copyright {
@@ -457,47 +500,32 @@ export function generateHTML(config) {
       padding-top: 1.5rem;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       text-align: center;
-      color: rgba(255, 255, 255, 0.7);
     }
     
-    /* Buttons */
+    .copyright p {
+      margin-bottom: 0;
+      opacity: 0.7;
+    }
+    
+    /* Utility Classes */
     .btn-primary {
-      background-color: ${processedConfig.hero.buttonColor};
-      border-color: ${processedConfig.hero.buttonColor};
-      padding: 0.75rem 1.5rem;
-      font-weight: 600;
-      border-radius: 0.375rem;
+      background-color: ${processedConfig.global.primaryColor};
+      border-color: ${processedConfig.global.primaryColor};
     }
     
-    .btn-primary:hover {
-      background-color: ${processedConfig.hero.buttonColor}dd;
-      border-color: ${processedConfig.hero.buttonColor}dd;
+    .btn-primary:hover, .btn-primary:focus {
+      background-color: ${processedConfig.global.primaryColor};
+      border-color: ${processedConfig.global.primaryColor};
+      opacity: 0.9;
     }
     
-    .btn-outline-light {
-      color: ${processedConfig.callToAction.buttonTextColor};
-      border-color: ${processedConfig.callToAction.buttonColor};
-      background-color: ${processedConfig.callToAction.buttonColor};
-      padding: 0.75rem 1.5rem;
-      font-weight: 600;
-      border-radius: 0.375rem;
-    }
-    
-    .btn-outline-light:hover {
-      background-color: transparent;
-      color: ${processedConfig.callToAction.buttonColor};
-    }
-    
-    /* Utilities */
     .section-title h2 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
+      color: ${processedConfig.global.textColor};
     }
-
-    .section-title h4 {
-      font-size: 1.25rem;
-      font-weight: 600;
+    
+    .section-title p {
+      color: ${processedConfig.global.textColor};
+      opacity: 0.8;
     }
   </style>
 </head>
@@ -549,8 +577,8 @@ export function generateHTML(config) {
         ${processedConfig.benefits.items.map(item => `
           <div class="col-md-4 mb-4">
             <div class="feature-card shadow-sm">
-              <div class="icon" style="background-color: ${item.iconColor}20;">
-                <i class="${item.icon}" style="color: ${item.iconColor}; font-size: 1.5rem;"></i>
+              <div class="icon">
+                <i class="${item.icon}"></i>
               </div>
               <h4>${item.title}</h4>
               <p>${item.description}</p>
@@ -597,7 +625,7 @@ export function generateHTML(config) {
         <h2>${processedConfig.callToAction.title}</h2>
         <p>${processedConfig.callToAction.subtitle}</p>
       </div>
-      <a href="#contact" class="btn btn-outline-light">${processedConfig.callToAction.buttonText}</a>
+      <a href="#contact" class="btn">${processedConfig.callToAction.buttonText}</a>
     </div>
   </section>
 
