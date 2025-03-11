@@ -54,8 +54,8 @@ export function parseIntent(message) {
     }
   }
   
-  if (lowerMessage.includes('change logo text') || 
-      lowerMessage.includes('change the logo text')) {
+  if ((lowerMessage.includes('change logo text') || 
+      lowerMessage.includes('change the logo text')) && !lowerMessage.includes('color')) {
     const regex = /change (?:the )?logo text(?: to)? ["']?([^"']+)["']?/i;
     const match = message.match(regex);
     if (match && match[1]) {

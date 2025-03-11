@@ -14,7 +14,8 @@ export async function deployWebsite(websiteConfig) {
     const siteName = websiteConfig.header.title.toLowerCase().replace(/[^a-z0-9]/g, '-');
     
     // Generate the deployable HTML using the imported template function
-    const html = generateHTML(websiteConfig);
+    // Always pass false for showGuides to ensure guides are not included in deployed version
+    const html = generateHTML(websiteConfig, false);
     
     // Call the backend API
     const response = await axios.post(`${API_URL}/deploy`, {

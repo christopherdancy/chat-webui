@@ -122,7 +122,7 @@ const basicTemplate = {
 };
 
 // Function to generate HTML from the template configuration
-export function generateHTML(config) {
+export function generateHTML(config, showGuides = false) {
   // Apply global defaults if specific values aren't provided
   const processedConfig = {
     ...config,
@@ -160,6 +160,85 @@ export function generateHTML(config) {
       backgroundColor: config.callToAction.backgroundColor || config.global.primaryColor,
       buttonTextColor: config.callToAction.buttonTextColor || config.global.primaryColor
     }
+  };
+
+  // Enhanced section guide styles with element-level guides
+  const sectionGuideStyles = showGuides ? `
+    .section-guide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 5px 10px;
+      font-size: 12px;
+      z-index: 1000;
+      border-bottom-right-radius: 4px;
+      pointer-events: none;
+    }
+    
+    .section-container {
+      position: relative;
+      border: ${showGuides ? '2px dashed rgba(255, 0, 0, 0.3)' : 'none'};
+    }
+    
+    .element-guide {
+      position: absolute;
+      top: -20px;
+      right: 0;
+      background-color: rgba(0, 100, 255, 0.7);
+      color: white;
+      padding: 3px 6px;
+      font-size: 10px;
+      z-index: 1000;
+      border-radius: 4px;
+      pointer-events: none;
+    }
+    
+    .element-container {
+      position: relative;
+      border: ${showGuides ? '1px dotted rgba(0, 100, 255, 0.3)' : 'none'};
+      margin-top: 20px;
+      padding-top: 2px;
+    }
+    
+    /* Adjust first element in a container to avoid extra spacing */
+    .section-container > .element-container:first-child,
+    .row > .col-md-4 > .element-container:first-child,
+    .feature-card > .element-container:first-child {
+      margin-top: 25px;
+    }
+    
+    /* Special handling for inline elements */
+    .inline-element-container {
+      position: relative;
+      display: inline-block;
+      border: ${showGuides ? '1px dotted rgba(0, 100, 255, 0.3)' : 'none'};
+      margin-top: 20px;
+      padding: 2px;
+    }
+  ` : '';
+
+  // Function to wrap sections with guide labels
+  const wrapWithGuide = (sectionName, content) => {
+    if (!showGuides) return content;
+    return `
+      <div class="section-container">
+        <div class="section-guide">${sectionName}</div>
+        ${content}
+      </div>
+    `;
+  };
+
+  // Function to wrap elements with guide labels
+  const wrapElementWithGuide = (elementName, content) => {
+    if (!showGuides) return content;
+    return `
+      <div class="element-container">
+        <div class="element-guide">${elementName}</div>
+        ${content}
+      </div>
+    `;
   };
 
   return `
@@ -527,29 +606,36 @@ export function generateHTML(config) {
       color: ${processedConfig.global.textColor};
       opacity: 0.8;
     }
+    
+    ${sectionGuideStyles}
   </style>
 </head>
 <body>
   <!-- Header -->
+  ${wrapWithGuide('Header', `
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      <a class="navbar-brand" href="#">${processedConfig.header.logoText}</a>
+      ${wrapElementWithGuide('Logo Text', `
+        <a class="navbar-brand" href="#">${processedConfig.header.logoText}</a>
+      `)}
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          ${processedConfig.header.menuItems.map(item => `
-            <li class="nav-item">
-              <a class="nav-link" href="${item.url}">${item.text}</a>
-            </li>
+          ${processedConfig.header.menuItems.map((item, index) => `
+              <li class="nav-item">
+                <a class="nav-link" href="${item.url}">${item.text}</a>
+              </li>
           `).join('')}
         </ul>
       </div>
     </div>
   </nav>
+  `)}
 
   <!-- Hero Section -->
+  ${wrapWithGuide('Hero', `
   <section class="hero">
     <div class="hero-shape"></div>
     <div class="hero-shape-2"></div>
@@ -557,112 +643,175 @@ export function generateHTML(config) {
       <div class="row">
         <div class="col-lg-8">
           <div class="hero-content">
-            <h1>${processedConfig.hero.title}</h1>
-            <p>${processedConfig.hero.subtitle}</p>
-            <a href="#contact" class="btn btn-primary">${processedConfig.hero.buttonText}</a>
+            ${wrapElementWithGuide('Hero Title', `
+              <h1>${processedConfig.hero.title}</h1>
+            `)}
+            ${wrapElementWithGuide('Hero Subtitle', `
+              <p>${processedConfig.hero.subtitle}</p>
+            `)}
+            ${wrapElementWithGuide('Hero Button', `
+              <a href="#contact" class="btn btn-primary">${processedConfig.hero.buttonText}</a>
+            `)}
           </div>
         </div>
       </div>
     </div>
   </section>
+  `)}
 
   <!-- Benefits Section -->
+  ${wrapWithGuide('Benefits', `
   <section id="benefits" class="benefits">
     <div class="container">
       <div class="section-title">
-        <h2>${processedConfig.benefits.title}</h2>
-        <p>${processedConfig.benefits.subtitle}</p>
+        ${wrapElementWithGuide('Benefits Title', `
+          <h2>${processedConfig.benefits.title}</h2>
+        `)}
+        ${wrapElementWithGuide('Benefits Subtitle', `
+          <p>${processedConfig.benefits.subtitle}</p>
+        `)}
       </div>
       <div class="row">
-        ${processedConfig.benefits.items.map(item => `
+        ${processedConfig.benefits.items.map((item, index) => `
           <div class="col-md-4 mb-4">
-            <div class="feature-card shadow-sm">
-              <div class="icon">
-                <i class="${item.icon}"></i>
+            ${wrapElementWithGuide(`Benefit ${index + 1}`, `
+              <div class="feature-card shadow-sm">
+                <div class="icon">
+                  <i class="${item.icon}"></i>
+                </div>
+                ${wrapElementWithGuide(`Benefit ${index + 1} Title`, `
+                  <h4>${item.title}</h4>
+                `)}
+                ${wrapElementWithGuide(`Benefit ${index + 1} Description`, `
+                  <p>${item.description}</p>
+                `)}
               </div>
-              <h4>${item.title}</h4>
-              <p>${item.description}</p>
-            </div>
+            `)}
           </div>
         `).join('')}
       </div>
     </div>
   </section>
+  `)}
 
   <!-- Features Section -->
+  ${wrapWithGuide('Features', `
   <section id="features" class="features">
     <div class="container">
       <div class="section-title">
-        <h2>${processedConfig.features.title}</h2>
-        <p>${processedConfig.features.subtitle}</p>
+        ${wrapElementWithGuide('Features Title', `
+          <h2>${processedConfig.features.title}</h2>
+        `)}
+        ${wrapElementWithGuide('Features Subtitle', `
+          <p>${processedConfig.features.subtitle}</p>
+        `)}
       </div>
       
       <div class="row">
         <div class="col-lg-6 mb-4 mb-lg-0">
-          <img src="${processedConfig.features.image}" alt="Features" class="img-fluid">
+          ${wrapElementWithGuide('Features Image', `
+            <img src="${processedConfig.features.image}" alt="Features" class="img-fluid">
+          `)}
         </div>
         <div class="col-lg-6">
-          ${processedConfig.features.items.map(item => `
-            <div class="feature-item">
-              <div class="feature-icon">
-                <i class="${item.icon}"></i>
+          ${processedConfig.features.items.map((item, index) => `
+            ${wrapElementWithGuide(`Feature ${index + 1}`, `
+              <div class="feature-item">
+                <div class="feature-icon">
+                  <i class="${item.icon}"></i>
+                </div>
+                <div class="feature-content">
+                  ${wrapElementWithGuide(`Feature ${index + 1} Title`, `
+                    <h4>${item.title}</h4>
+                  `)}
+                  ${wrapElementWithGuide(`Feature ${index + 1} Description`, `
+                    <p>${item.description}</p>
+                  `)}
+                </div>
               </div>
-              <div class="feature-content">
-                <h4>${item.title}</h4>
-                <p>${item.description}</p>
-              </div>
-            </div>
+            `)}
           `).join('')}
         </div>
       </div>
     </div>
   </section>
+  `)}
 
   <!-- Call to Action -->
+  ${wrapWithGuide('Call to Action', `
   <section class="cta">
     <div class="container">
       <div class="section-title">
-        <h2>${processedConfig.callToAction.title}</h2>
-        <p>${processedConfig.callToAction.subtitle}</p>
+        ${wrapElementWithGuide('CTA Title', `
+          <h2>${processedConfig.callToAction.title}</h2>
+        `)}
+        ${wrapElementWithGuide('CTA Subtitle', `
+          <p>${processedConfig.callToAction.subtitle}</p>
+        `)}
       </div>
-      <a href="#contact" class="btn">${processedConfig.callToAction.buttonText}</a>
+      ${wrapElementWithGuide('CTA Button', `
+        <a href="#contact" class="btn">${processedConfig.callToAction.buttonText}</a>
+      `)}
     </div>
   </section>
+  `)}
 
   <!-- Footer -->
+  ${wrapWithGuide('Footer', `
   <footer id="footer">
     <div class="container">
       <div class="row">
         <div class="col-lg-4 mb-4 mb-lg-0">
-          <h5>About Us</h5>
-          <p>We are a team of passionate professionals dedicated to helping businesses grow and succeed in the digital age.</p>
+          ${wrapElementWithGuide('About Us Title', `
+            <h5>About Us</h5>
+          `)}
+          ${wrapElementWithGuide('About Us Text', `
+            <p>We are a team of passionate professionals dedicated to helping businesses grow and succeed in the digital age.</p>
+          `)}
           <div class="social-links">
-            <a href="${processedConfig.footer.socialLinks.facebook}"><i class="fab fa-facebook-f"></i></a>
-            <a href="${processedConfig.footer.socialLinks.twitter}"><i class="fab fa-twitter"></i></a>
-            <a href="${processedConfig.footer.socialLinks.instagram}"><i class="fab fa-instagram"></i></a>
-            <a href="${processedConfig.footer.socialLinks.linkedin}"><i class="fab fa-linkedin-in"></i></a>
+            ${wrapElementWithGuide('Social Links', `
+              <a href="${processedConfig.footer.socialLinks.facebook}"><i class="fab fa-facebook-f"></i></a>
+              <a href="${processedConfig.footer.socialLinks.twitter}"><i class="fab fa-twitter"></i></a>
+              <a href="${processedConfig.footer.socialLinks.instagram}"><i class="fab fa-instagram"></i></a>
+              <a href="${processedConfig.footer.socialLinks.linkedin}"><i class="fab fa-linkedin-in"></i></a>
+            `)}
           </div>
         </div>
         <div class="col-lg-4 mb-4 mb-lg-0">
-          <h5>Quick Links</h5>
+          ${wrapElementWithGuide('Quick Links Title', `
+            <h5>Quick Links</h5>
+          `)}
           <ul class="footer-links">
-            ${processedConfig.footer.links.map(link => `
-              <li><a href="${link.url}">${link.text}</a></li>
+            ${processedConfig.footer.links.map((link, index) => `
+              ${wrapElementWithGuide(`Footer Link ${index + 1}`, `
+                <li><a href="${link.url}">${link.text}</a></li>
+              `)}
             `).join('')}
           </ul>
         </div>
         <div class="col-lg-4">
-          <h5>Contact Info</h5>
-          <p><i class="fas fa-map-marker-alt mr-2"></i> 123 Business Street, New York, NY</p>
-          <p><i class="fas fa-phone mr-2"></i> (123) 456-7890</p>
-          <p><i class="fas fa-envelope mr-2"></i> info@yourbrand.com</p>
+          ${wrapElementWithGuide('Contact Info Title', `
+            <h5>Contact Info</h5>
+          `)}
+          ${wrapElementWithGuide('Contact Address', `
+            <p><i class="fas fa-map-marker-alt mr-2"></i> 123 Business Street, New York, NY</p>
+          `)}
+          ${wrapElementWithGuide('Contact Phone', `
+            <p><i class="fas fa-phone mr-2"></i> (123) 456-7890</p>
+          `)}
+          ${wrapElementWithGuide('Contact Email', `
+            <p><i class="fas fa-envelope mr-2"></i> info@yourbrand.com</p>
+          `)}
         </div>
       </div>
       <div class="copyright">
-        <p>${processedConfig.footer.text}</p>
+        ${wrapElementWithGuide('Copyright Text', `
+          <p>${processedConfig.footer.text}</p>
+        `)}
       </div>
     </div>
   </footer>
+  `)}
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
