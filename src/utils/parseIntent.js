@@ -64,6 +64,15 @@ export function parseIntent(message) {
   }
   
   // Hero section
+  if (lowerMessage.includes('change hero background color') || 
+      lowerMessage.includes('change the hero background color')) {
+    const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
+    const match = message.match(colorRegex);
+    if (match) {
+      return { type: 'changeHeroBackground', value: match[0] };
+    }
+  }
+
   if (lowerMessage.includes('change hero title') || 
       lowerMessage.includes('change the hero title') ||
       lowerMessage.includes('change main title')) {
@@ -103,17 +112,27 @@ export function parseIntent(message) {
       return { type: 'changeHeroButtonColor', value: match[0].toLowerCase() };
     }
   }
-  
-  if (lowerMessage.includes('change hero background') || 
-      lowerMessage.includes('change the hero background image')) {
+
+  if (lowerMessage.includes('change hero button url') || 
+      lowerMessage.includes('change the hero button url') ||
+      (lowerMessage.includes('button url') && lowerMessage.includes('hero'))) {
     const urlRegex = /https?:\/\/[^\s"']+/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'changeHeroBackgroundImage', value: match[0] };
+      return { type: 'changeHeroButtonUrl', value: match[0] };
     }
   }
   
   // Benefits section
+  if (lowerMessage.includes('change benefits background color') || 
+      lowerMessage.includes('change the benefits background color')) {
+    const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
+    const match = message.match(colorRegex);
+    if (match) {
+      return { type: 'changeBenefitsBackground', value: match[0].toLowerCase() };
+    }
+  }
+
   if (lowerMessage.includes('change benefits title') || 
       lowerMessage.includes('change the benefits title')) {
     const regex = /change (?:the )?benefits title(?: to)? ["']?([^"']+)["']?/i;
@@ -131,8 +150,44 @@ export function parseIntent(message) {
       return { type: 'changeBenefitsSubtitle', value: match[1].trim() };
     }
   }
+
+  if (lowerMessage.includes('change benefit') && 
+      (lowerMessage.includes('title') || lowerMessage.includes('description'))) {
+    // Match pattern like "change benefit 2 title to 'New Title'"
+    const titleRegex = /change benefit (\d+) title(?: to)? ["']?([^"']+)["']?/i;
+    const titleMatch = message.match(titleRegex);
+    if (titleMatch && titleMatch[1] && titleMatch[2]) {
+      const itemIndex = parseInt(titleMatch[1]) - 1; // Convert to 0-based index
+      return { 
+        type: 'changeBenefitItemTitle', 
+        value: titleMatch[2].trim(),
+        itemIndex: itemIndex
+      };
+    }
+    
+    // Match pattern like "change benefit 3 description to 'New description'"
+    const descRegex = /change benefit (\d+) description(?: to)? ["']?([^"']+)["']?/i;
+    const descMatch = message.match(descRegex);
+    if (descMatch && descMatch[1] && descMatch[2]) {
+      const itemIndex = parseInt(descMatch[1]) - 1; // Convert to 0-based index
+      return { 
+        type: 'changeBenefitItemDescription', 
+        value: descMatch[2].trim(),
+        itemIndex: itemIndex
+      };
+    }
+  }
   
   // Features section
+  if (lowerMessage.includes('change features background color') || 
+      lowerMessage.includes('change the features background color')) {
+    const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
+    const match = message.match(colorRegex);
+    if (match) {
+      return { type: 'changeFeaturesBackground', value: match[0].toLowerCase() };
+    }
+  }
+
   if (lowerMessage.includes('change features title') || 
       lowerMessage.includes('change the features title')) {
     const regex = /change (?:the )?features title(?: to)? ["']?([^"']+)["']?/i;
@@ -159,8 +214,44 @@ export function parseIntent(message) {
       return { type: 'changeFeaturesImage', value: match[0] };
     }
   }
+
+  if (lowerMessage.includes('change feature') && 
+      (lowerMessage.includes('title') || lowerMessage.includes('description'))) {
+    // Match pattern like "change feature 2 title to 'New Title'"
+    const titleRegex = /change feature (\d+) title(?: to)? ["']?([^"']+)["']?/i;
+    const titleMatch = message.match(titleRegex);
+    if (titleMatch && titleMatch[1] && titleMatch[2]) {
+      const itemIndex = parseInt(titleMatch[1]) - 1; // Convert to 0-based index
+      return { 
+        type: 'changeFeatureItemTitle', 
+        value: titleMatch[2].trim(),
+        itemIndex: itemIndex
+      };
+    }
+    
+    // Match pattern like "change feature 3 description to 'New description'"
+    const descRegex = /change feature (\d+) description(?: to)? ["']?([^"']+)["']?/i;
+    const descMatch = message.match(descRegex);
+    if (descMatch && descMatch[1] && descMatch[2]) {
+      const itemIndex = parseInt(descMatch[1]) - 1; // Convert to 0-based index
+      return { 
+        type: 'changeFeatureItemDescription', 
+        value: descMatch[2].trim(),
+        itemIndex: itemIndex
+      };  
+    }
+  }
   
   // Call to Action section
+  if (lowerMessage.includes('change cta background color') || 
+      lowerMessage.includes('change the cta background color')) {
+    const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
+    const match = message.match(colorRegex);
+    if (match) {
+      return { type: 'changeCtaBackground', value: match[0].toLowerCase() };
+    }
+  }
+
   if (lowerMessage.includes('change cta title') || 
       lowerMessage.includes('change the cta title') ||
       lowerMessage.includes('change call to action title')) {
@@ -191,7 +282,34 @@ export function parseIntent(message) {
     }
   }
   
+  if (lowerMessage.includes('change cta button color') || 
+      lowerMessage.includes('change the cta button color')) {
+    const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
+    const match = message.match(colorRegex);
+    if (match) {
+      return { type: 'changeCtaButtonColor', value: match[0].toLowerCase() };
+    }
+  }
+  
+  if (lowerMessage.includes('change cta button url') || 
+      lowerMessage.includes('change the cta button url')) {
+    const urlRegex = /https?:\/\/[^\s"']+/i;
+    const match = message.match(urlRegex);
+    if (match) {
+      return { type: 'changeCtaButtonUrl', value: match[0] };
+    }
+  }
+  
   // Footer section
+  if (lowerMessage.includes('change about us text') || 
+      lowerMessage.includes('change the about us text')) {
+    const regex = /change (?:the )?about us text(?: to)? ["']?([^"']+)["']?/i;
+    const match = message.match(regex);
+    if (match && match[1]) {
+      return { type: 'changeFooterAboutUsText', value: match[1].trim() };
+    }
+  }
+
   if (lowerMessage.includes('change footer text') || 
       lowerMessage.includes('change the footer text')) {
     const regex = /change (?:the )?footer text(?: to)? ["']?([^"']+)["']?/i;
@@ -200,7 +318,80 @@ export function parseIntent(message) {
       return { type: 'changeFooterText', value: match[1].trim() };
     }
   }
-  
+
+  if (lowerMessage.includes('change footer links') || 
+      lowerMessage.includes('change the footer links')) {
+    const regex = /change (?:the )?footer links(?: to)? ["']?([^"']+)["']?/i;
+    const match = message.match(regex);
+    if (match && match[1]) {
+      return { type: 'changeFooterLinks', value: match[1].trim() };
+    }
+  }
+
+  // Footer social links
+  if (lowerMessage.includes('change facebook link') || 
+      lowerMessage.includes('change the facebook link')) {
+    const urlRegex = /https?:\/\/[^\s"']+/i;
+    const match = message.match(urlRegex);
+    if (match) {
+      return { type: 'changeFooterSocialLink', platform: 'facebook', value: match[0] };
+    }
+  }
+
+  if (lowerMessage.includes('change twitter link') || 
+      lowerMessage.includes('change the twitter link')) {
+    const urlRegex = /https?:\/\/[^\s"']+/i;
+    const match = message.match(urlRegex);
+    if (match) {
+      return { type: 'changeFooterSocialLink', platform: 'twitter', value: match[0] };
+    }
+  }
+
+  if (lowerMessage.includes('change instagram link') || 
+      lowerMessage.includes('change the instagram link')) {
+    const urlRegex = /https?:\/\/[^\s"']+/i;
+    const match = message.match(urlRegex);
+    if (match) {
+      return { type: 'changeFooterSocialLink', platform: 'instagram', value: match[0] };
+    }
+  }
+
+  if (lowerMessage.includes('change linkedin link') || 
+      lowerMessage.includes('change the linkedin link')) {
+    const urlRegex = /https?:\/\/[^\s"']+/i;
+    const match = message.match(urlRegex);
+    if (match) {
+      return { type: 'changeFooterSocialLink', platform: 'linkedin', value: match[0] };
+    }
+  }
+
+  if (lowerMessage.includes('change address') || 
+      lowerMessage.includes('change the address')) {
+    const regex = /change (?:the )?address(?: to)? ["']?([^"']+)["']?/i;
+    const match = message.match(regex);
+    if (match && match[1]) {
+      return { type: 'changeFooterAddress', value: match[1].trim() };
+    }
+  }
+
+  if (lowerMessage.includes('change email') || 
+      lowerMessage.includes('change the email')) {
+    const regex = /change (?:the )?email(?: to)? ["']?([^"']+)["']?/i; 
+    const match = message.match(regex);
+    if (match && match[1]) {
+      return { type: 'changeFooterEmail', value: match[1].trim() };
+    }
+  }
+
+  if (lowerMessage.includes('change phone') || 
+      lowerMessage.includes('change the phone')) {
+    const regex = /change (?:the )?phone(?: to)? ["']?([^"']+)["']?/i;
+    const match = message.match(regex);
+    if (match && match[1]) {  
+      return { type: 'changeFooterPhone', value: match[1].trim() };
+    }
+  }
+
   // Generic button text change (if section not specified)
   if (lowerMessage.includes('change button text') || 
       lowerMessage.includes('change the button text')) {

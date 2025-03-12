@@ -31,7 +31,7 @@ const basicTemplate = {
     buttonText: "Get Started",
     buttonColor: "#4a90e2", // Uses global.primaryColor by default
     buttonTextColor: "#ffffff",
-    backgroundImage: "https://source.unsplash.com/random/1600x900/?business"
+    buttonUrl: "#",
   },
   
   // Benefits section
@@ -99,25 +99,30 @@ const basicTemplate = {
     textColor: "#ffffff",
     buttonText: "Contact Us",
     buttonColor: "#ffffff",
-    buttonTextColor: "#4a90e2" // Uses global.primaryColor by default
+    buttonTextColor: "#4a90e2", // Uses global.primaryColor by default
+    buttonUrl: "#"
   },
   
   // Footer section
   footer: {
+    aboutUsTitle: "About Us",
     text: "© 2025 YourBrand. All rights reserved.",
     backgroundColor: "#2d3748",
     textColor: "#ffffff",
     socialLinks: {
-      facebook: "#",
-      twitter: "#",
-      instagram: "#",
-      linkedin: "#"
+      facebook: { url: "https://www.facebook.com", icon: "fab fa-facebook-f" },
+      twitter: { url: "https://www.twitter.com", icon: "fab fa-twitter" },
+      instagram: { url: "https://www.instagram.com", icon: "fab fa-instagram" },
+      linkedin: { url: "https://www.linkedin.com", icon: "fab fa-linkedin-in" }
     },
     links: [
-      { text: "About Us", url: "#" },
-      { text: "Services", url: "#" },
-      { text: "Contact", url: "#" },
-    ]
+      { text: "Home", url: "#" },
+      { text: "Features", url: "#Features" },
+      { text: "Benefits", url: "#Benefits" },
+    ],
+    address: "123 Business Street, New York, NY",
+    email: "info@yourbrand.com",
+    phone: "(123) 456-7890"
   }
 };
 
@@ -141,24 +146,73 @@ export function generateHTML(config, showGuides = false) {
       ...config.benefits,
       backgroundColor: config.benefits.backgroundColor || "#ffffff",
       textColor: config.benefits.textColor || config.global.textColor,
-      items: config.benefits.items.map(item => ({
-        ...item,
-        iconColor: item.iconColor || config.global.primaryColor
-      }))
+      items: [
+        {
+          ...config.benefits.items[0],
+          title: config.benefits.items[0].title || "Premium Quality",
+          iconColor: config.global.primaryColor
+        },
+        {
+          ...config.benefits.items[1],
+          title: config.benefits.items[1].title || "Innovative Approach",
+          iconColor: config.global.primaryColor
+        },
+        {
+          ...config.benefits.items[2],
+          title: config.benefits.items[2].title || "Global Reach",
+          iconColor: config.global.primaryColor
+        }
+      ]
     },
     features: {
       ...config.features,
       backgroundColor: config.features.backgroundColor || config.global.secondaryColor,
       textColor: config.features.textColor || config.global.textColor,
-      items: config.features.items.map(item => ({
-        ...item,
-        iconColor: item.iconColor || config.global.primaryColor
-      }))
+      image: config.features.image || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+      items: [
+        {
+         ...config.features.items[0],
+          title: config.features.items[0].title || "Customized Solutions",
+          iconColor: config.global.primaryColor
+        },
+        {
+          ...config.features.items[1],
+          title: config.features.items[1].title || "Modern Technology",
+          iconColor: config.global.primaryColor
+        },
+        {
+          ...config.features.items[2],
+          title: config.features.items[2].title || "Dedicated Support",
+          iconColor: config.global.primaryColor
+        }
+      ]
     },
     callToAction: {
       ...config.callToAction,
       backgroundColor: config.callToAction.backgroundColor || config.global.primaryColor,
-      buttonTextColor: config.callToAction.buttonTextColor || config.global.primaryColor
+      buttonTextColor: config.callToAction.buttonTextColor || config.global.primaryColor,
+      buttonUrl: config.callToAction.buttonUrl || "#",
+      buttonColor: config.callToAction.buttonColor || config.global.primaryColor
+    },
+    footer: {
+      ...config.footer,
+      backgroundColor: config.footer.backgroundColor || config.global.primaryColor,
+      textColor: config.footer.textColor || config.global.textColor,
+      aboutUsText: config.footer.aboutUsText || "We are a team of passionate professionals dedicated to helping businesses grow and succeed in the digital age.",
+      socialLinks: config.footer.socialLinks || {
+        facebook: { url: "https://www.facebook.com", icon: "fab fa-facebook-f" },
+        twitter: { url: "https://www.twitter.com", icon: "fab fa-twitter" },
+        instagram: { url: "https://www.instagram.com", icon: "fab fa-instagram" },
+        linkedin: { url: "https://www.linkedin.com", icon: "fab fa-linkedin-in" }
+      },
+      links: config.footer.links || [
+        { text: "Home", url: "#" },
+        { text: "Features", url: "#Features" },
+        { text: "Benefits", url: "#Benefits" },
+      ],
+      address: config.footer.address || "123 Business Street, New York, NY",
+      email: config.footer.email || "info@yourbrand.com",
+      phone: config.footer.phone || "(123) 456-7890"
     }
   };
 
@@ -290,12 +344,12 @@ export function generateHTML(config, showGuides = false) {
     
     /* Hero Section */
     .hero {
-      background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('${processedConfig.hero.backgroundImage}');
       background-size: cover;
       background-position: center;
       padding: 5rem 0;
       position: relative;
       overflow: hidden;
+      background-color: ${processedConfig.hero.backgroundColor};
     }
     
     .hero-content {
@@ -470,7 +524,7 @@ export function generateHTML(config, showGuides = false) {
     .cta {
       background-color: ${processedConfig.callToAction.backgroundColor};
       color: ${processedConfig.callToAction.textColor};
-      padding: 4rem 0;
+      padding: 3rem 0;
       text-align: center;
     }
     
@@ -650,7 +704,7 @@ export function generateHTML(config, showGuides = false) {
               <p>${processedConfig.hero.subtitle}</p>
             `)}
             ${wrapElementWithGuide('Hero Button', `
-              <a href="#contact" class="btn btn-primary">${processedConfig.hero.buttonText}</a>
+              <a href="${processedConfig.hero.buttonUrl}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">${processedConfig.hero.buttonText}</a>
             `)}
           </div>
         </div>
@@ -674,7 +728,6 @@ export function generateHTML(config, showGuides = false) {
       <div class="row">
         ${processedConfig.benefits.items.map((item, index) => `
           <div class="col-md-4 mb-4">
-            ${wrapElementWithGuide(`Benefit ${index + 1}`, `
               <div class="feature-card shadow-sm">
                 <div class="icon">
                   <i class="${item.icon}"></i>
@@ -686,7 +739,6 @@ export function generateHTML(config, showGuides = false) {
                   <p>${item.description}</p>
                 `)}
               </div>
-            `)}
           </div>
         `).join('')}
       </div>
@@ -715,7 +767,6 @@ export function generateHTML(config, showGuides = false) {
         </div>
         <div class="col-lg-6">
           ${processedConfig.features.items.map((item, index) => `
-            ${wrapElementWithGuide(`Feature ${index + 1}`, `
               <div class="feature-item">
                 <div class="feature-icon">
                   <i class="${item.icon}"></i>
@@ -729,7 +780,6 @@ export function generateHTML(config, showGuides = false) {
                   `)}
                 </div>
               </div>
-            `)}
           `).join('')}
         </div>
       </div>
@@ -750,57 +800,49 @@ export function generateHTML(config, showGuides = false) {
         `)}
       </div>
       ${wrapElementWithGuide('CTA Button', `
-        <a href="#contact" class="btn">${processedConfig.callToAction.buttonText}</a>
+        <a href="${processedConfig.callToAction.buttonUrl}" class="btn" target="_blank" rel="noopener noreferrer">${processedConfig.callToAction.buttonText}</a>
       `)}
     </div>
   </section>
   `)}
 
   <!-- Footer -->
-  ${wrapWithGuide('Footer', `
+  ${wrapWithGuide('Footer Section', `
   <footer id="footer">
     <div class="container">
       <div class="row">
         <div class="col-lg-4 mb-4 mb-lg-0">
-          ${wrapElementWithGuide('About Us Title', `
-            <h5>About Us</h5>
-          `)}
+          <h5>About Us</h5>
           ${wrapElementWithGuide('About Us Text', `
-            <p>We are a team of passionate professionals dedicated to helping businesses grow and succeed in the digital age.</p>
+            <p>${processedConfig.footer.aboutUsText}</p>
           `)}
           <div class="social-links">
             ${wrapElementWithGuide('Social Links', `
-              <a href="${processedConfig.footer.socialLinks.facebook}"><i class="fab fa-facebook-f"></i></a>
-              <a href="${processedConfig.footer.socialLinks.twitter}"><i class="fab fa-twitter"></i></a>
-              <a href="${processedConfig.footer.socialLinks.instagram}"><i class="fab fa-instagram"></i></a>
-              <a href="${processedConfig.footer.socialLinks.linkedin}"><i class="fab fa-linkedin-in"></i></a>
+              <a href="${processedConfig.footer.socialLinks.facebook.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.facebook.icon}"></i></a>
+              <a href="${processedConfig.footer.socialLinks.twitter.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.twitter.icon}"></i></a>
+              <a href="${processedConfig.footer.socialLinks.instagram.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.instagram.icon}"></i></a>
+              <a href="${processedConfig.footer.socialLinks.linkedin.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.linkedin.icon}"></i></a>
             `)}
           </div>
         </div>
         <div class="col-lg-4 mb-4 mb-lg-0">
-          ${wrapElementWithGuide('Quick Links Title', `
-            <h5>Quick Links</h5>
-          `)}
+          <h5>Quick Links</h5>
           <ul class="footer-links">
             ${processedConfig.footer.links.map((link, index) => `
-              ${wrapElementWithGuide(`Footer Link ${index + 1}`, `
                 <li><a href="${link.url}">${link.text}</a></li>
-              `)}
             `).join('')}
           </ul>
         </div>
         <div class="col-lg-4">
-          ${wrapElementWithGuide('Contact Info Title', `
-            <h5>Contact Info</h5>
+          <h5>Contact Info</h5>
+          ${wrapElementWithGuide('Address', `
+            <p><i class="fas fa-map-marker-alt mr-2"></i> ${processedConfig.footer.address}</p>
           `)}
-          ${wrapElementWithGuide('Contact Address', `
-            <p><i class="fas fa-map-marker-alt mr-2"></i> 123 Business Street, New York, NY</p>
+          ${wrapElementWithGuide('Phone', `
+            <p><i class="fas fa-phone mr-2"></i> ${processedConfig.footer.phone}</p>
           `)}
-          ${wrapElementWithGuide('Contact Phone', `
-            <p><i class="fas fa-phone mr-2"></i> (123) 456-7890</p>
-          `)}
-          ${wrapElementWithGuide('Contact Email', `
-            <p><i class="fas fa-envelope mr-2"></i> info@yourbrand.com</p>
+          ${wrapElementWithGuide('Email', `
+            <p><i class="fas fa-envelope mr-2"></i> ${processedConfig.footer.email}</p>
           `)}
         </div>
       </div>
