@@ -49,6 +49,11 @@ export async function processMessage(message, currentConfig) {
       break;
     
     // Hero section
+    case 'changeHeroBackground':
+      updatedConfig.hero.backgroundColor = intent.value;
+      responseMessage = `I've updated the hero background to ${intent.value}. How does it look?`;
+      break;
+
     case 'changeHeroTitle':
       updatedConfig.hero.title = intent.value;
       responseMessage = `The hero title is now "${intent.value}". Anything else you'd like to change?`;
@@ -69,12 +74,17 @@ export async function processMessage(message, currentConfig) {
       responseMessage = `I've changed the hero button color to ${intent.value}. Does that work for you?`;
       break;
       
-    case 'changeHeroBackgroundImage':
-      updatedConfig.hero.backgroundImage = intent.value;
-      responseMessage = `I've updated the hero background image. How does it look?`;
+    case 'changeHeroButtonUrl':
+      updatedConfig.hero.buttonUrl = intent.value;
+      responseMessage = `The hero button URL is now "${intent.value}". How does that look?`;
       break;
     
     // Benefits section
+    case 'changeBenefitsBackground':
+      updatedConfig.benefits.backgroundColor = intent.value;
+      responseMessage = `I've updated the benefits background to ${intent.value}. How does it look?`;
+      break;
+
     case 'changeBenefitsTitle':
       updatedConfig.benefits.title = intent.value;
       responseMessage = `The benefits section title is now "${intent.value}". How does that look?`;
@@ -84,8 +94,23 @@ export async function processMessage(message, currentConfig) {
       updatedConfig.benefits.subtitle = intent.value;
       responseMessage = `I've updated the benefits subtitle to "${intent.value}". Anything else you'd like to change?`;
       break;
+
+    case 'changeBenefitItemTitle':
+      updatedConfig.benefits.items[intent.itemIndex].title = intent.value;
+      responseMessage = `The title for Benefit ${intent.itemIndex + 1} is now "${intent.value}". How does that look?`;
+      break;
+      
+    case 'changeBenefitItemDescription':
+      updatedConfig.benefits.items[intent.itemIndex].description = intent.value;
+      responseMessage = `The description for Benefit ${intent.itemIndex + 1} is now "${intent.value}". How does that look?`;
+      break;
     
     // Features section
+    case 'changeFeaturesBackground':
+      updatedConfig.features.backgroundColor = intent.value;
+      responseMessage = `I've updated the features background to ${intent.value}. How does it look?`;
+      break;
+
     case 'changeFeaturesTitle':
       updatedConfig.features.title = intent.value;
       responseMessage = `The features section title is now "${intent.value}". How does that look?`;
@@ -101,7 +126,22 @@ export async function processMessage(message, currentConfig) {
       responseMessage = `I've updated the features section image. How does it look?`;
       break;
     
+    case 'changeFeatureItemTitle':
+      updatedConfig.features.items[intent.itemIndex].title = intent.value;
+      responseMessage = `The title for Feature ${intent.itemIndex + 1} is now "${intent.value}". How does that look?`;
+      break;
+      
+    case 'changeFeatureItemDescription':  
+      updatedConfig.features.items[intent.itemIndex].description = intent.value;
+      responseMessage = `The description for Feature ${intent.itemIndex + 1} is now "${intent.value}". How does that look?`;
+      break;
+      
     // Call to Action section
+    case 'changeCtaBackground':
+      updatedConfig.callToAction.backgroundColor = intent.value;
+      responseMessage = `I've updated the call to action background to ${intent.value}. How does it look?`;
+      break;
+
     case 'changeCtaTitle':
       updatedConfig.callToAction.title = intent.value;
       responseMessage = `The call to action title is now "${intent.value}". How does that look?`;
@@ -116,12 +156,65 @@ export async function processMessage(message, currentConfig) {
       updatedConfig.callToAction.buttonText = intent.value;
       responseMessage = `The call to action button text now says "${intent.value}". What else would you like to modify?`;
       break;
+
+    case 'changeCtaButtonColor':
+      updatedConfig.callToAction.buttonColor = intent.value;
+      responseMessage = `I've changed the call to action button color to ${intent.value}. How does that look?`;
+      break;
+
+    case 'changeCtaButtonUrl':
+      updatedConfig.callToAction.buttonUrl = intent.value;
+      responseMessage = `The call to action button URL is now "${intent.value}". How does that look?`;
+      break;
     
     // Footer section
+    case 'changeFooterAboutUsText':
+      updatedConfig.footer.aboutUsText = intent.value;
+      responseMessage = `The footer about us text is now "${intent.value}". How does that look?`;
+      break;
+
     case 'changeFooterText':
       updatedConfig.footer.text = intent.value;
       responseMessage = `The footer text now reads "${intent.value}". Anything else you want to change?`;
       break;
+
+    case 'changeFooterSocialLink':
+      // Make sure the socialLinks object and the platform property exist
+      if (!updatedConfig.footer.socialLinks) {
+        updatedConfig.footer.socialLinks = {};
+      }
+      
+      if (!updatedConfig.footer.socialLinks[intent.platform]) {
+        updatedConfig.footer.socialLinks[intent.platform] = {
+          url: '',
+          icon: `fab fa-${intent.platform}`
+        };
+      }
+      
+      // Update the URL
+      updatedConfig.footer.socialLinks[intent.platform].url = intent.value;
+      responseMessage = `I've updated the ${intent.platform} link to ${intent.value}. How does that look?`;
+      break;
+
+    case 'changeFooterLinks':
+      updatedConfig.footer.links = intent.value;
+      responseMessage = `The footer links are now "${intent.value}". How does that look?`;
+      break;
+
+    case 'changeFooterAddress':
+      updatedConfig.footer.address = intent.value;
+      responseMessage = `The footer address is now "${intent.value}". How does that look?`;
+      break;
+
+    case 'changeFooterEmail':
+      updatedConfig.footer.email = intent.value;
+      responseMessage = `The footer email is now "${intent.value}". How does that look?`;
+      break;
+      
+    case 'changeFooterPhone':
+      updatedConfig.footer.phone = intent.value;
+      responseMessage = `The footer phone is now "${intent.value}". How does that look?`;
+      break;  
       
     case 'unknown':
     default:
