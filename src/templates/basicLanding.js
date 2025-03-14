@@ -14,7 +14,7 @@ const basicTemplate = {
     title: "Modern Business Website",
     backgroundColor: "#4a90e2", // Uses global.primaryColor by default
     textColor: "#ffffff",
-    logoText: "YourBrand",
+    logo: "YourBrand",
     menuItems: [
       { text: "Benefits", url: "#benefits" },
       { text: "Features", url: "#features" },
@@ -92,7 +92,7 @@ const basicTemplate = {
   },
   
   // Call to Action section
-  callToAction: {
+  cta: {
     title: "Ready to get started?",
     subtitle: "Contact us today to transform your business",
     backgroundColor: "#4a90e2", // Uses global.primaryColor by default
@@ -105,8 +105,7 @@ const basicTemplate = {
   
   // Footer section
   footer: {
-    aboutUsTitle: "About Us",
-    text: "© 2025 YourBrand. All rights reserved.",
+    description: "About Us",
     backgroundColor: "#2d3748",
     textColor: "#ffffff",
     socialLinks: {
@@ -187,18 +186,18 @@ export function generateHTML(config, showGuides = false) {
         }
       ]
     },
-    callToAction: {
-      ...config.callToAction,
-      backgroundColor: config.callToAction.backgroundColor || config.global.primaryColor,
-      buttonTextColor: config.callToAction.buttonTextColor || config.global.primaryColor,
-      buttonUrl: config.callToAction.buttonUrl || "#",
-      buttonColor: config.callToAction.buttonColor || config.global.primaryColor
+    cta: {
+      ...config.cta,
+      backgroundColor: config.cta.backgroundColor || config.global.primaryColor,
+      buttonTextColor: config.cta.buttonTextColor || config.global.primaryColor,
+      buttonUrl: config.cta.buttonUrl || "#",
+      buttonColor: config.cta.buttonColor || config.global.primaryColor
     },
     footer: {
       ...config.footer,
       backgroundColor: config.footer.backgroundColor || config.global.primaryColor,
       textColor: config.footer.textColor || config.global.textColor,
-      aboutUsText: config.footer.aboutUsText || "We are a team of passionate professionals dedicated to helping businesses grow and succeed in the digital age.",
+      description: config.footer.description || "We are a team of passionate professionals dedicated to helping businesses grow and succeed in the digital age.",
       socialLinks: config.footer.socialLinks || {
         facebook: { url: "https://www.facebook.com", icon: "fab fa-facebook-f" },
         twitter: { url: "https://www.twitter.com", icon: "fab fa-twitter" },
@@ -522,8 +521,8 @@ export function generateHTML(config, showGuides = false) {
     
     /* Call to Action */
     .cta {
-      background-color: ${processedConfig.callToAction.backgroundColor};
-      color: ${processedConfig.callToAction.textColor};
+      background-color: ${processedConfig.cta.backgroundColor};
+      color: ${processedConfig.cta.textColor};
       padding: 3rem 0;
       text-align: center;
     }
@@ -536,12 +535,12 @@ export function generateHTML(config, showGuides = false) {
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 1rem;
-      color: ${processedConfig.callToAction.textColor};
+      color: ${processedConfig.cta.textColor};
     }
     
     .cta .section-title p {
       font-size: 1.2rem;
-      color: ${processedConfig.callToAction.textColor};
+      color: ${processedConfig.cta.textColor};
       opacity: 0.9;
       margin-bottom: 2rem;
     }
@@ -553,8 +552,8 @@ export function generateHTML(config, showGuides = false) {
       text-transform: uppercase;
       letter-spacing: 0.5px;
       font-size: 0.9rem;
-      background-color: ${processedConfig.callToAction.buttonColor};
-      color: ${processedConfig.callToAction.buttonTextColor};
+      background-color: ${processedConfig.cta.buttonColor};
+      color: ${processedConfig.cta.buttonTextColor};
       border: none;
       box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
       transition: all 0.3s;
@@ -646,12 +645,6 @@ export function generateHTML(config, showGuides = false) {
       border-color: ${processedConfig.global.primaryColor};
     }
     
-    .btn-primary:hover, .btn-primary:focus {
-      background-color: ${processedConfig.global.primaryColor};
-      border-color: ${processedConfig.global.primaryColor};
-      opacity: 0.9;
-    }
-    
     .section-title h2 {
       color: ${processedConfig.global.textColor};
     }
@@ -669,8 +662,8 @@ export function generateHTML(config, showGuides = false) {
   ${wrapWithGuide('Header', `
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      ${wrapElementWithGuide('Logo Text', `
-        <a class="navbar-brand" href="#">${processedConfig.header.logoText}</a>
+      ${wrapElementWithGuide('Logo', `
+        <a class="navbar-brand" href="#">${processedConfig.header.logo}</a>
       `)}
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -697,13 +690,13 @@ export function generateHTML(config, showGuides = false) {
       <div class="row">
         <div class="col-lg-8">
           <div class="hero-content">
-            ${wrapElementWithGuide('Hero Title', `
+            ${wrapElementWithGuide('Title', `
               <h1>${processedConfig.hero.title}</h1>
             `)}
-            ${wrapElementWithGuide('Hero Subtitle', `
+            ${wrapElementWithGuide('Subtitle', `
               <p>${processedConfig.hero.subtitle}</p>
             `)}
-            ${wrapElementWithGuide('Hero Button', `
+            ${wrapElementWithGuide('Button', `
               <a href="${processedConfig.hero.buttonUrl}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">${processedConfig.hero.buttonText}</a>
             `)}
           </div>
@@ -718,27 +711,29 @@ export function generateHTML(config, showGuides = false) {
   <section id="benefits" class="benefits">
     <div class="container">
       <div class="section-title">
-        ${wrapElementWithGuide('Benefits Title', `
+        ${wrapElementWithGuide('Title', `
           <h2>${processedConfig.benefits.title}</h2>
         `)}
-        ${wrapElementWithGuide('Benefits Subtitle', `
+        ${wrapElementWithGuide('Subtitle', `
           <p>${processedConfig.benefits.subtitle}</p>
         `)}
       </div>
       <div class="row">
         ${processedConfig.benefits.items.map((item, index) => `
           <div class="col-md-4 mb-4">
+            ${wrapElementWithGuide(`Item ${index + 1}`, `
               <div class="feature-card shadow-sm">
                 <div class="icon">
                   <i class="${item.icon}"></i>
                 </div>
-                ${wrapElementWithGuide(`Benefit ${index + 1} Title`, `
+                ${wrapElementWithGuide(`Title`, `
                   <h4>${item.title}</h4>
                 `)}
-                ${wrapElementWithGuide(`Benefit ${index + 1} Description`, `
+                ${wrapElementWithGuide(`Description`, `
                   <p>${item.description}</p>
                 `)}
               </div>
+            `)}
           </div>
         `).join('')}
       </div>
@@ -751,17 +746,17 @@ export function generateHTML(config, showGuides = false) {
   <section id="features" class="features">
     <div class="container">
       <div class="section-title">
-        ${wrapElementWithGuide('Features Title', `
+        ${wrapElementWithGuide('Title', `
           <h2>${processedConfig.features.title}</h2>
         `)}
-        ${wrapElementWithGuide('Features Subtitle', `
+        ${wrapElementWithGuide('Subtitle', `
           <p>${processedConfig.features.subtitle}</p>
         `)}
       </div>
       
       <div class="row">
         <div class="col-lg-6 mb-4 mb-lg-0">
-          ${wrapElementWithGuide('Features Image', `
+          ${wrapElementWithGuide('Image', `
             <img src="${processedConfig.features.image}" alt="Features" class="img-fluid">
           `)}
         </div>
@@ -772,10 +767,10 @@ export function generateHTML(config, showGuides = false) {
                   <i class="${item.icon}"></i>
                 </div>
                 <div class="feature-content">
-                  ${wrapElementWithGuide(`Feature ${index + 1} Title`, `
+                  ${wrapElementWithGuide(`Title`, `
                     <h4>${item.title}</h4>
                   `)}
-                  ${wrapElementWithGuide(`Feature ${index + 1} Description`, `
+                  ${wrapElementWithGuide(`Description`, `
                     <p>${item.description}</p>
                   `)}
                 </div>
@@ -792,15 +787,15 @@ export function generateHTML(config, showGuides = false) {
   <section class="cta">
     <div class="container">
       <div class="section-title">
-        ${wrapElementWithGuide('CTA Title', `
-          <h2>${processedConfig.callToAction.title}</h2>
+        ${wrapElementWithGuide('Title', `
+          <h2>${processedConfig.cta.title}</h2>
         `)}
-        ${wrapElementWithGuide('CTA Subtitle', `
-          <p>${processedConfig.callToAction.subtitle}</p>
+        ${wrapElementWithGuide('Subtitle', `
+          <p>${processedConfig.cta.subtitle}</p>
         `)}
       </div>
-      ${wrapElementWithGuide('CTA Button', `
-        <a href="${processedConfig.callToAction.buttonUrl}" class="btn" target="_blank" rel="noopener noreferrer">${processedConfig.callToAction.buttonText}</a>
+      ${wrapElementWithGuide('Button', `
+        <a href="${processedConfig.cta.buttonUrl}" class="btn" target="_blank" rel="noopener noreferrer">${processedConfig.cta.buttonText}</a>
       `)}
     </div>
   </section>
@@ -813,8 +808,8 @@ export function generateHTML(config, showGuides = false) {
       <div class="row">
         <div class="col-lg-4 mb-4 mb-lg-0">
           <h5>About Us</h5>
-          ${wrapElementWithGuide('About Us Text', `
-            <p>${processedConfig.footer.aboutUsText}</p>
+          ${wrapElementWithGuide('company description', `
+            <p>${processedConfig.footer.description}</p>
           `)}
           <div class="social-links">
             ${wrapElementWithGuide('Social Links', `
@@ -847,9 +842,7 @@ export function generateHTML(config, showGuides = false) {
         </div>
       </div>
       <div class="copyright">
-        ${wrapElementWithGuide('Copyright Text', `
-          <p>${processedConfig.footer.text}</p>
-        `)}
+        <p>© 2025 ${processedConfig.header.logo}. All rights reserved.</p>
       </div>
     </div>
   </footer>
