@@ -239,7 +239,7 @@ export function generateHTML(config, showGuides = false) {
       position: absolute;
       top: -20px;
       right: 0;
-      background-color: rgba(0, 100, 255, 0.7);
+      background-color: rgba(0, 0, 0, 0.7);
       color: white;
       padding: 3px 6px;
       font-size: 10px;
