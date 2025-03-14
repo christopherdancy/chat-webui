@@ -5,412 +5,400 @@ export function parseIntent(message) {
   const lowerMessage = message.toLowerCase();
   
   // Global settings
-  if (lowerMessage.includes('change primary color') || 
-      lowerMessage.includes('change the primary color') ||
-      lowerMessage.includes('change theme color')) {
+  if (lowerMessage.includes('primary color') || 
+      lowerMessage.includes('the primary color') ||
+      lowerMessage.includes('theme color')) {
     const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
     const match = message.match(colorRegex);
     if (match) {
-      return { type: 'changePrimaryColor', value: match[0].toLowerCase() };
+      return { type: 'PrimaryColor', value: match[0].toLowerCase() };
     }
   }
   
-  if (lowerMessage.includes('change secondary color') || 
-      lowerMessage.includes('change the secondary color')) {
+  if (lowerMessage.includes('secondary color') || 
+      lowerMessage.includes('the secondary color')) {
     const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
     const match = message.match(colorRegex);
     if (match) {
-      return { type: 'changeSecondaryColor', value: match[0].toLowerCase() };
+      return { type: 'SecondaryColor', value: match[0].toLowerCase() };
     }
   }
   
-  if (lowerMessage.includes('change text color') || 
-      lowerMessage.includes('change the text color')) {
+  if (lowerMessage.includes('text color') || 
+      lowerMessage.includes('the text color')) {
     const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
     const match = message.match(colorRegex);
     if (match) {
-      return { type: 'changeTextColor', value: match[0].toLowerCase() };
+      return { type: 'TextColor', value: match[0].toLowerCase() };
     }
   }
   
   // Header section
-  if (lowerMessage.includes('change header title') || 
-      lowerMessage.includes('change the header title') ||
-      lowerMessage.includes('update header title')) {
-    const regex = /change (?:the )?header title(?: to)? ["']?([^"']+)["']?/i;
-    const match = message.match(regex);
-    if (match && match[1]) {
-      return { type: 'changeHeaderTitle', value: match[1].trim() };
-    }
-  }
-  
-  if (lowerMessage.includes('change header color') || 
-      lowerMessage.includes('change the header color') ||
+  // TODO: Website name needs to be updated
+  // TODO: header title to random for not overwriting & remove name from deployment
+  // TODO: the guide title to more simple since we are doing a command builder
+  // TODO: How does the user know how to the header color?
+  if (lowerMessage.includes('header color') || 
       lowerMessage.includes('header background')) {
     const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
     const match = message.match(colorRegex);
     if (match) {
-      return { type: 'changeHeaderColor', value: match[0].toLowerCase() };
+      return { type: 'HeaderColor', value: match[0].toLowerCase() };
     }
   }
   
-  if ((lowerMessage.includes('change logo text') || 
-      lowerMessage.includes('change the logo text')) && !lowerMessage.includes('color')) {
-    const regex = /change (?:the )?logo text(?: to)? ["']?([^"']+)["']?/i;
+  // Todo: Logo should also be an image
+  if ((lowerMessage.includes('logo text') || 
+      lowerMessage.includes('the logo text')) && !lowerMessage.includes('color')) {
+    const regex = /(?:the )?logo text(?: to)? ["']?([^"']+)["']?/i;
     const match = message.match(regex);
     if (match && match[1]) {
-      return { type: 'changeLogoText', value: match[1].trim() };
+      return { type: 'LogoText', value: match[1].trim() };
     }
   }
   
   // Hero section
-  if (lowerMessage.includes('change hero background color') || 
-      lowerMessage.includes('change the hero background color')) {
+  if (lowerMessage.includes('hero background color') || 
+      lowerMessage.includes('the hero background color')) {
     const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
     const match = message.match(colorRegex);
     if (match) {
-      return { type: 'changeHeroBackground', value: match[0] };
+      return { type: 'HeroBackground', value: match[0] };
     }
   }
 
-  if (lowerMessage.includes('change hero title') || 
-      lowerMessage.includes('change the hero title') ||
-      lowerMessage.includes('change main title')) {
-    const regex = /change (?:the )?(?:hero|main) title(?: to)? ["']?([^"']+)["']?/i;
+  if (lowerMessage.includes('hero title text') || 
+      lowerMessage.includes('the hero title text') ||
+      lowerMessage.includes('main title text')) {
+    const regex = /(?:the )?(?:hero|main) title text(?: to)? ["']?([^"']+)["']?/i;
     const match = message.match(regex);
     if (match && match[1]) {
-      return { type: 'changeHeroTitle', value: match[1].trim() };
+      return { type: 'HeroTitle', value: match[1].trim() };
     }
   }
   
-  if (lowerMessage.includes('change hero subtitle') || 
-      lowerMessage.includes('change the hero subtitle') ||
-      lowerMessage.includes('update hero subtitle')) {
-    const regex = /change (?:the )?hero subtitle(?: to)? ["']?([^"']+)["']?/i;
+  if (lowerMessage.includes('hero subtitle text') || 
+      lowerMessage.includes('the hero subtitle text') ||
+      lowerMessage.includes('update hero subtitle text')) {
+    const regex = /(?:the )?hero subtitle text(?: to)? ["']?([^"']+)["']?/i;
     const match = message.match(regex);
     if (match && match[1]) {
-      return { type: 'changeHeroSubtitle', value: match[1].trim() };
+      return { type: 'HeroSubtitle', value: match[1].trim() };
     }
   }
   
-  if (lowerMessage.includes('change hero button text') || 
-      lowerMessage.includes('change the hero button text') ||
+  if (lowerMessage.includes('hero button text') || 
+      lowerMessage.includes('the hero button text') ||
       (lowerMessage.includes('button text') && lowerMessage.includes('hero'))) {
-    const regex = /change (?:the )?(?:hero )?button text(?: to)? ["']?([^"']+)["']?/i;
+    const regex = /(?:the )?(?:hero )?button text(?: to)? ["']?([^"']+)["']?/i;
     const match = message.match(regex);
     if (match && match[1]) {
-      return { type: 'changeHeroButtonText', value: match[1].trim() };
+      return { type: 'HeroButtonText', value: match[1].trim() };
     }
   }
   
-  if (lowerMessage.includes('change hero button color') || 
-      lowerMessage.includes('change the hero button color') ||
+  if (lowerMessage.includes('hero button color') || 
+      lowerMessage.includes('the hero button color') ||
       (lowerMessage.includes('button color') && lowerMessage.includes('hero'))) {
     const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
     const match = message.match(colorRegex);
     if (match) {
-      return { type: 'changeHeroButtonColor', value: match[0].toLowerCase() };
+      return { type: 'HeroButtonColor', value: match[0].toLowerCase() };
     }
   }
 
-  if (lowerMessage.includes('change hero button url') || 
-      lowerMessage.includes('change the hero button url') ||
+  if (lowerMessage.includes('hero button url') || 
+      lowerMessage.includes('the hero button url') ||
       (lowerMessage.includes('button url') && lowerMessage.includes('hero'))) {
     const urlRegex = /https?:\/\/[^\s"']+/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'changeHeroButtonUrl', value: match[0] };
+      return { type: 'HeroButtonUrl', value: match[0] };
     }
   }
   
   // Benefits section
-  if (lowerMessage.includes('change benefits background color') || 
-      lowerMessage.includes('change the benefits background color')) {
+  if (lowerMessage.includes('benefits background color') || 
+      lowerMessage.includes('the benefits background color')) {
     const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
     const match = message.match(colorRegex);
     if (match) {
-      return { type: 'changeBenefitsBackground', value: match[0].toLowerCase() };
+      return { type: 'BenefitsBackground', value: match[0].toLowerCase() };
     }
   }
 
-  if (lowerMessage.includes('change benefits title') || 
-      lowerMessage.includes('change the benefits title')) {
-    const regex = /change (?:the )?benefits title(?: to)? ["']?([^"']+)["']?/i;
+  if (lowerMessage.includes('benefits title text') || 
+      lowerMessage.includes('the benefits title text')) {
+    const regex = /(?:the )?benefits title text(?: to)? ["']?([^"']+)["']?/i;
     const match = message.match(regex);
     if (match && match[1]) {
-      return { type: 'changeBenefitsTitle', value: match[1].trim() };
+      return { type: 'BenefitsTitle', value: match[1].trim() };
     }
   }
   
-  if (lowerMessage.includes('change benefits subtitle') || 
-      lowerMessage.includes('change the benefits subtitle')) {
-    const regex = /change (?:the )?benefits subtitle(?: to)? ["']?([^"']+)["']?/i;
+  if (lowerMessage.includes('benefits subtitle text') || 
+      lowerMessage.includes('the benefits subtitle text')) {
+    const regex = /(?:the )?benefits subtitle text(?: to)? ["']?([^"']+)["']?/i;
     const match = message.match(regex);
     if (match && match[1]) {
-      return { type: 'changeBenefitsSubtitle', value: match[1].trim() };
+      return { type: 'BenefitsSubtitle', value: match[1].trim() };
     }
   }
 
-  if (lowerMessage.includes('change benefit') && 
-      (lowerMessage.includes('title') || lowerMessage.includes('description'))) {
-    // Match pattern like "change benefit 2 title to 'New Title'"
-    const titleRegex = /change benefit (\d+) title(?: to)? ["']?([^"']+)["']?/i;
-    const titleMatch = message.match(titleRegex);
-    if (titleMatch && titleMatch[1] && titleMatch[2]) {
-      const itemIndex = parseInt(titleMatch[1]) - 1; // Convert to 0-based index
+  // Handle benefits item subsections
+  if (lowerMessage.includes('benefits item')) {
+    // Match pattern like "benefits item1 title text New Title"
+    const itemTitleRegex = /benefits (item\d+) title(?: text)?(?: to)? ["']?([^"']+)["']?/i;
+    const itemTitleMatch = message.match(itemTitleRegex);
+    if (itemTitleMatch && itemTitleMatch[1] && itemTitleMatch[2]) {
+      const itemName = itemTitleMatch[1].toLowerCase(); // e.g., "item1"
       return { 
-        type: 'changeBenefitItemTitle', 
-        value: titleMatch[2].trim(),
-        itemIndex: itemIndex
+        type: 'BenefitItemTitle', 
+        value: itemTitleMatch[2].trim(),
+        itemName: itemName
       };
     }
     
-    // Match pattern like "change benefit 3 description to 'New description'"
-    const descRegex = /change benefit (\d+) description(?: to)? ["']?([^"']+)["']?/i;
-    const descMatch = message.match(descRegex);
-    if (descMatch && descMatch[1] && descMatch[2]) {
-      const itemIndex = parseInt(descMatch[1]) - 1; // Convert to 0-based index
+    // Match pattern like "benefits item2 description text New description"
+    const itemDescRegex = /benefits (item\d+) description(?: text)?(?: to)? ["']?([^"']+)["']?/i;
+    const itemDescMatch = message.match(itemDescRegex);
+    if (itemDescMatch && itemDescMatch[1] && itemDescMatch[2]) {
+      const itemName = itemDescMatch[1].toLowerCase(); // e.g., "item2"
       return { 
-        type: 'changeBenefitItemDescription', 
-        value: descMatch[2].trim(),
-        itemIndex: itemIndex
+        type: 'BenefitItemDescription', 
+        value: itemDescMatch[2].trim(),
+        itemName: itemName
       };
     }
   }
   
   // Features section
-  if (lowerMessage.includes('change features background color') || 
-      lowerMessage.includes('change the features background color')) {
+  if (lowerMessage.includes('features background color') || 
+      lowerMessage.includes('the features background color')) {
     const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
     const match = message.match(colorRegex);
     if (match) {
-      return { type: 'changeFeaturesBackground', value: match[0].toLowerCase() };
+      return { type: 'FeaturesBackground', value: match[0].toLowerCase() };
     }
   }
 
-  if (lowerMessage.includes('change features title') || 
-      lowerMessage.includes('change the features title')) {
-    const regex = /change (?:the )?features title(?: to)? ["']?([^"']+)["']?/i;
+  if (lowerMessage.includes('features title text') || 
+      lowerMessage.includes('the features title')) {
+    const regex = /(?:the )?features title text(?: to)? ["']?([^"']+)["']?/i;
     const match = message.match(regex);
     if (match && match[1]) {
-      return { type: 'changeFeaturesTitle', value: match[1].trim() };
+      return { type: 'FeaturesTitle', value: match[1].trim() };
     }
   }
   
-  if (lowerMessage.includes('change features subtitle') || 
-      lowerMessage.includes('change the features subtitle')) {
-    const regex = /change (?:the )?features subtitle(?: to)? ["']?([^"']+)["']?/i;
+  if (lowerMessage.includes('features subtitle text') || 
+      lowerMessage.includes('the features subtitle')) {
+    const regex = /(?:the )?features subtitle text(?: to)? ["']?([^"']+)["']?/i;
     const match = message.match(regex);
     if (match && match[1]) {
-      return { type: 'changeFeaturesSubtitle', value: match[1].trim() };
+      return { type: 'FeaturesSubtitle', value: match[1].trim() };
     }
   }
   
-  if (lowerMessage.includes('change features image') || 
-      lowerMessage.includes('change the features image')) {
+  if (lowerMessage.includes('features image') || 
+      lowerMessage.includes('the features image')) {
     const urlRegex = /https?:\/\/[^\s"']+/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'changeFeaturesImage', value: match[0] };
+      return { type: 'FeaturesImage', value: match[0] };
     }
   }
 
-  if (lowerMessage.includes('change feature') && 
-      (lowerMessage.includes('title') || lowerMessage.includes('description'))) {
-    // Match pattern like "change feature 2 title to 'New Title'"
-    const titleRegex = /change feature (\d+) title(?: to)? ["']?([^"']+)["']?/i;
-    const titleMatch = message.match(titleRegex);
-    if (titleMatch && titleMatch[1] && titleMatch[2]) {
-      const itemIndex = parseInt(titleMatch[1]) - 1; // Convert to 0-based index
+  // Handle features subsections
+  if (lowerMessage.includes('features item')) {
+    // Match pattern like "features item1 title text New Title"
+    const itemTitleRegex = /features (item\d+) title(?: text)?(?: to)? ["']?([^"']+)["']?/i;
+    const itemTitleMatch = message.match(itemTitleRegex);
+    if (itemTitleMatch && itemTitleMatch[1] && itemTitleMatch[2]) {
+      const itemName = itemTitleMatch[1].toLowerCase(); // e.g., "item1"
       return { 
-        type: 'changeFeatureItemTitle', 
-        value: titleMatch[2].trim(),
-        itemIndex: itemIndex
+        type: 'FeatureItemTitle', 
+        value: itemTitleMatch[2].trim(),
+        itemName: itemName
       };
     }
     
-    // Match pattern like "change feature 3 description to 'New description'"
-    const descRegex = /change feature (\d+) description(?: to)? ["']?([^"']+)["']?/i;
-    const descMatch = message.match(descRegex);
-    if (descMatch && descMatch[1] && descMatch[2]) {
-      const itemIndex = parseInt(descMatch[1]) - 1; // Convert to 0-based index
+    // Match pattern like "features item2 description text New description"
+    const itemDescRegex = /features (item\d+) description(?: text)?(?: to)? ["']?([^"']+)["']?/i;
+    const itemDescMatch = message.match(itemDescRegex);
+    if (itemDescMatch && itemDescMatch[1] && itemDescMatch[2]) {
+      const itemName = itemDescMatch[1].toLowerCase(); // e.g., "item2"
       return { 
-        type: 'changeFeatureItemDescription', 
-        value: descMatch[2].trim(),
-        itemIndex: itemIndex
-      };  
+        type: 'FeatureItemDescription', 
+        value: itemDescMatch[2].trim(),
+        itemName: itemName
+      };
     }
   }
   
   // Call to Action section
-  if (lowerMessage.includes('change cta background color') || 
-      lowerMessage.includes('change the cta background color')) {
+  if (lowerMessage.includes('cta background color') || 
+      lowerMessage.includes('the cta background color')) {
     const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
     const match = message.match(colorRegex);
     if (match) {
-      return { type: 'changeCtaBackground', value: match[0].toLowerCase() };
+      return { type: 'CtaBackground', value: match[0].toLowerCase() };
     }
   }
 
-  if (lowerMessage.includes('change cta title') || 
-      lowerMessage.includes('change the cta title') ||
-      lowerMessage.includes('change call to action title')) {
-    const regex = /change (?:the )?(?:cta|call to action) title(?: to)? ["']?([^"']+)["']?/i;
+  if (lowerMessage.includes('cta title text') || 
+      lowerMessage.includes('the cta title text') ||
+      lowerMessage.includes('call to action title text')) {
+    const regex = /(?:the )?(?:cta|call to action) title text(?: to)? ["']?([^"']+)["']?/i;
     const match = message.match(regex);
     if (match && match[1]) {
-      return { type: 'changeCtaTitle', value: match[1].trim() };
+      return { type: 'CtaTitle', value: match[1].trim() };
     }
   }
   
-  if (lowerMessage.includes('change cta subtitle') || 
-      lowerMessage.includes('change the cta subtitle') ||
-      lowerMessage.includes('change call to action subtitle')) {
-    const regex = /change (?:the )?(?:cta|call to action) subtitle(?: to)? ["']?([^"']+)["']?/i;
+  if (lowerMessage.includes('cta subtitle text') || 
+      lowerMessage.includes('the cta subtitle text') ||
+      lowerMessage.includes('call to action subtitle text')) {
+    const regex = /(?:the )?(?:cta|call to action) subtitle text(?: to)? ["']?([^"']+)["']?/i;
     const match = message.match(regex);
     if (match && match[1]) {
-      return { type: 'changeCtaSubtitle', value: match[1].trim() };
+      return { type: 'CtaSubtitle', value: match[1].trim() };
     }
   }
   
-  if (lowerMessage.includes('change cta button text') || 
-      lowerMessage.includes('change the cta button text') ||
+  if (lowerMessage.includes('cta button text') || 
+      lowerMessage.includes('the cta button text') ||
       (lowerMessage.includes('button text') && (lowerMessage.includes('cta') || lowerMessage.includes('call to action')))) {
-    const regex = /change (?:the )?(?:cta |call to action )?button text(?: to)? ["']?([^"']+)["']?/i;
+    const regex = /(?:the )?(?:cta |call to action )?button text(?: to)? ["']?([^"']+)["']?/i;
     const match = message.match(regex);
     if (match && match[1]) {
-      return { type: 'changeCtaButtonText', value: match[1].trim() };
+      return { type: 'CtaButtonText', value: match[1].trim() };
     }
   }
   
-  if (lowerMessage.includes('change cta button color') || 
-      lowerMessage.includes('change the cta button color')) {
+  if (lowerMessage.includes('cta button color') || 
+      lowerMessage.includes('the cta button color')) {
     const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
     const match = message.match(colorRegex);
     if (match) {
-      return { type: 'changeCtaButtonColor', value: match[0].toLowerCase() };
+      return { type: 'CtaButtonColor', value: match[0].toLowerCase() };
     }
   }
   
-  if (lowerMessage.includes('change cta button url') || 
-      lowerMessage.includes('change the cta button url')) {
+  if (lowerMessage.includes('cta button url') || 
+      lowerMessage.includes('the cta button url')) {
     const urlRegex = /https?:\/\/[^\s"']+/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'changeCtaButtonUrl', value: match[0] };
+      return { type: 'CtaButtonUrl', value: match[0] };
     }
   }
   
   // Footer section
-  if (lowerMessage.includes('change about us text') || 
-      lowerMessage.includes('change the about us text')) {
-    const regex = /change (?:the )?about us text(?: to)? ["']?([^"']+)["']?/i;
-    const match = message.match(regex);
-    if (match && match[1]) {
-      return { type: 'changeFooterAboutUsText', value: match[1].trim() };
+  if (lowerMessage.includes('footer')) {
+    // Handle footer background color
+    if (lowerMessage.includes('background color')) {
+      const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
+      const match = message.match(colorRegex);
+      if (match) {
+        return { type: 'FooterBackground', value: match[0].toLowerCase() };
+      }
+    }
+    
+    // Handle footer text content
+    if (lowerMessage.includes('description text') || 
+        lowerMessage.includes('footer description text')) {
+      const regex = /footer (?:description text)(?: to)? ["']?([^"']+)["']?/i;
+      const match = message.match(regex);
+      if (match && match[1]) {
+        return { type: 'footerDescriptionText', value: match[1].trim() };
+      }
+    }
+    
+    // Handle footer address
+    if (lowerMessage.includes('address')) {
+      const regex = /footer address text(?: to)? ["']?([^"']+)["']?/i;
+      const match = message.match(regex);
+      if (match && match[1]) {
+        return { type: 'FooterAddress', value: match[1].trim() };
+      }
+    }
+    
+    // Handle footer phone
+    if (lowerMessage.includes('phone')) {
+      const regex = /footer phone text(?: to)? ["']?([^"']+)["']?/i;
+      const match = message.match(regex);
+      if (match && match[1]) {
+        return { type: 'FooterPhone', value: match[1].trim() };
+      }
+    }
+    
+    // Handle footer email
+    if (lowerMessage.includes('email')) {
+      const regex = /footer email text(?: to)? ["']?([^"']+)["']?/i;
+      const match = message.match(regex);
+      if (match && match[1]) {
+        return { type: 'FooterEmail', value: match[1].trim() };
+      }
+    }
+    
+    // Handle social links using the subsection structure
+    if (lowerMessage.includes('socials')) {
+      // Match pattern like "footer socials facebook url https://facebook.com"
+      const socialUrlRegex = /footer socials (facebook|twitter|instagram|linkedin) (?:url|link)(?: to)? (https?:\/\/[^\s"']+)/i;
+      const socialUrlMatch = message.match(socialUrlRegex);
+      
+      if (socialUrlMatch && socialUrlMatch[1] && socialUrlMatch[2]) {
+        const platform = socialUrlMatch[1].toLowerCase();
+        const url = socialUrlMatch[2];
+        
+        return { 
+          type: 'FooterSocialLink', 
+          platform: platform,
+          value: url
+        };
+      }
     }
   }
 
-  if (lowerMessage.includes('change footer text') || 
-      lowerMessage.includes('change the footer text')) {
-    const regex = /change (?:the )?footer text(?: to)? ["']?([^"']+)["']?/i;
-    const match = message.match(regex);
-    if (match && match[1]) {
-      return { type: 'changeFooterText', value: match[1].trim() };
-    }
-  }
-
-  if (lowerMessage.includes('change footer links') || 
-      lowerMessage.includes('change the footer links')) {
-    const regex = /change (?:the )?footer links(?: to)? ["']?([^"']+)["']?/i;
-    const match = message.match(regex);
-    if (match && match[1]) {
-      return { type: 'changeFooterLinks', value: match[1].trim() };
-    }
-  }
-
-  // Footer social links
-  if (lowerMessage.includes('change facebook link') || 
-      lowerMessage.includes('change the facebook link')) {
+  // For backward compatibility, keep the old social link patterns
+  if (lowerMessage.includes('footer facebook link') || 
+      lowerMessage.includes('the facebook link')) {
     const urlRegex = /https?:\/\/[^\s"']+/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'changeFooterSocialLink', platform: 'facebook', value: match[0] };
+      return { type: 'FooterSocialLink', platform: 'facebook', value: match[0] };
     }
   }
 
-  if (lowerMessage.includes('change twitter link') || 
-      lowerMessage.includes('change the twitter link')) {
+  if (lowerMessage.includes('footer twitter link') || 
+      lowerMessage.includes('the twitter link')) {
     const urlRegex = /https?:\/\/[^\s"']+/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'changeFooterSocialLink', platform: 'twitter', value: match[0] };
+      return { type: 'FooterSocialLink', platform: 'twitter', value: match[0] };
     }
   }
 
-  if (lowerMessage.includes('change instagram link') || 
-      lowerMessage.includes('change the instagram link')) {
+  if (lowerMessage.includes('footer instagram link') || 
+      lowerMessage.includes('the instagram link')) {
     const urlRegex = /https?:\/\/[^\s"']+/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'changeFooterSocialLink', platform: 'instagram', value: match[0] };
+      return { type: 'FooterSocialLink', platform: 'instagram', value: match[0] };
     }
   }
 
-  if (lowerMessage.includes('change linkedin link') || 
-      lowerMessage.includes('change the linkedin link')) {
+  if (lowerMessage.includes('footer linkedin link') || 
+      lowerMessage.includes('the linkedin link')) {
     const urlRegex = /https?:\/\/[^\s"']+/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'changeFooterSocialLink', platform: 'linkedin', value: match[0] };
+      return { type: 'FooterSocialLink', platform: 'linkedin', value: match[0] };
     }
   }
 
-  if (lowerMessage.includes('change address') || 
-      lowerMessage.includes('change the address')) {
-    const regex = /change (?:the )?address(?: to)? ["']?([^"']+)["']?/i;
-    const match = message.match(regex);
-    if (match && match[1]) {
-      return { type: 'changeFooterAddress', value: match[1].trim() };
-    }
-  }
-
-  if (lowerMessage.includes('change email') || 
-      lowerMessage.includes('change the email')) {
-    const regex = /change (?:the )?email(?: to)? ["']?([^"']+)["']?/i; 
-    const match = message.match(regex);
-    if (match && match[1]) {
-      return { type: 'changeFooterEmail', value: match[1].trim() };
-    }
-  }
-
-  if (lowerMessage.includes('change phone') || 
-      lowerMessage.includes('change the phone')) {
-    const regex = /change (?:the )?phone(?: to)? ["']?([^"']+)["']?/i;
-    const match = message.match(regex);
-    if (match && match[1]) {  
-      return { type: 'changeFooterPhone', value: match[1].trim() };
-    }
-  }
-
-  // Generic button text change (if section not specified)
-  if (lowerMessage.includes('change button text') || 
-      lowerMessage.includes('change the button text')) {
-    const regex = /change (?:the )?button text(?: to)? ["']?([^"']+)["']?/i;
-    const match = message.match(regex);
-    if (match && match[1]) {
-      return { type: 'changeHeroButtonText', value: match[1].trim() }; // Default to hero button
-    }
-  }
-  
-  // Generic button color change (if section not specified)
-  if (lowerMessage.includes('change button color') || 
-      lowerMessage.includes('change the button color')) {
-    const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
-    const match = message.match(colorRegex);
-    if (match) {
-      return { type: 'changeHeroButtonColor', value: match[0].toLowerCase() }; // Default to hero button
-    }
-  }
+  // TODO: command 
   
   // If no intent was matched
   return { type: 'unknown' };
