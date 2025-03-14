@@ -762,6 +762,7 @@ export function generateHTML(config, showGuides = false) {
         </div>
         <div class="col-lg-6">
           ${processedConfig.features.items.map((item, index) => `
+            ${wrapElementWithGuide(`Item ${index + 1}`, `
               <div class="feature-item">
                 <div class="feature-icon">
                   <i class="${item.icon}"></i>
@@ -775,6 +776,7 @@ export function generateHTML(config, showGuides = false) {
                   `)}
                 </div>
               </div>
+            `)}
           `).join('')}
         </div>
       </div>
