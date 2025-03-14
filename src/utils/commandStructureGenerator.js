@@ -108,7 +108,7 @@ export const generateCommandStructure = (websiteConfig) => {
           break;
           
         case 'footer':
-          structure.elements[section] = ['description', 'links', 'address', 'phone', 'email', 'background'];
+          structure.elements[section] = ['description', 'address', 'phone', 'email', 'background'];
           structure.properties[`${section}.description`] = ['text'];
           structure.properties[`${section}.address`] = ['text'];
           structure.properties[`${section}.phone`] = ['text'];
@@ -116,16 +116,16 @@ export const generateCommandStructure = (websiteConfig) => {
           structure.properties[`${section}.background`] = ['color'];
 
           // Define subsections for features (similar to benefits)
-          structure.subsections[section] = ['socials'];
+          structure.subsections[section] = ['social'];
 
           // Define elements for each subsection
-          structure.subsectionElements[`${section}.socials`] = ['facebook', 'twitter', 'instagram', 'linkedin'];
+          structure.subsectionElements[`${section}.social`] = ['facebook', 'twitter', 'instagram', 'linkedin'];
 
           // Define properties for subsection elements
-          structure.properties[`${section}.socials.facebook`] = ['url'];
-          structure.properties[`${section}.socials.twitter`] = ['url'];
-          structure.properties[`${section}.socials.instagram`] = ['url'];
-          structure.properties[`${section}.socials.linkedin`] = ['url'];
+          structure.properties[`${section}.social.facebook`] = ['url'];
+          structure.properties[`${section}.social.twitter`] = ['url'];
+          structure.properties[`${section}.social.instagram`] = ['url'];
+          structure.properties[`${section}.social.linkedin`] = ['url'];
           break;
           
         default:
