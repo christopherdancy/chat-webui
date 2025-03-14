@@ -18,158 +18,139 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Generate command structure from website config
-  const commandStructure = generateCommandStructure(websiteConfig);
+  // Generate command structure from website config - memoize this to prevent recreation on every render
+  const commandStructure = React.useMemo(() => generateCommandStructure(websiteConfig), [websiteConfig]);
 
-  // Auto-scroll to bottom of messages and focus input
+  // Auto-scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    // Focus the input field whenever messages change
-    if (!isProcessing) {
-      inputRef.current?.focus();
-    }
-  }, [messages, isProcessing]);
+  }, [messages]);
 
   // Focus input field when component mounts
   useEffect(() => {
     inputRef.current?.focus();
-  }, []);
+  }, []); // Empty dependency array - only runs once on mount
 
-  // Re-focus input when processing state changes to false
+  // Focus input after processing is complete
   useEffect(() => {
     if (!isProcessing) {
       inputRef.current?.focus();
     }
-  }, [isProcessing]);
+  }, [isProcessing]); // Only depends on isProcessing
 
   // Memoize the validateInput function
   const validateInput = useCallback((inputText) => {
-    if (!inputText.trim()) {
-      setValidationError('');
-      setIsValidCommand(false);
-      return;
-    }
+    // Move state updates outside this function to prevent infinite loops
+    let error = '';
+    let isValid = false;
 
-    const tokens = inputText.toLowerCase().trim().split(/\s+/);
-    
-    // Check if first token is a valid section
-    if (tokens.length >= 1) {
-      const section = tokens[0];
-      if (!commandStructure.sections.includes(section)) {
-        setValidationError(`"${section}" is not a valid section. Please choose from the available options.`);
-        setIsValidCommand(false);
-        return;
-      }
-    }
-    
-    // Check if second token is a valid element or subsection for the selected section
-    if (tokens.length >= 2) {
-      const section = tokens[0];
-      const elementOrSubsection = tokens[1];
+    if (!inputText.trim()) {
+      error = '';
+      isValid = false;
+    } else {
+      const tokens = inputText.toLowerCase().trim().split(/\s+/);
       
-      // Check if it's a subsection
-      if (commandStructure.subsections[section] && 
-          commandStructure.subsections[section].includes(elementOrSubsection)) {
-        // It's a valid subsection, continue validation
-      } 
-      // Check if it's an element
-      else if (commandStructure.elements[section] && 
-               commandStructure.elements[section].includes(elementOrSubsection)) {
-        // It's a valid element, continue validation
-      }
-      else {
-        setValidationError(`"${elementOrSubsection}" is not a valid element or subsection for the ${section} section. Please choose from the available options.`);
-        setIsValidCommand(false);
-        return;
-      }
-    }
-    
-    // Check if third token is valid based on whether the second token is a subsection or element
-    if (tokens.length >= 3) {
-      const section = tokens[0];
-      const elementOrSubsection = tokens[1];
-      const thirdToken = tokens[2];
-      
-      // If second token is a subsection
-      if (commandStructure.subsections[section] && 
-          commandStructure.subsections[section].includes(elementOrSubsection)) {
-        
-        // Check if third token is a valid element for this subsection
-        const subsectionKey = `${section}.${elementOrSubsection}`;
-        if (!commandStructure.subsectionElements[subsectionKey] || 
-            !commandStructure.subsectionElements[subsectionKey].includes(thirdToken)) {
-          setValidationError(`"${thirdToken}" is not a valid element for ${section} ${elementOrSubsection}. Please choose from the available options.`);
-          setIsValidCommand(false);
-          return;
-        }
-      } 
-      // If second token is an element
-      else {
-        // Check if third token is a valid property for this element
-        const key = `${section}.${elementOrSubsection}`;
-        if (!commandStructure.properties[key] || 
-            !commandStructure.properties[key].includes(thirdToken)) {
-          setValidationError(`"${thirdToken}" is not a valid property for ${section} ${elementOrSubsection}. Please choose from the available options.`);
-          setIsValidCommand(false);
-          return;
+      // Check if first token is a valid section
+      if (tokens.length >= 1) {
+        const section = tokens[0];
+        if (!commandStructure.sections.includes(section)) {
+          error = `"${section}" is not a valid section. Please choose from the available options.`;
+          isValid = false;
+          return { error, isValid };
         }
       }
-    }
-    
-    // Check if fourth token is valid when the second token is a subsection
-    if (tokens.length >= 4) {
-      const section = tokens[0];
-      const elementOrSubsection = tokens[1];
       
-      // If second token is a subsection
-      if (commandStructure.subsections[section] && 
-          commandStructure.subsections[section].includes(elementOrSubsection)) {
+      // Check if second token is a valid element or subsection for the selected section
+      if (tokens.length >= 2) {
+        const section = tokens[0];
+        const elementOrSubsection = tokens[1];
         
-        const subsectionElement = tokens[2];
+        // Check if it's a subsection
+        if (commandStructure.subsections[section] && 
+            commandStructure.subsections[section].includes(elementOrSubsection)) {
+          // It's a valid subsection, continue validation
+        } 
+        // Check if it's an element
+        else if (commandStructure.elements[section] && 
+                 commandStructure.elements[section].includes(elementOrSubsection)) {
+          // It's a valid element, continue validation
+        }
+        else {
+          error = `"${elementOrSubsection}" is not a valid element or subsection for the ${section} section. Please choose from the available options.`;
+          isValid = false;
+          return { error, isValid };
+        }
+      }
+      
+      // Check if third token is valid based on whether the second token is a subsection or element
+      if (tokens.length >= 3) {
+        const section = tokens[0];
+        const elementOrSubsection = tokens[1];
+        const thirdToken = tokens[2];
+        
+        // If second token is a subsection
+        if (commandStructure.subsections[section] && 
+            commandStructure.subsections[section].includes(elementOrSubsection)) {
+          
+          // Check if third token is a valid element for this subsection
+          const subsectionKey = `${section}.${elementOrSubsection}`;
+          if (!commandStructure.subsectionElements[subsectionKey] || 
+              !commandStructure.subsectionElements[subsectionKey].includes(thirdToken)) {
+            error = `"${thirdToken}" is not a valid element for the ${elementOrSubsection} subsection. Please choose from the available options.`;
+            isValid = false;
+            return { error, isValid };
+          }
+        } 
+        // If second token is an element
+        else if (commandStructure.elements[section] && 
+                 commandStructure.elements[section].includes(elementOrSubsection)) {
+          
+          // Check if third token is a valid property for this element
+          const elementKey = `${section}.${elementOrSubsection}`;
+          if (!commandStructure.properties[elementKey] || 
+              !commandStructure.properties[elementKey].includes(thirdToken)) {
+            error = `"${thirdToken}" is not a valid property for the ${elementOrSubsection} element. Please choose from the available options.`;
+            isValid = false;
+            return { error, isValid };
+          }
+        }
+      }
+      
+      // Check if fourth token is valid for subsection element properties
+      if (tokens.length >= 4) {
+        const section = tokens[0];
+        const subsection = tokens[1];
+        const element = tokens[2];
         const property = tokens[3];
         
-        // Check if fourth token is a valid property for this subsection element
-        const key = `${section}.${elementOrSubsection}.${subsectionElement}`;
-        if (!commandStructure.properties[key] || 
-            !commandStructure.properties[key].includes(property)) {
-          setValidationError(`"${property}" is not a valid property for ${section} ${elementOrSubsection} ${subsectionElement}. Please choose from the available options.`);
-          setIsValidCommand(false);
-          return;
+        // Only validate if we're dealing with a subsection element property
+        if (commandStructure.subsections[section] && 
+            commandStructure.subsections[section].includes(subsection)) {
+          
+          const subsectionElementKey = `${section}.${subsection}.${element}`;
+          if (!commandStructure.properties[subsectionElementKey] || 
+              !commandStructure.properties[subsectionElementKey].includes(property)) {
+            error = `"${property}" is not a valid property for the ${element} element in the ${subsection} subsection. Please choose from the available options.`;
+            isValid = false;
+            return { error, isValid };
+          }
         }
       }
-    }
-    
-    // Determine if the command is complete and valid
-    const section = tokens[0];
-    const elementOrSubsection = tokens[1];
-    
-    // If second token is a subsection, we need 5 tokens (section, subsection, element, property, value)
-    if (tokens.length >= 2 && 
-        commandStructure.subsections[section] && 
-        commandStructure.subsections[section].includes(elementOrSubsection)) {
       
-      if (tokens.length >= 5) {
-        setValidationError('');
-        setIsValidCommand(true);
-      } else {
-        setValidationError('');
-        setIsValidCommand(false);
-      }
-    } 
-    // If second token is an element, we need 4 tokens (section, element, property, value)
-    else if (tokens.length >= 4) {
-      setValidationError('');
-      setIsValidCommand(true);
-    } else {
-      setValidationError('');
-      setIsValidCommand(false);
+      // If we've made it this far, the command is valid enough to submit
+      error = '';
+      isValid = true;
     }
+    
+    return { error, isValid };
   }, [commandStructure]);
 
-  // Update available options based on current input
+  // Update validation state and available options based on current input
   useEffect(() => {
-    // Validate the current input
-    validateInput(input);
+    // Get validation results without setting state directly in the validation function
+    const { error, isValid } = validateInput(input);
+    setValidationError(error);
+    setIsValidCommand(isValid);
     
     // Initialize with sections if input is empty
     if (!input.trim()) {
@@ -417,9 +398,14 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     // Update the input field
     setInput(newInput);
     
-    // Focus the input field for the user to continue typing
+    // Focus the input field and position cursor at the end
     setTimeout(() => {
-      inputRef.current?.focus();
+      if (inputRef.current) {
+        inputRef.current.focus();
+        // Set cursor position to the end of the input text
+        const length = newInput.length;
+        inputRef.current.setSelectionRange(length, length);
+      }
     }, 0);
   };
 
@@ -548,11 +534,10 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
             placeholder="Type your changes here or click on options above..."
             className="chat-input"
             disabled={isProcessing}
-            // Add this to ensure the input is always focused when clicked anywhere in the form
-            onBlur={() => {
-              if (!isProcessing) {
-                setTimeout(() => inputRef.current?.focus(), 10);
-              }
+            // Add this to ensure cursor is at the end when input gets focus
+            onFocus={(e) => {
+              const length = e.target.value.length;
+              e.target.setSelectionRange(length, length);
             }}
           />
         </div>
