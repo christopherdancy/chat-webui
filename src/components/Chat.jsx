@@ -21,10 +21,26 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   // Generate command structure from website config
   const commandStructure = generateCommandStructure(websiteConfig);
 
-  // Auto-scroll to bottom of messages
+  // Auto-scroll to bottom of messages and focus input
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    // Focus the input field whenever messages change
+    if (!isProcessing) {
+      inputRef.current?.focus();
+    }
+  }, [messages, isProcessing]);
+
+  // Focus input field when component mounts
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  // Re-focus input when processing state changes to false
+  useEffect(() => {
+    if (!isProcessing) {
+      inputRef.current?.focus();
+    }
+  }, [isProcessing]);
 
   // Memoize the validateInput function
   const validateInput = useCallback((inputText) => {
@@ -402,7 +418,9 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     setInput(newInput);
     
     // Focus the input field for the user to continue typing
-    inputRef.current?.focus();
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
   };
 
   const handleSubmit = async (e) => {
@@ -457,6 +475,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       }]);
     } finally {
       setIsProcessing(false);
+      // Focus will be handled by the useEffect that watches isProcessing
     }
   };
 
@@ -529,6 +548,12 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
             placeholder="Type your changes here or click on options above..."
             className="chat-input"
             disabled={isProcessing}
+            // Add this to ensure the input is always focused when clicked anywhere in the form
+            onBlur={() => {
+              if (!isProcessing) {
+                setTimeout(() => inputRef.current?.focus(), 10);
+              }
+            }}
           />
         </div>
         <button 
