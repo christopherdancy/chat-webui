@@ -16,6 +16,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const [validationError, setValidationError] = useState('');
   const [isValidCommand, setIsValidCommand] = useState(false);
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
 
   // Generate command structure from website config
   const commandStructure = generateCommandStructure(websiteConfig);
@@ -362,10 +363,54 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     }
   }, [input, commandStructure, validateInput]);
 
+  // Handle option click
+  const handleOptionClick = (option) => {
+    // Get current tokens
+    const tokens = input.trim().split(/\s+/);
+    
+    // If the option is a placeholder, don't add it
+    if (option === '[Enter your value]') {
+      // Focus the input field for the user to type the value
+      inputRef.current?.focus();
+      return;
+    }
+    
+    // Determine how to add the option based on the current level
+    let newInput = '';
+    
+    if (currentLevel === 'section') {
+      // Starting a new command with a section
+      newInput = option;
+    } else if (currentLevel === 'elementOrSubsection' || 
+               currentLevel === 'element' || 
+               currentLevel === 'subsection') {
+      // Adding an element or subsection to a section
+      newInput = `${tokens[0]} ${option}`;
+    } else if (currentLevel === 'property' || currentLevel === 'subsectionElement') {
+      // Adding a property to an element or an element to a subsection
+      newInput = `${tokens[0]} ${tokens[1]} ${option}`;
+    } else if (currentLevel === 'subsectionProperty') {
+      // Adding a property to a subsection element
+      newInput = `${tokens[0]} ${tokens[1]} ${tokens[2]} ${option}`;
+    } else if (currentLevel === 'value' || currentLevel === 'subsectionValue') {
+      // For values, we'll just focus the input field
+      inputRef.current?.focus();
+      return;
+    }
+    
+    // Update the input field
+    setInput(newInput);
+    
+    // Focus the input field for the user to continue typing
+    inputRef.current?.focus();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!input.trim() || isProcessing) return;
+    if (!input.trim() || isProcessing) {
+      return;
+    }
     
     // Check if command is valid before submitting
     if (!isValidCommand) {
@@ -436,7 +481,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     <div className="chat-container">
       <div className="chat-messages">
         <div className="system-message">
-          Welcome to Website Chat Editor! Type commands to make changes to your website.
+          Welcome to Website Chat Editor! Type commands or click on options below to make changes to your website.
         </div>
         {messages.map((msg, index) => (
           <ChatMessage 
@@ -453,7 +498,11 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
         <div className="guide-label">{getLevelLabel()}</div>
         <div className="guide-options">
           {currentOptions.map((option, index) => (
-            <div key={index} className="guide-option">
+            <div 
+              key={index} 
+              className="guide-option clickable"
+              onClick={() => handleOptionClick(option)}
+            >
               {option}
             </div>
           ))}
@@ -473,10 +522,11 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       <form className="chat-input-form" onSubmit={handleSubmit}>
         <div className="input-container">
           <input
+            ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your changes here..."
+            placeholder="Type your changes here or click on options above..."
             className="chat-input"
             disabled={isProcessing}
           />

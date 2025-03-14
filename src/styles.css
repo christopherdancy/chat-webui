@@ -253,6 +253,25 @@
     color: #333;
   }
   
+  /* New styles for clickable guide options */
+  .guide-option.clickable {
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+    user-select: none;
+  }
+  
+  .guide-option.clickable:hover {
+    background-color: #f0f8ff;
+    border-color: #4a90e2;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .guide-option.clickable:active {
+    transform: translateY(1px);
+    box-shadow: none;
+  }
+  
   .guide-hint {
     font-size: 0.8rem;
     color: #666;
