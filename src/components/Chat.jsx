@@ -28,7 +28,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const [showIconHint, setShowIconHint] = useState(false);
   const [showColorHint, setShowColorHint] = useState(false);
   const [showImageUploadHint, setShowImageUploadHint] = useState(false);
-  const [currentImageContext, setCurrentImageContext] = useState(null);
+  const [currentImageContext, setCurrentImageContext] = useState(false);
 
   // Generate command structure from website config - memoize this to prevent recreation on every render
   const commandStructure = React.useMemo(() => generateCommandStructure(websiteConfig), [websiteConfig]);
@@ -277,12 +277,24 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     }
 
     const tokens = input.toLowerCase().trim().split(/\s+/);
+
+    // if ((tokens.length >= 3 && 
+    //     tokens[0] === 'features' && 
+    //     tokens[1] === 'image' && 
+    //     tokens[2] === 'upload') ||
+    //     (input.includes('features image url ') && input.includes('.jpg'))) {
+          
+    //     setCurrentOptions(["[Click to upload an image]"]);
+    //     setCurrentLevel('value');
+    //     setShowImageUploadHint(true);
+    //     return;
+    // }
     
     // Check if we're in the "features image upload" context or if we already have a URL
     if ((tokens.length >= 3 && 
-         tokens[0] === 'features' && 
-         tokens[1] === 'image' && 
-         (tokens[2] === 'upload' || tokens[2] === 'url')) ||
+         (tokens[0] === 'features' || tokens[0] === 'header') && 
+         (tokens[1] === 'image' || tokens[1] === 'logo') && 
+         (tokens[2] === 'upload' || tokens[2] === 'image')) ||
         (input.includes('features image url ') && input.includes('.jpg'))) {
       
       // Show the upload option regardless of whether we already have a URL
@@ -592,6 +604,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
 
     // Check if we should automatically show the image uploader
     if (tokens.length >= 3) {
+       console.log(true);
       const section = tokens[0];
       const property = tokens[1];
       const action = tokens[2];
@@ -600,6 +613,12 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       if (section === 'features' && 
           property === 'image' && 
           action === 'upload') {
+        showImageUploaderFor(section);
+      }
+      // If user has typed something like "header logo image"
+      if (section === 'header' && 
+          property === 'logo' && 
+          action === 'image') {
         showImageUploaderFor(section);
       }
     }
@@ -612,18 +631,28 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       // Check if we're in the features image upload context, regardless of what's in the input field
       const tokens = input.toLowerCase().trim().split(/\s+/);
       
-      // If the input starts with "features image upload" or contains a URL
-      if ((tokens.length >= 3 && 
-           tokens[0] === 'features' && 
-           tokens[1] === 'image' && 
-           tokens[2] === 'upload') ||
-          (input.includes('features image url') || input.includes('features image upload'))) {
+      // Handle logo upload
+      if (tokens.length >= 3 && 
+          tokens[0] === 'header' && 
+          tokens[1] === 'logo' && 
+          tokens[2] === 'image') {
         
-        // Show the image uploader
-        showImageUploaderFor('features');
+        showImageUploaderFor('header');
         return;
       }
-    }
+      
+      // Handle features image upload (existing code)
+      if ((tokens.length >= 3 && 
+        tokens[0] === 'features' && 
+        tokens[1] === 'image' && 
+        tokens[2] === 'upload') ||
+       (input.includes('features image url') || input.includes('features image upload'))) {
+     
+     // Show the image uploader
+     showImageUploaderFor('features');
+     return;
+   }
+ }
     
     // Get current tokens
     const tokens = input.trim().split(/\s+/);
@@ -991,9 +1020,9 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
           <ImageUploader 
             onImageSelect={(imageUrl) => {
               // Format the command with the image URL
-              const command = `${currentImageContext?.section} image upload ${imageUrl}`;
+              const command = currentImageContext?.section === "header" ? `${currentImageContext?.section} logo image ${imageUrl}` : `${currentImageContext?.section} image upload ${imageUrl}`;
+              console.log(command);
               
-              // Update the input
               setInput(command);
               
               // Close the uploader after the state updates
@@ -1009,7 +1038,6 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
               }, 100);
             }}
             onClose={() => {
-              // Simple close handler that just closes the uploader
               setShowImageUploader(false);
             }}
           />

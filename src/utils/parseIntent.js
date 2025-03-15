@@ -45,13 +45,21 @@ export function parseIntent(message) {
     }
   }
   
-  // Todo: Logo should also be an image
   if ((lowerMessage.includes('logo text') || 
       lowerMessage.includes('the logo text')) && !lowerMessage.includes('color')) {
     const regex = /(?:the )?logo text(?: to)? ["']?([^"']+)["']?/i;
     const match = message.match(regex);
     if (match && match[1]) {
       return { type: 'LogoText', value: match[1].trim() };
+    }
+  }
+
+  if ((lowerMessage.includes('logo image') || 
+      lowerMessage.includes('the logo image')) && !lowerMessage.includes('color')) {
+    const regex = /(?:the )?logo image(?: to)? ["']?([^"']+)["']?/i;
+    const match = message.match(regex);
+    if (match && match[1]) {
+      return { type: 'LogoImage', value: match[1].trim() };
     }
   }
   

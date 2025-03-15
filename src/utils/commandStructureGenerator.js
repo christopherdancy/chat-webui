@@ -39,9 +39,8 @@ export const generateCommandStructure = (websiteConfig) => {
         // TODO: Options for colors and fonts and icons
         case 'header':
             structure.elements[section] = ['logo', 'background'];
-            structure.properties[`${section}.logo`] = ['text'];
+            structure.properties[`${section}.logo`] = ['text', 'image'];
             structure.properties[`${section}.background`] = ['color'];
-            structure.properties[`${section}.menuItems`] = ['add', 'remove'];
             break;
             
         case 'hero':

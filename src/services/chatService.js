@@ -46,9 +46,14 @@ export async function processMessage(message, currentConfig) {
       break;
       
     case 'LogoText':
-      updatedConfig.header.logo = intent.value;
+      updatedConfig.header.logoText = intent.value;
       updatedConfig.header.title = intent.value;
       responseMessage = `The logo text is now "${intent.value}". How does it look?`;
+      break;
+
+    case 'LogoImage':
+      updatedConfig.header.logoImage = intent.value;
+      responseMessage = `The logo image is now "${intent.value}". How does it look?`;
       break;
     
     // Hero section

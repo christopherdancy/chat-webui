@@ -14,7 +14,9 @@ const basicTemplate = {
     title: "Modern Business Website",
     backgroundColor: "#4a90e2", // Uses global.primaryColor by default
     textColor: "#ffffff",
-    logo: "YourBrand",
+    logo: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+    logoText: "YourBrand",
+    logoImage: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
     menuItems: [
       { text: "Benefits", url: "#benefits" },
       { text: "Features", url: "#features" },
@@ -133,7 +135,10 @@ export function generateHTML(config, showGuides = false) {
     header: {
       ...config.header,
       backgroundColor: config.header.backgroundColor || config.global.primaryColor,
-      textColor: config.header.textColor || "#ffffff"
+      textColor: config.header.textColor || "#ffffff",
+      logo: config.header.logo || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+      logoText: config.header.logoText || "YourBrand",
+      logoImage: config.header.logoImage || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
     },
     hero: {
       ...config.hero,
@@ -337,6 +342,21 @@ export function generateHTML(config, showGuides = false) {
       color: ${processedConfig.header.textColor};
       font-weight: 600;
       font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+    
+    .logo-text {
+      color: ${processedConfig.header.textColor};
+      margin: 0;
     }
     
     .navbar-nav .nav-link {
@@ -678,7 +698,11 @@ export function generateHTML(config, showGuides = false) {
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
       ${wrapElementWithGuide('Logo', `
-        <a class="navbar-brand" href="#">${processedConfig.header.logo}</a>
+        <a class="navbar-brand" href="#">
+          ${processedConfig.header.logoImage ? 
+            `<img src="${processedConfig.header.logoImage}" alt="Logo" class="logo-image">` : ''}
+          <span class="logo-text">${processedConfig.header.logoText || processedConfig.header.logo}</span>
+        </a>
       `)}
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
