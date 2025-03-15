@@ -493,6 +493,15 @@ export function generateHTML(config, showGuides = false) {
       opacity: 0.8;
     }
     
+    .features .feature-image {
+      width: 100%;
+      height: auto;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
     .features .feature-item {
       display: flex;
       margin-bottom: 2rem;
@@ -765,7 +774,7 @@ export function generateHTML(config, showGuides = false) {
       <div class="row">
         <div class="col-lg-6 mb-4 mb-lg-0">
           ${wrapElementWithGuide('Image', `
-            <img src="${processedConfig.features.image}" alt="Features" class="img-fluid">
+            <img src="${processedConfig.features.image}" alt="Features" class="img-fluid feature-image">
           `)}
         </div>
         <div class="col-lg-6">
