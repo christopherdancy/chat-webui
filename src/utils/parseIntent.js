@@ -181,6 +181,18 @@ export function parseIntent(message) {
         itemName: itemName
       };
     }
+
+    // Match pattern like "benefits item1 icon color"
+    const iconColorRegex = /benefits (item\d+) icon color(?: to)? ["']?([^"']+)["']?/i;
+    const iconColorMatch = message.match(iconColorRegex);
+    if (iconColorMatch && iconColorMatch[1] && iconColorMatch[2]) {
+      const itemName = iconColorMatch[1].toLowerCase(); // e.g., "item1"
+      return {
+        type: 'BenefitItemIconColor',
+        value: iconColorMatch[2].trim(),
+        itemName: itemName
+      };
+    }
   }
   
   // Features section

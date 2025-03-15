@@ -150,19 +150,19 @@ export function generateHTML(config, showGuides = false) {
           ...config.benefits.items[0],
           title: config.benefits.items[0].title || "Premium Quality",
           icon: config.benefits.items[0].icon || "fas fa-check",
-          iconColor: config.global.primaryColor
+          iconColor: config.benefits.items[0].iconColor || config.global.primaryColor 
         },
         {
           ...config.benefits.items[1],
           title: config.benefits.items[1].title || "Innovative Approach",
           icon: config.benefits.items[1].icon || "fas fa-chart-line",
-          iconColor: config.global.primaryColor
+          iconColor: config.benefits.items[1].iconColor || config.global.primaryColor
         },
         {
           ...config.benefits.items[2],
           title: config.benefits.items[2].title || "Global Reach",
           icon: config.benefits.items[2].icon || "fas fa-globe",
-          iconColor: config.global.primaryColor
+          iconColor: config.benefits.items[2].iconColor || config.global.primaryColor
         }
       ]
     },
@@ -175,16 +175,19 @@ export function generateHTML(config, showGuides = false) {
         {
          ...config.features.items[0],
           title: config.features.items[0].title || "Customized Solutions",
+          icon: config.features.items[0].icon || "fas fa-cog",
           iconColor: config.global.primaryColor
         },
         {
           ...config.features.items[1],
           title: config.features.items[1].title || "Modern Technology",
+          icon: config.features.items[1].icon || "fas fa-code",
           iconColor: config.global.primaryColor
         },
         {
           ...config.features.items[2],
           title: config.features.items[2].title || "Dedicated Support",
+          icon: config.features.items[2].icon || "fas fa-smile",
           iconColor: config.global.primaryColor
         }
       ]
@@ -447,11 +450,9 @@ export function generateHTML(config, showGuides = false) {
       margin-bottom: 1.5rem;
       margin-left: auto;
       margin-right: auto;
-      background-color: ${processedConfig.global.primaryColor}20;
     }
     
     .benefits .icon i {
-      color: ${processedConfig.global.primaryColor};
       font-size: 1.5rem;
     }
     
@@ -728,9 +729,11 @@ export function generateHTML(config, showGuides = false) {
           <div class="col-md-4 mb-4">
             ${wrapElementWithGuide(`Item ${index + 1}`, `
               <div class="feature-card shadow-sm">
-                <div class="icon">
-                  <i class="${item.icon}"></i>
-                </div>
+                ${wrapElementWithGuide(`Icon`, `
+                  <div class="icon" style="background-color: ${item.iconColor}20; color: ${item.iconColor};">
+                    <i class="${item.icon}"></i>
+                  </div>
+                `)}
                 ${wrapElementWithGuide(`Title`, `
                   <h4>${item.title}</h4>
                 `)}
@@ -769,9 +772,6 @@ export function generateHTML(config, showGuides = false) {
           ${processedConfig.features.items.map((item, index) => `
             ${wrapElementWithGuide(`Item ${index + 1}`, `
               <div class="feature-item">
-                <div class="feature-icon">
-                  <i class="${item.icon}"></i>
-                </div>
                 <div class="feature-content">
                   ${wrapElementWithGuide(`Title`, `
                     <h4>${item.title}</h4>

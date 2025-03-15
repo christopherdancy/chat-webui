@@ -144,7 +144,21 @@ export async function processMessage(message, currentConfig) {
         return { message: responseMessage, updatedConfig: null };
       }
       break;
-    
+
+    case 'BenefitItemIconColor':
+      const benefitIconColorIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
+      if (updatedConfig.benefits && 
+          updatedConfig.benefits.items && 
+          benefitIconColorIndex >= 0 && 
+          benefitIconColorIndex < updatedConfig.benefits.items.length) {
+        updatedConfig.benefits.items[benefitIconColorIndex].iconColor = intent.value;
+        responseMessage = `Updated the icon color for benefits ${intent.itemName} to ${intent.value}.`;
+      } else {
+        responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
+      }
+      break;
     // Features section
     // TODO: Image should the upload the image?
     // TODO: Image with sizing and alignment

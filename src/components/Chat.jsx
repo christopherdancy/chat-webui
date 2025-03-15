@@ -200,7 +200,16 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     
     if (item) {
       // For item properties like "benefits item1 iconColor"
-      command = `${section} ${item} ${property} ${colorValue}`;
+      // Check if we're dealing with a nested property like "icon color"
+      const tokens = currentInput.trim().split(/\s+/);
+      
+      if (tokens.length >= 4 && tokens[2] === 'icon' && tokens[3] === 'color') {
+        // For "benefits item1 icon color"
+        command = `${section} ${item} icon color ${colorValue}`;
+      } else {
+        // For other item properties
+        command = `${section} ${item} ${property} ${colorValue}`;
+      }
     } else {
       // For section properties like "hero background color"
       const tokens = currentInput.trim().split(/\s+/);
@@ -273,18 +282,25 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
         setShowColorHint(false);
       } else if ((section === 'benefits' || section === 'features') && 
                 item.match(/^item[1-3]$/) && 
-                property === 'iconcolor') {
-        setShowColorHint(true);
-        setShowIconHint(false);
-      } else if (property === 'color' || 
-                property === 'backgroundcolor' || 
-                property === 'textcolor' || 
-                property === 'buttoncolor') {
+                property === 'icon' &&
+                subproperty === 'color') {
         setShowColorHint(true);
         setShowIconHint(false);
       } else {
         setShowIconHint(false);
         setShowColorHint(false);
+      }
+    } else if (tokens.length >= 3) {
+      // Check for color properties
+      const lastToken = tokens[tokens.length - 1].toLowerCase();
+      
+      if (lastToken === 'color') {
+        // For section color properties like "hero background color"
+        setShowColorHint(true);
+        setShowIconHint(false);
+      } else {
+        setShowColorHint(false);
+        setShowIconHint(false);
       }
     } else {
       setShowIconHint(false);
@@ -532,6 +548,21 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     if (option === 'color') {
       const section = tokens[0];
       
+      // For nested properties like "icon color"
+      if (tokens.length >= 3 && tokens[2] === 'icon') {
+        const item = tokens[1];
+        
+        // Store the current input to preserve the structure
+        setCurrentColorContext({ 
+          section, 
+          item, 
+          property: 'icon color',
+          currentInput: `${section} ${item} icon color` // Explicitly set the structure
+        });
+        setShowColorPicker(true);
+        return;
+      }
+      
       // For compound properties like "background color"
       if (tokens.length >= 2) {
         const previousToken = tokens[1].toLowerCase();
@@ -550,29 +581,25 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       return;
     }
     
-    // For other specific color properties
-    if (option === 'backgroundColor' || 
-        option === 'textColor' || 
-        option === 'buttonColor' || 
-        option === 'iconColor') {
-      
-      const section = tokens[0];
-      
-      // For item properties like "benefits item1 iconColor"
-      if (tokens.length >= 2 && tokens[1].match(/^item[1-3]$/)) {
-        const item = tokens[1];
-        showColorPickerFor(section, item, option);
-        return;
-      }
-      
-      // For section properties
-      showColorPickerFor(section, null, option);
-      return;
-    }
-    
     // Special handling for [Enter your value] when in color context
     if (option === '[Enter your value]') {
       const section = tokens[0];
+      
+      // Check for icon color context
+      if (tokens.length >= 4 && 
+          tokens[1].match(/^item[1-3]$/) && 
+          tokens[2] === 'icon' && 
+          tokens[3] === 'color') {
+        
+        setCurrentColorContext({ 
+          section, 
+          item: tokens[1], 
+          property: 'icon color',
+          currentInput: input
+        });
+        setShowColorPicker(true);
+        return;
+      }
       
       // Check for compound properties like "background color"
       if (tokens.length >= 3 && 
@@ -719,6 +746,38 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     }
   };
 
+  // Function to get more explicit option text
+  const getOptionText = (option, currentLevel) => {
+    // For value placeholders, make them more explicit
+    if (option === '[Enter your value]') {
+      // Check current input to determine context
+      const tokens = input.trim().split(/\s+/);
+      
+      // For icon image context
+      if (tokens.length >= 4 && 
+          tokens[1].match(/^item[1-3]$/) && 
+          tokens[2] === 'icon' && 
+          tokens[3] === 'image') {
+        return '[Click to select an icon]';
+      }
+      
+      // For color contexts
+      if (tokens.length >= 3 && tokens[tokens.length - 1] === 'color') {
+        return '[Click to select a color]';
+      }
+      
+      // For icon color context
+      if (tokens.length >= 4 && 
+          tokens[1].match(/^item[1-3]$/) && 
+          tokens[2] === 'icon' && 
+          tokens[3] === 'color') {
+        return '[Click to select a color]';
+      }
+    }
+    
+    return option;
+  };
+
   return (
     <div className="chat-container">
       <div className="chat-messages">
@@ -745,18 +804,18 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
               className="guide-option clickable"
               onClick={() => handleOptionClick(option)}
             >
-              {option}
+              {getOptionText(option, currentLevel)}
             </div>
           ))}
         </div>
         {showIconHint && (
           <div className="guide-hint icon-hint">
-            <i className="fas fa-info-circle"></i> Click on "[Enter your value]" to open the icon picker
+            <i className="fas fa-info-circle"></i> Click on "[Click to select an icon]" to open the icon picker
           </div>
         )}
         {showColorHint && (
           <div className="guide-hint color-hint">
-            <i className="fas fa-info-circle"></i> Click on "[Enter your value]" to open the color picker
+            <i className="fas fa-info-circle"></i> Click on "[Click to select a color]" to open the color picker
           </div>
         )}
         {(currentLevel === 'property' || currentLevel === 'subsectionProperty') && 
