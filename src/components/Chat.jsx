@@ -5,6 +5,7 @@ import { processMessage } from '../services/chatService';
 import { generateCommandStructure } from '../utils/commandStructureGenerator';
 import IconPicker from './IconPicker';
 import ColorPicker from './ColorPicker';
+import ImageUploader from './ImageUploader';
 
 const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const [messages, setMessages] = useState([
@@ -21,10 +22,13 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const inputRef = useRef(null);
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showImageUploader, setShowImageUploader] = useState(false);
   const [currentIconContext, setCurrentIconContext] = useState(null);
   const [currentColorContext, setCurrentColorContext] = useState(null);
   const [showIconHint, setShowIconHint] = useState(false);
   const [showColorHint, setShowColorHint] = useState(false);
+  const [showImageUploadHint, setShowImageUploadHint] = useState(false);
+  const [currentImageContext, setCurrentImageContext] = useState(null);
 
   // Generate command structure from website config - memoize this to prevent recreation on every render
   const commandStructure = React.useMemo(() => generateCommandStructure(websiteConfig), [websiteConfig]);
@@ -249,6 +253,12 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     setShowIconPicker(true);
   };
 
+  // Show image uploader for a specific context
+  const showImageUploaderFor = (section) => {
+    setCurrentImageContext({ section });
+    setShowImageUploader(true);
+  };
+
   // Update validation state and available options based on current input
   useEffect(() => {
     // Get validation results without setting state directly in the validation function
@@ -262,10 +272,53 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       setCurrentLevel('section');
       setShowIconHint(false);
       setShowColorHint(false);
+      setShowImageUploadHint(false);
       return;
     }
 
     const tokens = input.toLowerCase().trim().split(/\s+/);
+    
+    // Check if we're in the "features image upload" context or if we already have a URL
+    if ((tokens.length >= 3 && 
+         tokens[0] === 'features' && 
+         tokens[1] === 'image' && 
+         (tokens[2] === 'upload' || tokens[2] === 'url')) ||
+        (input.includes('features image url ') && input.includes('.jpg'))) {
+      
+      // Show the upload option regardless of whether we already have a URL
+      setCurrentOptions(["[Click to upload an image]"]);
+      setCurrentLevel('value');
+      setShowImageUploadHint(true);
+      return;
+    }
+    
+    // For "features image" context, make sure "upload" is in the options
+    if (tokens.length === 2 && 
+        tokens[0] === 'features' && 
+        tokens[1] === 'image') {
+      
+      // Make sure "upload" is one of the options
+      const options = ['upload'];
+      setCurrentOptions(options);
+      setCurrentLevel('property');
+      return;
+    }
+    
+    // Check if we should show the image upload hint
+    if (tokens.length === 3) {
+      const section = tokens[0];
+      const property = tokens[1];
+      const action = tokens[2];
+      
+      if (section === 'features' && 
+          property === 'image' && 
+          action === 'upload') {
+        setShowImageUploadHint(true);
+        setShowIconHint(false);
+        setShowColorHint(false);
+        return;
+      }
+    }
     
     // Check if we should show the icon hint
     if (tokens.length === 4) {
@@ -280,15 +333,18 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
           subproperty === 'image') {
         setShowIconHint(true);
         setShowColorHint(false);
+        setShowImageUploadHint(false);
       } else if ((section === 'benefits' || section === 'features') && 
                 item.match(/^item[1-3]$/) && 
                 property === 'icon' &&
                 subproperty === 'color') {
         setShowColorHint(true);
         setShowIconHint(false);
+        setShowImageUploadHint(false);
       } else {
         setShowIconHint(false);
         setShowColorHint(false);
+        setShowImageUploadHint(false);
       }
     } else if (tokens.length >= 3) {
       // Check for color properties
@@ -298,13 +354,24 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
         // For section color properties like "hero background color"
         setShowColorHint(true);
         setShowIconHint(false);
+        setShowImageUploadHint(false);
+      } else if (tokens.length === 3 && 
+                 tokens[0] === 'features' && 
+                 tokens[1] === 'image' && 
+                 tokens[2] === 'upload') {
+        // For "features image upload"
+        setShowImageUploadHint(true);
+        setShowColorHint(false);
+        setShowIconHint(false);
       } else {
         setShowColorHint(false);
         setShowIconHint(false);
+        setShowImageUploadHint(false);
       }
     } else {
       setShowIconHint(false);
       setShowColorHint(false);
+      setShowImageUploadHint(false);
     }
     
     // Determine current level and set appropriate options
@@ -522,10 +589,42 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
         }
       }
     }
+
+    // Check if we should automatically show the image uploader
+    if (tokens.length >= 3) {
+      const section = tokens[0];
+      const property = tokens[1];
+      const action = tokens[2];
+      
+      // If user has typed something like "features image upload"
+      if (section === 'features' && 
+          property === 'image' && 
+          action === 'upload') {
+        showImageUploaderFor(section);
+      }
+    }
   }, [input, commandStructure, validateInput]);
 
   // Handle option click
   const handleOptionClick = (option) => {
+    // Special handling for the upload image option
+    if (option === "[Click to upload an image]") {
+      // Check if we're in the features image upload context, regardless of what's in the input field
+      const tokens = input.toLowerCase().trim().split(/\s+/);
+      
+      // If the input starts with "features image upload" or contains a URL
+      if ((tokens.length >= 3 && 
+           tokens[0] === 'features' && 
+           tokens[1] === 'image' && 
+           tokens[2] === 'upload') ||
+          (input.includes('features image url') || input.includes('features image upload'))) {
+        
+        // Show the image uploader
+        showImageUploaderFor('features');
+        return;
+      }
+    }
+    
     // Get current tokens
     const tokens = input.trim().split(/\s+/);
     
@@ -540,6 +639,14 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
           item.match(/^item[1-3]$/) && 
           property === 'icon') {
         showIconPickerFor(section, item);
+        return;
+      }
+
+      // For image properties
+      if (section === 'features' && 
+          item === 'image' && 
+          property === 'upload') {
+        showImageUploaderFor(section);
         return;
       }
     }
@@ -635,6 +742,17 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       // If not a special case, just focus the input
       inputRef.current?.focus();
       return;
+    }
+    
+    // Special handling for image uploads
+    if (option === 'upload' && tokens.length >= 2) {
+      const section = tokens[0];
+      const property = tokens[1];
+      
+      if (section === 'features' && property === 'image') {
+        showImageUploaderFor(section);
+        return;
+      }
     }
     
     // Determine how to add the option based on the current level
@@ -773,7 +891,15 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
           tokens[3] === 'color') {
         return '[Click to select a color]';
       }
+
+      // For image upload context
+      if (tokens.length >= 3 && 
+          tokens[1] === 'image' && 
+          tokens[2] === 'upload') {
+        return '[Click to upload an image]';
+      }
     }
+
     
     return option;
   };
@@ -818,8 +944,13 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
             <i className="fas fa-info-circle"></i> Click on "[Click to select a color]" to open the color picker
           </div>
         )}
+        {showImageUploadHint && (
+          <div className="guide-hint image-upload-hint">
+            <i className="fas fa-info-circle"></i> Click on "[Click to upload an image]" to open the image uploader
+          </div>
+        )}
         {(currentLevel === 'property' || currentLevel === 'subsectionProperty') && 
-         !showIconHint && !showColorHint && (
+         !showIconHint && !showColorHint && !showImageUploadHint && (
           <div className="guide-hint">
             After selecting a property, enter the value you want to set
           </div>
@@ -843,6 +974,45 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
             </button>
           </div>
           <IconPicker onSelectIcon={handleIconSelect} />
+        </div>
+      )}
+      
+      {showImageUploader && (
+        <div className="image-uploader-container">
+          <div className="image-uploader-header">
+            <h4>Upload Image for {currentImageContext?.section}</h4>
+            <button 
+              className="close-image-uploader"
+              onClick={() => setShowImageUploader(false)}
+            >
+              &times;
+            </button>
+          </div>
+          <ImageUploader 
+            onImageSelect={(imageUrl) => {
+              // Format the command with the image URL
+              const command = `${currentImageContext?.section} image upload ${imageUrl}`;
+              
+              // Update the input
+              setInput(command);
+              
+              // Close the uploader after the state updates
+              setTimeout(() => {
+                setShowImageUploader(false);
+                
+                // Focus the input field and position cursor at the end
+                if (inputRef.current) {
+                  inputRef.current.focus();
+                  const length = command.length;
+                  inputRef.current.setSelectionRange(length, length);
+                }
+              }, 100);
+            }}
+            onClose={() => {
+              // Simple close handler that just closes the uploader
+              setShowImageUploader(false);
+            }}
+          />
         </div>
       )}
       
@@ -882,7 +1052,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
               e.target.setSelectionRange(length, length);
             }}
           />
-        </div>
+          </div>
         <button 
           type="submit" 
           className={`chat-submit-button ${!isValidCommand && input.trim() ? 'invalid' : ''}`} 

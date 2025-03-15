@@ -80,10 +80,11 @@ export const generateCommandStructure = (websiteConfig) => {
           break;
           
         case 'features':
-          structure.elements[section] = ['title', 'subtitle', 'background'];
+          structure.elements[section] = ['title', 'subtitle', 'background', 'image'];
           structure.properties[`${section}.title`] = ['text'];
           structure.properties[`${section}.subtitle`] = ['text'];
           structure.properties[`${section}.background`] = ['color'];
+          structure.properties[`${section}.image`] = ['upload'];
           
           // Define subsections (items)
           structure.subsections[section] = ['item1', 'item2', 'item3'];

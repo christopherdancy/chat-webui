@@ -159,9 +159,8 @@ export async function processMessage(message, currentConfig) {
         return { message: responseMessage, updatedConfig: null };
       }
       break;
+
     // Features section
-    // TODO: Image should the upload the image?
-    // TODO: Image with sizing and alignment
     case 'FeaturesBackground':
       updatedConfig.features.backgroundColor = intent.value;
       responseMessage = `I've updated the features background to ${intent.value}. How does it look?`;
