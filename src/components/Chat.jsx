@@ -4,6 +4,7 @@ import ChatMessage from './ChatMessage';
 import { processMessage } from '../services/chatService';
 import { generateCommandStructure } from '../utils/commandStructureGenerator';
 import IconPicker from './IconPicker';
+import ColorPicker from './ColorPicker';
 
 const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const [messages, setMessages] = useState([
@@ -19,8 +20,11 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const [showIconPicker, setShowIconPicker] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const [currentIconContext, setCurrentIconContext] = useState(null);
+  const [currentColorContext, setCurrentColorContext] = useState(null);
   const [showIconHint, setShowIconHint] = useState(false);
+  const [showColorHint, setShowColorHint] = useState(false);
 
   // Generate command structure from website config - memoize this to prevent recreation on every render
   const commandStructure = React.useMemo(() => generateCommandStructure(websiteConfig), [websiteConfig]);
@@ -149,6 +153,93 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     return { error, isValid };
   }, [commandStructure]);
 
+  // Handle icon selection
+  const handleIconSelect = (iconClass) => {
+    if (!currentIconContext) return;
+    
+    const { section, item } = currentIconContext;
+    // Format the command correctly: "benefits item1 icon image fas fa-home"
+    const command = `${section} ${item} icon image ${iconClass}`;
+    
+    // Set the command in the input field
+    setInput(command);
+    
+    // Close the icon picker
+    setShowIconPicker(false);
+    
+    // Focus the input field and position cursor at the end
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        const length = command.length;
+        inputRef.current.setSelectionRange(length, length);
+      }
+    }, 0);
+  };
+
+  // Show color picker for a specific context
+  const showColorPickerFor = (section, item, property) => {
+    // Store the full context including the current input
+    setCurrentColorContext({ 
+      section, 
+      item, 
+      property,
+      currentInput: input // Store the current input to preserve structure
+    });
+    setShowColorPicker(true);
+  };
+
+  // Handle color selection
+  const handleColorSelect = (colorValue) => {
+    if (!currentColorContext) return;
+    
+    const { section, item, property, currentInput } = currentColorContext;
+    
+    // Format the command based on context
+    let command = '';
+    
+    if (item) {
+      // For item properties like "benefits item1 iconColor"
+      command = `${section} ${item} ${property} ${colorValue}`;
+    } else {
+      // For section properties like "hero background color"
+      const tokens = currentInput.trim().split(/\s+/);
+      
+      // Check if we're dealing with a compound property like "background color"
+      if (tokens.length >= 2 && tokens[1].toLowerCase() === 'background') {
+        command = `${section} background color ${colorValue}`;
+      } else if (tokens.length >= 2 && tokens[1].toLowerCase() === 'text') {
+        command = `${section} text color ${colorValue}`;
+      } else if (tokens.length >= 2 && tokens[1].toLowerCase() === 'button') {
+        command = `${section} button color ${colorValue}`;
+      } else {
+        // For simple properties like "color"
+        command = `${section} ${property} ${colorValue}`;
+      }
+    }
+    
+    // Set the command in the input field
+    setInput(command);
+    
+    // Close the color picker
+    setShowColorPicker(false);
+    
+    // Focus the input field and position cursor at the end
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        const length = command.length;
+        inputRef.current.setSelectionRange(length, length);
+      }
+    }, 0);
+  };
+
+  // Show icon picker for a specific context
+  const showIconPickerFor = (section, item) => {
+    setCurrentIconContext({ section, item });
+    setShowIconPicker(true);
+  };
+
   // Update validation state and available options based on current input
   useEffect(() => {
     // Get validation results without setting state directly in the validation function
@@ -161,6 +252,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       setCurrentOptions(commandStructure.sections);
       setCurrentLevel('section');
       setShowIconHint(false);
+      setShowColorHint(false);
       return;
     }
 
@@ -178,11 +270,25 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
           property === 'icon' &&
           subproperty === 'image') {
         setShowIconHint(true);
+        setShowColorHint(false);
+      } else if ((section === 'benefits' || section === 'features') && 
+                item.match(/^item[1-3]$/) && 
+                property === 'iconcolor') {
+        setShowColorHint(true);
+        setShowIconHint(false);
+      } else if (property === 'color' || 
+                property === 'backgroundcolor' || 
+                property === 'textcolor' || 
+                property === 'buttoncolor') {
+        setShowColorHint(true);
+        setShowIconHint(false);
       } else {
         setShowIconHint(false);
+        setShowColorHint(false);
       }
     } else {
       setShowIconHint(false);
+      setShowColorHint(false);
     }
     
     // Determine current level and set appropriate options
@@ -402,36 +508,6 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     }
   }, [input, commandStructure, validateInput]);
 
-  // Handle icon selection
-  const handleIconSelect = (iconClass) => {
-    if (!currentIconContext) return;
-    
-    const { section, item } = currentIconContext;
-    // Format the command correctly: "benefits item1 icon image fas fa-home"
-    const command = `${section} ${item} icon image ${iconClass}`;
-    
-    // Set the command in the input field
-    setInput(command);
-    
-    // Close the icon picker
-    setShowIconPicker(false);
-    
-    // Focus the input field and position cursor at the end
-    setTimeout(() => {
-      if (inputRef.current) {
-        inputRef.current.focus();
-        const length = command.length;
-        inputRef.current.setSelectionRange(length, length);
-      }
-    }, 0);
-  };
-
-  // Show icon picker for a specific context
-  const showIconPickerFor = (section, item) => {
-    setCurrentIconContext({ section, item });
-    setShowIconPicker(true);
-  };
-
   // Handle option click
   const handleOptionClick = (option) => {
     // Get current tokens
@@ -452,25 +528,84 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       }
     }
     
-    // Special handling for [Enter your value] when in icon context
-    if (option === '[Enter your value]' && tokens.length >= 4) {
+    // Special handling for color properties
+    if (option === 'color') {
       const section = tokens[0];
-      const item = tokens[1];
-      const property = tokens[2];
-      const subproperty = tokens[3];
       
-      // If user has clicked [Enter your value] for an icon image property
-      if ((section === 'benefits' || section === 'features') && 
-          item.match(/^item[1-3]$/) && 
-          property === 'icon' &&
-          subproperty === 'image') {
-        showIconPickerFor(section, item);
-        return;
+      // For compound properties like "background color"
+      if (tokens.length >= 2) {
+        const previousToken = tokens[1].toLowerCase();
+        
+        if (previousToken === 'background' || 
+            previousToken === 'text' || 
+            previousToken === 'button') {
+          // For "hero background color", "hero text color", etc.
+          showColorPickerFor(section, null, option);
+          return;
+        }
       }
+      
+      // For simple color properties
+      showColorPickerFor(section, null, option);
+      return;
     }
     
-    // If the option is a placeholder for other contexts, just focus the input field
+    // For other specific color properties
+    if (option === 'backgroundColor' || 
+        option === 'textColor' || 
+        option === 'buttonColor' || 
+        option === 'iconColor') {
+      
+      const section = tokens[0];
+      
+      // For item properties like "benefits item1 iconColor"
+      if (tokens.length >= 2 && tokens[1].match(/^item[1-3]$/)) {
+        const item = tokens[1];
+        showColorPickerFor(section, item, option);
+        return;
+      }
+      
+      // For section properties
+      showColorPickerFor(section, null, option);
+      return;
+    }
+    
+    // Special handling for [Enter your value] when in color context
     if (option === '[Enter your value]') {
+      const section = tokens[0];
+      
+      // Check for compound properties like "background color"
+      if (tokens.length >= 3 && 
+          (tokens[1] === 'background' || tokens[1] === 'text' || tokens[1] === 'button') && 
+          tokens[2] === 'color') {
+        showColorPickerFor(section, null, 'color');
+        return;
+      }
+      
+      // Check for simple color property
+      if (tokens.length >= 2 && tokens[1] === 'color') {
+        showColorPickerFor(section, null, 'color');
+        return;
+      }
+      
+      // Check for item color properties
+      if (tokens.length >= 3 && 
+          tokens[1].match(/^item[1-3]$/) && 
+          (tokens[2] === 'iconColor' || tokens[2] === 'color')) {
+        showColorPickerFor(section, tokens[1], tokens[2]);
+        return;
+      }
+      
+      // For icon image properties
+      if (tokens.length >= 4 && 
+          tokens[1].match(/^item[1-3]$/) && 
+          tokens[2] === 'icon' && 
+          tokens[3] === 'image') {
+        showIconPickerFor(section, tokens[1]);
+        return;
+      }
+      
+      // If not a special case, just focus the input
       inputRef.current?.focus();
       return;
     }
@@ -619,7 +754,13 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
             <i className="fas fa-info-circle"></i> Click on "[Enter your value]" to open the icon picker
           </div>
         )}
-        {(currentLevel === 'property' || currentLevel === 'subsectionProperty') && !showIconHint && (
+        {showColorHint && (
+          <div className="guide-hint color-hint">
+            <i className="fas fa-info-circle"></i> Click on "[Enter your value]" to open the color picker
+          </div>
+        )}
+        {(currentLevel === 'property' || currentLevel === 'subsectionProperty') && 
+         !showIconHint && !showColorHint && (
           <div className="guide-hint">
             After selecting a property, enter the value you want to set
           </div>
@@ -643,6 +784,26 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
             </button>
           </div>
           <IconPicker onSelectIcon={handleIconSelect} />
+        </div>
+      )}
+      
+      {showColorPicker && (
+        <div className="color-picker-container">
+          <div className="color-picker-header">
+            <h4>
+              {currentColorContext?.item 
+                ? `Select a color for ${currentColorContext?.section} ${currentColorContext?.item} ${currentColorContext?.property}`
+                : `Select a color for ${currentColorContext?.section} ${currentColorContext?.property}`
+              }
+            </h4>
+            <button 
+              className="close-color-picker"
+              onClick={() => setShowColorPicker(false)}
+            >
+              &times;
+            </button>
+          </div>
+          <ColorPicker onSelectColor={handleColorSelect} />
         </div>
       )}
       
