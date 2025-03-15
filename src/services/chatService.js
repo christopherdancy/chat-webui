@@ -72,7 +72,6 @@ export async function processMessage(message, currentConfig) {
       responseMessage = `The hero button text now says "${intent.value}". What else would you like to modify?`;
       break;
     
-    // TODO: Hover state
     case 'HeroButtonColor':
       updatedConfig.hero.buttonColor = intent.value;
       responseMessage = `I've d the hero button color to ${intent.value}. Does that work for you?`;
@@ -101,29 +100,48 @@ export async function processMessage(message, currentConfig) {
       break;
 
     case 'BenefitItemTitle':
-      // Extract the item number from itemName (e.g., "item1" -> 0)
-      const benefitItemNumber = parseInt(intent.itemName.replace('item', '')) - 1;
+      // Extract item number from itemName (e.g., "item1" -> 0)
+      const benefitItemIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
       if (updatedConfig.benefits && 
           updatedConfig.benefits.items && 
-          updatedConfig.benefits.items[benefitItemNumber]) {
-        updatedConfig.benefits.items[benefitItemNumber].title = intent.value;
-        return {
-          message: `Updated benefit ${intent.itemName} title to "${intent.value}"`,
-          updatedConfig
-        };
+          benefitItemIndex >= 0 && 
+          benefitItemIndex < updatedConfig.benefits.items.length) {
+        updatedConfig.benefits.items[benefitItemIndex].title = intent.value;
+        responseMessage = `Updated the title for benefits ${intent.itemName} to "${intent.value}".`;
+      } else {
+        responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
       }
       break;
       
     case 'BenefitItemDescription':
-      const benefitItemDescNumber = parseInt(intent.itemName.replace('item', '')) - 1;
+      const benefitDescIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
       if (updatedConfig.benefits && 
           updatedConfig.benefits.items && 
-          updatedConfig.benefits.items[benefitItemDescNumber]) {
-        updatedConfig.benefits.items[benefitItemDescNumber].description = intent.value;
-        return {
-          message: `Updated benefit ${intent.itemName} description to "${intent.value}"`,
-          updatedConfig
-        };
+          benefitDescIndex >= 0 && 
+          benefitDescIndex < updatedConfig.benefits.items.length) {
+        updatedConfig.benefits.items[benefitDescIndex].description = intent.value;
+        responseMessage = `Updated the description for benefits ${intent.itemName} to "${intent.value}".`;
+      } else {
+        responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
+      }
+      break;
+
+    case 'BenefitItemIcon':
+      const benefitIconIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
+      if (updatedConfig.benefits && 
+          updatedConfig.benefits.items && 
+          benefitIconIndex >= 0 && 
+          benefitIconIndex < updatedConfig.benefits.items.length) {
+        updatedConfig.benefits.items[benefitIconIndex].icon = intent.value;
+        responseMessage = `Updated the icon for benefits ${intent.itemName} to ${intent.value}.`;
+      } else {
+        responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
       }
       break;
     
@@ -151,31 +169,50 @@ export async function processMessage(message, currentConfig) {
       break;
     
     case 'FeatureItemTitle':
-      const featureItemNumber = parseInt(intent.itemName.replace('item', '')) - 1;
+      const featureItemIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
       if (updatedConfig.features && 
           updatedConfig.features.items && 
-          updatedConfig.features.items[featureItemNumber]) {
-        updatedConfig.features.items[featureItemNumber].title = intent.value;
-        return {
-          message: `Updated feature ${intent.itemName} title to "${intent.value}"`,
-          updatedConfig
-        };
+          featureItemIndex >= 0 && 
+          featureItemIndex < updatedConfig.features.items.length) {
+        updatedConfig.features.items[featureItemIndex].title = intent.value;
+        responseMessage = `Updated the title for features ${intent.itemName} to "${intent.value}".`;
+      } else {
+        responseMessage = `Couldn't find features ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
       }
       break;
       
     case 'FeatureItemDescription':
-      const featureItemDescNumber = parseInt(intent.itemName.replace('item', '')) - 1;
+      const featureDescIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
       if (updatedConfig.features && 
           updatedConfig.features.items && 
-          updatedConfig.features.items[featureItemDescNumber]) {
-        updatedConfig.features.items[featureItemDescNumber].description = intent.value;
-        return {
-          message: `Updated feature ${intent.itemName} description to "${intent.value}"`,
-          updatedConfig
-        };
+          featureDescIndex >= 0 && 
+          featureDescIndex < updatedConfig.features.items.length) {
+        updatedConfig.features.items[featureDescIndex].description = intent.value;
+        responseMessage = `Updated the description for features ${intent.itemName} to "${intent.value}".`;
+      } else {
+        responseMessage = `Couldn't find features ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
       }
       break;
       
+    case 'FeatureItemIcon':
+      const featureIconIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
+      if (updatedConfig.features && 
+          updatedConfig.features.items && 
+          featureIconIndex >= 0 && 
+          featureIconIndex < updatedConfig.features.items.length) {
+        updatedConfig.features.items[featureIconIndex].icon = intent.value;
+        responseMessage = `Updated the icon for features ${intent.itemName} to ${intent.value}.`;
+      } else {
+        responseMessage = `Couldn't find features ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
+      }
+      break;
+    
     // Call to Action section
     case 'CtaBackground':
       updatedConfig.cta.backgroundColor = intent.value;

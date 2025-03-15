@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ChatMessage from './ChatMessage';
 import { processMessage } from '../services/chatService';
 import { generateCommandStructure } from '../utils/commandStructureGenerator';
+import IconPicker from './IconPicker';
 
 const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const [messages, setMessages] = useState([
@@ -17,6 +18,9 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const [isValidCommand, setIsValidCommand] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const [showIconPicker, setShowIconPicker] = useState(false);
+  const [currentIconContext, setCurrentIconContext] = useState(null);
+  const [showIconHint, setShowIconHint] = useState(false);
 
   // Generate command structure from website config - memoize this to prevent recreation on every render
   const commandStructure = React.useMemo(() => generateCommandStructure(websiteConfig), [websiteConfig]);
@@ -156,10 +160,30 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     if (!input.trim()) {
       setCurrentOptions(commandStructure.sections);
       setCurrentLevel('section');
+      setShowIconHint(false);
       return;
     }
 
     const tokens = input.toLowerCase().trim().split(/\s+/);
+    
+    // Check if we should show the icon hint
+    if (tokens.length === 4) {
+      const section = tokens[0];
+      const item = tokens[1];
+      const property = tokens[2];
+      const subproperty = tokens[3];
+      
+      if ((section === 'benefits' || section === 'features') && 
+          item.match(/^item[1-3]$/) && 
+          property === 'icon' &&
+          subproperty === 'image') {
+        setShowIconHint(true);
+      } else {
+        setShowIconHint(false);
+      }
+    } else {
+      setShowIconHint(false);
+    }
     
     // Determine current level and set appropriate options
     if (tokens.length === 1) {
@@ -358,16 +382,95 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       setCurrentOptions(["[Enter your value]"]);
       setCurrentLevel('value');
     }
+
+    // Check if we should automatically show the icon picker
+    if (tokens.length >= 3) {
+      const section = tokens[0];
+      const item = tokens[1];
+      const property = tokens[2];
+      
+      // If user has typed something like "benefits item1 icon" or "features item1 icon"
+      if ((section === 'benefits' || section === 'features') && 
+          item.match(/^item[1-3]$/) && 
+          property === 'icon image') {
+        
+        // If the next token is not "image", show the icon picker
+        if (true) {
+          showIconPickerFor(section, item);
+        }
+      }
+    }
   }, [input, commandStructure, validateInput]);
+
+  // Handle icon selection
+  const handleIconSelect = (iconClass) => {
+    if (!currentIconContext) return;
+    
+    const { section, item } = currentIconContext;
+    // Format the command correctly: "benefits item1 icon image fas fa-home"
+    const command = `${section} ${item} icon image ${iconClass}`;
+    
+    // Set the command in the input field
+    setInput(command);
+    
+    // Close the icon picker
+    setShowIconPicker(false);
+    
+    // Focus the input field and position cursor at the end
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        const length = command.length;
+        inputRef.current.setSelectionRange(length, length);
+      }
+    }, 0);
+  };
+
+  // Show icon picker for a specific context
+  const showIconPickerFor = (section, item) => {
+    setCurrentIconContext({ section, item });
+    setShowIconPicker(true);
+  };
 
   // Handle option click
   const handleOptionClick = (option) => {
     // Get current tokens
     const tokens = input.trim().split(/\s+/);
     
-    // If the option is a placeholder, don't add it
+    // Special handling for icon properties
+    if (option === 'image' && tokens.length >= 3) {
+      const section = tokens[0];
+      const item = tokens[1];
+      const property = tokens[2];
+      
+      // Check if we're in an icon property context
+      if ((section === 'benefits' || section === 'features') && 
+          item.match(/^item[1-3]$/) && 
+          property === 'icon') {
+        showIconPickerFor(section, item);
+        return;
+      }
+    }
+    
+    // Special handling for [Enter your value] when in icon context
+    if (option === '[Enter your value]' && tokens.length >= 4) {
+      const section = tokens[0];
+      const item = tokens[1];
+      const property = tokens[2];
+      const subproperty = tokens[3];
+      
+      // If user has clicked [Enter your value] for an icon image property
+      if ((section === 'benefits' || section === 'features') && 
+          item.match(/^item[1-3]$/) && 
+          property === 'icon' &&
+          subproperty === 'image') {
+        showIconPickerFor(section, item);
+        return;
+      }
+    }
+    
+    // If the option is a placeholder for other contexts, just focus the input field
     if (option === '[Enter your value]') {
-      // Focus the input field for the user to type the value
       inputRef.current?.focus();
       return;
     }
@@ -402,7 +505,6 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     setTimeout(() => {
       if (inputRef.current) {
         inputRef.current.focus();
-        // Set cursor position to the end of the input text
         const length = newInput.length;
         inputRef.current.setSelectionRange(length, length);
       }
@@ -512,7 +614,12 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
             </div>
           ))}
         </div>
-        {(currentLevel === 'property' || currentLevel === 'subsectionProperty') && (
+        {showIconHint && (
+          <div className="guide-hint icon-hint">
+            <i className="fas fa-info-circle"></i> Click on "[Enter your value]" to open the icon picker
+          </div>
+        )}
+        {(currentLevel === 'property' || currentLevel === 'subsectionProperty') && !showIconHint && (
           <div className="guide-hint">
             After selecting a property, enter the value you want to set
           </div>
@@ -523,6 +630,21 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
           </div>
         )}
       </div>
+      
+      {showIconPicker && (
+        <div className="icon-picker-container">
+          <div className="icon-picker-header">
+            <h4>Select an icon for {currentIconContext?.section} {currentIconContext?.item}</h4>
+            <button 
+              className="close-icon-picker"
+              onClick={() => setShowIconPicker(false)}
+            >
+              &times;
+            </button>
+          </div>
+          <IconPicker onSelectIcon={handleIconSelect} />
+        </div>
+      )}
       
       <form className="chat-input-form" onSubmit={handleSubmit}>
         <div className="input-container">

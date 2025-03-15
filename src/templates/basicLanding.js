@@ -149,16 +149,19 @@ export function generateHTML(config, showGuides = false) {
         {
           ...config.benefits.items[0],
           title: config.benefits.items[0].title || "Premium Quality",
+          icon: config.benefits.items[0].icon || "fas fa-check",
           iconColor: config.global.primaryColor
         },
         {
           ...config.benefits.items[1],
           title: config.benefits.items[1].title || "Innovative Approach",
+          icon: config.benefits.items[1].icon || "fas fa-chart-line",
           iconColor: config.global.primaryColor
         },
         {
           ...config.benefits.items[2],
           title: config.benefits.items[2].title || "Global Reach",
+          icon: config.benefits.items[2].icon || "fas fa-globe",
           iconColor: config.global.primaryColor
         }
       ]
@@ -304,6 +307,8 @@ export function generateHTML(config, showGuides = false) {
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
   <link href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Add Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --primary-color: ${processedConfig.global.primaryColor};

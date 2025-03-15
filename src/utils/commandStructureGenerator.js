@@ -9,7 +9,8 @@ export const generateCommandStructure = (websiteConfig) => {
     elements: {},
     properties: {},
     subsections: {}, // New field to store subsections
-    subsectionElements: {} // New field to store elements for each subsection
+    subsectionElements: {}, // New field to store elements for each subsection
+    aliases: {}
   };
 
   // Extract sections from the config
@@ -62,9 +63,9 @@ export const generateCommandStructure = (websiteConfig) => {
           structure.subsections[section] = ['item1', 'item2', 'item3'];
           
           // Define elements for each subsection
-          structure.subsectionElements[`${section}.item1`] = ['title', 'description'];
-          structure.subsectionElements[`${section}.item2`] = ['title', 'description'];
-          structure.subsectionElements[`${section}.item3`] = ['title', 'description'];
+          structure.subsectionElements[`${section}.item1`] = ['title', 'description', 'icon'];
+          structure.subsectionElements[`${section}.item2`] = ['title', 'description', 'icon'];
+          structure.subsectionElements[`${section}.item3`] = ['title', 'description', 'icon'];
           
           // Define properties for subsection elements
           structure.properties[`${section}.item1.title`] = ['text'];
@@ -73,30 +74,29 @@ export const generateCommandStructure = (websiteConfig) => {
           structure.properties[`${section}.item2.description`] = ['text'];
           structure.properties[`${section}.item3.title`] = ['text'];
           structure.properties[`${section}.item3.description`] = ['text'];
+          structure.properties[`${section}.item1.icon`] = ['image', 'color'];
+          structure.properties[`${section}.item2.icon`] = ['image', 'color'];
+          structure.properties[`${section}.item3.icon`] = ['image', 'color'];
           break;
           
         case 'features':
-          structure.elements[section] = ['title', 'subtitle', 'image', 'background'];
+          structure.elements[section] = ['title', 'subtitle', 'backgroundColor', 'textColor', 'image'];
           structure.properties[`${section}.title`] = ['text'];
           structure.properties[`${section}.subtitle`] = ['text'];
+          structure.properties[`${section}.backgroundColor`] = ['color'];
+          structure.properties[`${section}.textColor`] = ['color'];
           structure.properties[`${section}.image`] = ['url'];
-          structure.properties[`${section}.background`] = ['color'];
           
           // Define subsections for features (similar to benefits)
-          structure.subsections[section] = ['item1', 'item2', 'item3'];
+          structure.subsections[section] = ['items'];
           
           // Define elements for each subsection
-          structure.subsectionElements[`${section}.item1`] = ['title', 'description'];
-          structure.subsectionElements[`${section}.item2`] = ['title', 'description'];
-          structure.subsectionElements[`${section}.item3`] = ['title', 'description'];
+          structure.subsectionElements[`${section}.items`] = ['item1', 'item2', 'item3'];
           
           // Define properties for subsection elements
-          structure.properties[`${section}.item1.title`] = ['text'];
-          structure.properties[`${section}.item1.description`] = ['text'];
-          structure.properties[`${section}.item2.title`] = ['text'];
-          structure.properties[`${section}.item2.description`] = ['text'];
-          structure.properties[`${section}.item3.title`] = ['text'];
-          structure.properties[`${section}.item3.description`] = ['text'];
+          structure.properties[`${section}.items.item1`] = ['title', 'description', 'icon', 'iconColor'];
+          structure.properties[`${section}.items.item2`] = ['title', 'description', 'icon', 'iconColor'];
+          structure.properties[`${section}.items.item3`] = ['title', 'description', 'icon', 'iconColor'];
           break;
           
         case 'cta':
