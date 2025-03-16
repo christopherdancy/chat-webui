@@ -9,7 +9,7 @@ import ImageUploader from './ImageUploader';
 
 const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const [messages, setMessages] = useState([
-    { text: "Hi, I'm your website editor assistant. Customize your website by typing a command like 'change header color to green'.", isUser: false }
+    { text: "Hi, I'm your website editor assistant. Customize your website by typing a command like 'header background color green'.", isUser: false }
   ]);
 
   const [input, setInput] = useState('');
