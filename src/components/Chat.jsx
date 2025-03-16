@@ -3,10 +3,13 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ChatMessage from './ChatMessage';
 import { processMessage } from '../services/chatService';
 import { generateCommandStructure } from '../utils/commandStructureGenerator';
+import IconPicker from './IconPicker';
+import ColorPicker from './ColorPicker';
+import ImageUploader from './ImageUploader';
 
 const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const [messages, setMessages] = useState([
-    { text: "Hi, I'm your website editor assistant. Customize your website by typing a command like 'change header color to green'.", isUser: false }
+    { text: "Hi, I'm your website editor assistant. Customize your website by typing a command like 'header background color green'.", isUser: false }
   ]);
 
   const [input, setInput] = useState('');
@@ -17,6 +20,15 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const [isValidCommand, setIsValidCommand] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const [showIconPicker, setShowIconPicker] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showImageUploader, setShowImageUploader] = useState(false);
+  const [currentIconContext, setCurrentIconContext] = useState(null);
+  const [currentColorContext, setCurrentColorContext] = useState(null);
+  const [showIconHint, setShowIconHint] = useState(false);
+  const [showColorHint, setShowColorHint] = useState(false);
+  const [showImageUploadHint, setShowImageUploadHint] = useState(false);
+  const [currentImageContext, setCurrentImageContext] = useState(false);
 
   // Generate command structure from website config - memoize this to prevent recreation on every render
   const commandStructure = React.useMemo(() => generateCommandStructure(websiteConfig), [websiteConfig]);
@@ -145,6 +157,108 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     return { error, isValid };
   }, [commandStructure]);
 
+  // Handle icon selection
+  const handleIconSelect = (iconClass) => {
+    if (!currentIconContext) return;
+    
+    const { section, item } = currentIconContext;
+    // Format the command correctly: "benefits item1 icon image fas fa-home"
+    const command = `${section} ${item} icon image ${iconClass}`;
+    
+    // Set the command in the input field
+    setInput(command);
+    
+    // Close the icon picker
+    setShowIconPicker(false);
+    
+    // Focus the input field and position cursor at the end
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        const length = command.length;
+        inputRef.current.setSelectionRange(length, length);
+      }
+    }, 0);
+  };
+
+  // Show color picker for a specific context
+  const showColorPickerFor = (section, item, property) => {
+    // Store the full context including the current input
+    setCurrentColorContext({ 
+      section, 
+      item, 
+      property,
+      currentInput: input // Store the current input to preserve structure
+    });
+    setShowColorPicker(true);
+  };
+
+  // Handle color selection
+  const handleColorSelect = (colorValue) => {
+    if (!currentColorContext) return;
+    
+    const { section, item, property, currentInput } = currentColorContext;
+    
+    // Format the command based on context
+    let command = '';
+    
+    if (item) {
+      // For item properties like "benefits item1 iconColor"
+      // Check if we're dealing with a nested property like "icon color"
+      const tokens = currentInput.trim().split(/\s+/);
+      
+      if (tokens.length >= 4 && tokens[2] === 'icon' && tokens[3] === 'color') {
+        // For "benefits item1 icon color"
+        command = `${section} ${item} icon color ${colorValue}`;
+      } else {
+        // For other item properties
+        command = `${section} ${item} ${property} ${colorValue}`;
+      }
+    } else {
+      // For section properties like "hero background color"
+      const tokens = currentInput.trim().split(/\s+/);
+      
+      // Check if we're dealing with a compound property like "background color"
+      if (tokens.length >= 2 && tokens[1].toLowerCase() === 'background') {
+        command = `${section} background color ${colorValue}`;
+      } else if (tokens.length >= 2 && tokens[1].toLowerCase() === 'text') {
+        command = `${section} text color ${colorValue}`;
+      } else if (tokens.length >= 2 && tokens[1].toLowerCase() === 'button') {
+        command = `${section} button color ${colorValue}`;
+      } else {
+        // For simple properties like "color"
+        command = `${section} ${property} ${colorValue}`;
+      }
+    }
+    
+    // Set the command in the input field
+    setInput(command);
+    
+    // Close the color picker
+    setShowColorPicker(false);
+    
+    // Focus the input field and position cursor at the end
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        const length = command.length;
+        inputRef.current.setSelectionRange(length, length);
+      }
+    }, 0);
+  };
+
+  // Show icon picker for a specific context
+  const showIconPickerFor = (section, item) => {
+    setCurrentIconContext({ section, item });
+    setShowIconPicker(true);
+  };
+
+  // Show image uploader for a specific context
+  const showImageUploaderFor = (section) => {
+    setCurrentImageContext({ section });
+    setShowImageUploader(true);
+  };
+
   // Update validation state and available options based on current input
   useEffect(() => {
     // Get validation results without setting state directly in the validation function
@@ -156,10 +270,121 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     if (!input.trim()) {
       setCurrentOptions(commandStructure.sections);
       setCurrentLevel('section');
+      setShowIconHint(false);
+      setShowColorHint(false);
+      setShowImageUploadHint(false);
       return;
     }
 
     const tokens = input.toLowerCase().trim().split(/\s+/);
+
+    // if ((tokens.length >= 3 && 
+    //     tokens[0] === 'features' && 
+    //     tokens[1] === 'image' && 
+    //     tokens[2] === 'upload') ||
+    //     (input.includes('features image url ') && input.includes('.jpg'))) {
+          
+    //     setCurrentOptions(["[Click to upload an image]"]);
+    //     setCurrentLevel('value');
+    //     setShowImageUploadHint(true);
+    //     return;
+    // }
+    
+    // Check if we're in the "features image upload" context or if we already have a URL
+    if ((tokens.length >= 3 && 
+         (tokens[0] === 'features' || tokens[0] === 'header') && 
+         (tokens[1] === 'image' || tokens[1] === 'logo') && 
+         (tokens[2] === 'upload' || tokens[2] === 'image')) ||
+        (input.includes('features image url ') && input.includes('.jpg'))) {
+      
+      // Show the upload option regardless of whether we already have a URL
+      setCurrentOptions(["[Click to upload an image]"]);
+      setCurrentLevel('value');
+      setShowImageUploadHint(true);
+      return;
+    }
+    
+    // For "features image" context, make sure "upload" is in the options
+    if (tokens.length === 2 && 
+        tokens[0] === 'features' && 
+        tokens[1] === 'image') {
+      
+      // Make sure "upload" is one of the options
+      const options = ['upload'];
+      setCurrentOptions(options);
+      setCurrentLevel('property');
+      return;
+    }
+    
+    // Check if we should show the image upload hint
+    if (tokens.length === 3) {
+      const section = tokens[0];
+      const property = tokens[1];
+      const action = tokens[2];
+      
+      if (section === 'features' && 
+          property === 'image' && 
+          action === 'upload') {
+        setShowImageUploadHint(true);
+        setShowIconHint(false);
+        setShowColorHint(false);
+        return;
+      }
+    }
+    
+    // Check if we should show the icon hint
+    if (tokens.length === 4) {
+      const section = tokens[0];
+      const item = tokens[1];
+      const property = tokens[2];
+      const subproperty = tokens[3];
+      
+      if ((section === 'benefits' || section === 'features') && 
+          item.match(/^item[1-3]$/) && 
+          property === 'icon' &&
+          subproperty === 'image') {
+        setShowIconHint(true);
+        setShowColorHint(false);
+        setShowImageUploadHint(false);
+      } else if ((section === 'benefits' || section === 'features') && 
+                item.match(/^item[1-3]$/) && 
+                property === 'icon' &&
+                subproperty === 'color') {
+        setShowColorHint(true);
+        setShowIconHint(false);
+        setShowImageUploadHint(false);
+      } else {
+        setShowIconHint(false);
+        setShowColorHint(false);
+        setShowImageUploadHint(false);
+      }
+    } else if (tokens.length >= 3) {
+      // Check for color properties
+      const lastToken = tokens[tokens.length - 1].toLowerCase();
+      
+      if (lastToken === 'color') {
+        // For section color properties like "hero background color"
+        setShowColorHint(true);
+        setShowIconHint(false);
+        setShowImageUploadHint(false);
+      } else if (tokens.length === 3 && 
+                 tokens[0] === 'features' && 
+                 tokens[1] === 'image' && 
+                 tokens[2] === 'upload') {
+        // For "features image upload"
+        setShowImageUploadHint(true);
+        setShowColorHint(false);
+        setShowIconHint(false);
+      } else {
+        setShowColorHint(false);
+        setShowIconHint(false);
+        setShowImageUploadHint(false);
+      }
+    } else {
+      setShowIconHint(false);
+      setShowColorHint(false);
+      setShowImageUploadHint(false);
+    }
     
     // Determine current level and set appropriate options
     if (tokens.length === 1) {
@@ -358,18 +583,205 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       setCurrentOptions(["[Enter your value]"]);
       setCurrentLevel('value');
     }
+
+    // Check if we should automatically show the icon picker
+    if (tokens.length >= 3) {
+      const section = tokens[0];
+      const item = tokens[1];
+      const property = tokens[2];
+      
+      // If user has typed something like "benefits item1 icon" or "features item1 icon"
+      if ((section === 'benefits' || section === 'features') && 
+          item.match(/^item[1-3]$/) && 
+          property === 'icon image') {
+        
+        // If the next token is not "image", show the icon picker
+        if (true) {
+          showIconPickerFor(section, item);
+        }
+      }
+    }
+
+    // Check if we should automatically show the image uploader
+    if (tokens.length >= 3) {
+       console.log(true);
+      const section = tokens[0];
+      const property = tokens[1];
+      const action = tokens[2];
+      
+      // If user has typed something like "features image upload"
+      if (section === 'features' && 
+          property === 'image' && 
+          action === 'upload') {
+        showImageUploaderFor(section);
+      }
+      // If user has typed something like "header logo image"
+      if (section === 'header' && 
+          property === 'logo' && 
+          action === 'image') {
+        showImageUploaderFor(section);
+      }
+    }
   }, [input, commandStructure, validateInput]);
 
   // Handle option click
   const handleOptionClick = (option) => {
+    // Special handling for the upload image option
+    if (option === "[Click to upload an image]") {
+      // Check if we're in the features image upload context, regardless of what's in the input field
+      const tokens = input.toLowerCase().trim().split(/\s+/);
+      
+      // Handle logo upload
+      if (tokens.length >= 3 && 
+          tokens[0] === 'header' && 
+          tokens[1] === 'logo' && 
+          tokens[2] === 'image') {
+        
+        showImageUploaderFor('header');
+        return;
+      }
+      
+      // Handle features image upload (existing code)
+      if ((tokens.length >= 3 && 
+        tokens[0] === 'features' && 
+        tokens[1] === 'image' && 
+        tokens[2] === 'upload') ||
+       (input.includes('features image url') || input.includes('features image upload'))) {
+     
+     // Show the image uploader
+     showImageUploaderFor('features');
+     return;
+   }
+ }
+    
     // Get current tokens
     const tokens = input.trim().split(/\s+/);
     
-    // If the option is a placeholder, don't add it
+    // Special handling for icon properties
+    if (option === 'image' && tokens.length >= 3) {
+      const section = tokens[0];
+      const item = tokens[1];
+      const property = tokens[2];
+      
+      // Check if we're in an icon property context
+      if ((section === 'benefits' || section === 'features') && 
+          item.match(/^item[1-3]$/) && 
+          property === 'icon') {
+        showIconPickerFor(section, item);
+        return;
+      }
+
+      // For image properties
+      if (section === 'features' && 
+          item === 'image' && 
+          property === 'upload') {
+        showImageUploaderFor(section);
+        return;
+      }
+    }
+    
+    // Special handling for color properties
+    if (option === 'color') {
+      const section = tokens[0];
+      
+      // For nested properties like "icon color"
+      if (tokens.length >= 3 && tokens[2] === 'icon') {
+        const item = tokens[1];
+        
+        // Store the current input to preserve the structure
+        setCurrentColorContext({ 
+          section, 
+          item, 
+          property: 'icon color',
+          currentInput: `${section} ${item} icon color` // Explicitly set the structure
+        });
+        setShowColorPicker(true);
+        return;
+      }
+      
+      // For compound properties like "background color"
+      if (tokens.length >= 2) {
+        const previousToken = tokens[1].toLowerCase();
+        
+        if (previousToken === 'background' || 
+            previousToken === 'text' || 
+            previousToken === 'button') {
+          // For "hero background color", "hero text color", etc.
+          showColorPickerFor(section, null, option);
+          return;
+        }
+      }
+      
+      // For simple color properties
+      showColorPickerFor(section, null, option);
+      return;
+    }
+    
+    // Special handling for [Enter your value] when in color context
     if (option === '[Enter your value]') {
-      // Focus the input field for the user to type the value
+      const section = tokens[0];
+      
+      // Check for icon color context
+      if (tokens.length >= 4 && 
+          tokens[1].match(/^item[1-3]$/) && 
+          tokens[2] === 'icon' && 
+          tokens[3] === 'color') {
+        
+        setCurrentColorContext({ 
+          section, 
+          item: tokens[1], 
+          property: 'icon color',
+          currentInput: input
+        });
+        setShowColorPicker(true);
+        return;
+      }
+      
+      // Check for compound properties like "background color"
+      if (tokens.length >= 3 && 
+          (tokens[1] === 'background' || tokens[1] === 'text' || tokens[1] === 'button') && 
+          tokens[2] === 'color') {
+        showColorPickerFor(section, null, 'color');
+        return;
+      }
+      
+      // Check for simple color property
+      if (tokens.length >= 2 && tokens[1] === 'color') {
+        showColorPickerFor(section, null, 'color');
+        return;
+      }
+      
+      // Check for item color properties
+      if (tokens.length >= 3 && 
+          tokens[1].match(/^item[1-3]$/) && 
+          (tokens[2] === 'iconColor' || tokens[2] === 'color')) {
+        showColorPickerFor(section, tokens[1], tokens[2]);
+        return;
+      }
+      
+      // For icon image properties
+      if (tokens.length >= 4 && 
+          tokens[1].match(/^item[1-3]$/) && 
+          tokens[2] === 'icon' && 
+          tokens[3] === 'image') {
+        showIconPickerFor(section, tokens[1]);
+        return;
+      }
+      
+      // If not a special case, just focus the input
       inputRef.current?.focus();
       return;
+    }
+    
+    // Special handling for image uploads
+    if (option === 'upload' && tokens.length >= 2) {
+      const section = tokens[0];
+      const property = tokens[1];
+      
+      if (section === 'features' && property === 'image') {
+        showImageUploaderFor(section);
+        return;
+      }
     }
     
     // Determine how to add the option based on the current level
@@ -402,7 +814,6 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     setTimeout(() => {
       if (inputRef.current) {
         inputRef.current.focus();
-        // Set cursor position to the end of the input text
         const length = newInput.length;
         inputRef.current.setSelectionRange(length, length);
       }
@@ -482,6 +893,46 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     }
   };
 
+  // Function to get more explicit option text
+  const getOptionText = (option, currentLevel) => {
+    // For value placeholders, make them more explicit
+    if (option === '[Enter your value]') {
+      // Check current input to determine context
+      const tokens = input.trim().split(/\s+/);
+      
+      // For icon image context
+      if (tokens.length >= 4 && 
+          tokens[1].match(/^item[1-3]$/) && 
+          tokens[2] === 'icon' && 
+          tokens[3] === 'image') {
+        return '[Click to select an icon]';
+      }
+      
+      // For color contexts
+      if (tokens.length >= 3 && tokens[tokens.length - 1] === 'color') {
+        return '[Click to select a color]';
+      }
+      
+      // For icon color context
+      if (tokens.length >= 4 && 
+          tokens[1].match(/^item[1-3]$/) && 
+          tokens[2] === 'icon' && 
+          tokens[3] === 'color') {
+        return '[Click to select a color]';
+      }
+
+      // For image upload context
+      if (tokens.length >= 3 && 
+          tokens[1] === 'image' && 
+          tokens[2] === 'upload') {
+        return '[Click to upload an image]';
+      }
+    }
+
+    
+    return option;
+  };
+
   return (
     <div className="chat-container">
       <div className="chat-messages">
@@ -508,11 +959,27 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
               className="guide-option clickable"
               onClick={() => handleOptionClick(option)}
             >
-              {option}
+              {getOptionText(option, currentLevel)}
             </div>
           ))}
         </div>
-        {(currentLevel === 'property' || currentLevel === 'subsectionProperty') && (
+        {showIconHint && (
+          <div className="guide-hint icon-hint">
+            <i className="fas fa-info-circle"></i> Click on "[Click to select an icon]" to open the icon picker
+          </div>
+        )}
+        {showColorHint && (
+          <div className="guide-hint color-hint">
+            <i className="fas fa-info-circle"></i> Click on "[Click to select a color]" to open the color picker
+          </div>
+        )}
+        {showImageUploadHint && (
+          <div className="guide-hint image-upload-hint">
+            <i className="fas fa-info-circle"></i> Click on "[Click to upload an image]" to open the image uploader
+          </div>
+        )}
+        {(currentLevel === 'property' || currentLevel === 'subsectionProperty') && 
+         !showIconHint && !showColorHint && !showImageUploadHint && (
           <div className="guide-hint">
             After selecting a property, enter the value you want to set
           </div>
@@ -523,6 +990,79 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
           </div>
         )}
       </div>
+      
+      {showIconPicker && (
+        <div className="icon-picker-container">
+          <div className="icon-picker-header">
+            <h4>Select an icon for {currentIconContext?.section} {currentIconContext?.item}</h4>
+            <button 
+              className="close-icon-picker"
+              onClick={() => setShowIconPicker(false)}
+            >
+              &times;
+            </button>
+          </div>
+          <IconPicker onSelectIcon={handleIconSelect} />
+        </div>
+      )}
+      
+      {showImageUploader && (
+        <div className="image-uploader-container">
+          <div className="image-uploader-header">
+            <h4>Upload Image for {currentImageContext?.section}</h4>
+            <button 
+              className="close-image-uploader"
+              onClick={() => setShowImageUploader(false)}
+            >
+              &times;
+            </button>
+          </div>
+          <ImageUploader 
+            onImageSelect={(imageUrl) => {
+              // Format the command with the image URL
+              const command = currentImageContext?.section === "header" ? `${currentImageContext?.section} logo image ${imageUrl}` : `${currentImageContext?.section} image upload ${imageUrl}`;
+              console.log(command);
+              
+              setInput(command);
+              
+              // Close the uploader after the state updates
+              setTimeout(() => {
+                setShowImageUploader(false);
+                
+                // Focus the input field and position cursor at the end
+                if (inputRef.current) {
+                  inputRef.current.focus();
+                  const length = command.length;
+                  inputRef.current.setSelectionRange(length, length);
+                }
+              }, 100);
+            }}
+            onClose={() => {
+              setShowImageUploader(false);
+            }}
+          />
+        </div>
+      )}
+      
+      {showColorPicker && (
+        <div className="color-picker-container">
+          <div className="color-picker-header">
+            <h4>
+              {currentColorContext?.item 
+                ? `Select a color for ${currentColorContext?.section} ${currentColorContext?.item} ${currentColorContext?.property}`
+                : `Select a color for ${currentColorContext?.section} ${currentColorContext?.property}`
+              }
+            </h4>
+            <button 
+              className="close-color-picker"
+              onClick={() => setShowColorPicker(false)}
+            >
+              &times;
+            </button>
+          </div>
+          <ColorPicker onSelectColor={handleColorSelect} />
+        </div>
+      )}
       
       <form className="chat-input-form" onSubmit={handleSubmit}>
         <div className="input-container">
@@ -540,7 +1080,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
               e.target.setSelectionRange(length, length);
             }}
           />
-        </div>
+          </div>
         <button 
           type="submit" 
           className={`chat-submit-button ${!isValidCommand && input.trim() ? 'invalid' : ''}`} 

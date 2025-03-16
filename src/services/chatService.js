@@ -30,31 +30,36 @@ export async function processMessage(message, currentConfig) {
       
     case 'TextColor':
       updatedConfig.global.textColor = intent.value;
-      responseMessage = `I've d the main text color to ${intent.value}. How does it look?`;
+      responseMessage = `I've d the main text color to ${intent.value}?`;
       break;
     
     // Header section
     case 'HeaderTitle':
       updatedConfig.header.title = intent.value;
-      responseMessage = `I've updated the header title to "${intent.value}". How does it look?`;
+      responseMessage = `I've updated the header title to "${intent.value}"?`;
       break;
     
     // TODO: System wide and prompt a  and not ask a question?
     case 'HeaderColor':
       updatedConfig.header.backgroundColor = intent.value;
-      responseMessage = `I've d the header background color to ${intent.value}. What else would you like to ?`;
+      responseMessage = `I've d the header background color to ${intent.value}?`;
       break;
       
     case 'LogoText':
-      updatedConfig.header.logo = intent.value;
+      updatedConfig.header.logoText = intent.value;
       updatedConfig.header.title = intent.value;
-      responseMessage = `The logo text is now "${intent.value}". How does it look?`;
+      responseMessage = `I've updated the logo text to "${intent.value}"?`;
+      break;
+
+    case 'LogoImage':
+      updatedConfig.header.logoImage = intent.value;
+      responseMessage = `I've updated the logo image to "${intent.value}"?`;
       break;
     
     // Hero section
     case 'HeroBackground':
       updatedConfig.hero.backgroundColor = intent.value;
-      responseMessage = `I've updated the hero background to ${intent.value}. How does it look?`;
+      responseMessage = `I've updated the hero background to ${intent.value}?`;
       break;
 
     case 'HeroTitle':
@@ -64,80 +69,111 @@ export async function processMessage(message, currentConfig) {
       
     case 'HeroSubtitle':
       updatedConfig.hero.subtitle = intent.value;
-      responseMessage = `I've updated the hero subtitle to "${intent.value}". How does it look?`;
+      responseMessage = `I've updated the hero subtitle to "${intent.value}"?`;
       break;
       
     case 'HeroButtonText':
       updatedConfig.hero.buttonText = intent.value;
-      responseMessage = `The hero button text now says "${intent.value}". What else would you like to modify?`;
+      responseMessage = `I've updated the hero button text to "${intent.value}"?`;
       break;
     
-    // TODO: Hover state
     case 'HeroButtonColor':
       updatedConfig.hero.buttonColor = intent.value;
-      responseMessage = `I've d the hero button color to ${intent.value}. Does that work for you?`;
+      responseMessage = `I've d the hero button color to ${intent.value}?`;
       break;
       
     case 'HeroButtonUrl':
       updatedConfig.hero.buttonUrl = intent.value;
-      responseMessage = `The hero button URL is now "${intent.value}". How does that look?`;
+      responseMessage = `I've updated the hero button URL to "${intent.value}"?`;
       break;
     
     // Benefits section
     // TODO: Icon in command  site 
     case 'BenefitsBackground':
       updatedConfig.benefits.backgroundColor = intent.value;
-      responseMessage = `I've updated the benefits background to ${intent.value}. How does it look?`;
+      responseMessage = `I've updated the benefits background to ${intent.value}?`;
       break;
 
     case 'BenefitsTitle':
       updatedConfig.benefits.title = intent.value;
-      responseMessage = `The benefits section title is now "${intent.value}". How does that look?`;
+      responseMessage = `I've updated the benefits section title to "${intent.value}"?`;
       break;
       
     case 'BenefitsSubtitle':
       updatedConfig.benefits.subtitle = intent.value;
-      responseMessage = `I've updated the benefits subtitle to "${intent.value}". Anything else you'd like to ?`;
+      responseMessage = `I've updated the benefits subtitle to "${intent.value}"?`;
       break;
 
     case 'BenefitItemTitle':
-      // Extract the item number from itemName (e.g., "item1" -> 0)
-      const benefitItemNumber = parseInt(intent.itemName.replace('item', '')) - 1;
+      // Extract item number from itemName (e.g., "item1" -> 0)
+      const benefitItemIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
       if (updatedConfig.benefits && 
           updatedConfig.benefits.items && 
-          updatedConfig.benefits.items[benefitItemNumber]) {
-        updatedConfig.benefits.items[benefitItemNumber].title = intent.value;
-        return {
-          message: `Updated benefit ${intent.itemName} title to "${intent.value}"`,
-          updatedConfig
-        };
+          benefitItemIndex >= 0 && 
+          benefitItemIndex < updatedConfig.benefits.items.length) {
+        updatedConfig.benefits.items[benefitItemIndex].title = intent.value;
+        responseMessage = `Updated the title for benefits ${intent.itemName} to "${intent.value}".`;
+      } else {
+        responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
       }
       break;
       
     case 'BenefitItemDescription':
-      const benefitItemDescNumber = parseInt(intent.itemName.replace('item', '')) - 1;
+      const benefitDescIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
       if (updatedConfig.benefits && 
           updatedConfig.benefits.items && 
-          updatedConfig.benefits.items[benefitItemDescNumber]) {
-        updatedConfig.benefits.items[benefitItemDescNumber].description = intent.value;
-        return {
-          message: `Updated benefit ${intent.itemName} description to "${intent.value}"`,
-          updatedConfig
-        };
+          benefitDescIndex >= 0 && 
+          benefitDescIndex < updatedConfig.benefits.items.length) {
+        updatedConfig.benefits.items[benefitDescIndex].description = intent.value;
+        responseMessage = `Updated the description for benefits ${intent.itemName} to "${intent.value}".`;
+      } else {
+        responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
       }
       break;
-    
+
+    case 'BenefitItemIcon':
+      const benefitIconIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
+      if (updatedConfig.benefits && 
+          updatedConfig.benefits.items && 
+          benefitIconIndex >= 0 && 
+          benefitIconIndex < updatedConfig.benefits.items.length) {
+        updatedConfig.benefits.items[benefitIconIndex].icon = intent.value;
+        responseMessage = `Updated the icon for benefits ${intent.itemName} to ${intent.value}.`;
+      } else {
+        responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
+      }
+      break;
+
+    case 'BenefitItemIconColor':
+      const benefitIconColorIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
+      if (updatedConfig.benefits && 
+          updatedConfig.benefits.items && 
+          benefitIconColorIndex >= 0 && 
+          benefitIconColorIndex < updatedConfig.benefits.items.length) {
+        updatedConfig.benefits.items[benefitIconColorIndex].iconColor = intent.value;
+        responseMessage = `Updated the icon color for benefits ${intent.itemName} to ${intent.value}.`;
+      } else {
+        responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
+      }
+      break;
+
     // Features section
-    // TODO: Image should the upload the image?
-    // TODO: Image with sizing and alignment
     case 'FeaturesBackground':
       updatedConfig.features.backgroundColor = intent.value;
-      responseMessage = `I've updated the features background to ${intent.value}. How does it look?`;
+      responseMessage = `I've updated the features background to ${intent.value}?`;
       break;
 
     case 'FeaturesTitle':
       updatedConfig.features.title = intent.value;
-      responseMessage = `The features section title is now "${intent.value}". How does that look?`;
+      responseMessage = `I've updated the features section title to "${intent.value}"?`;
       break;
       
     case 'FeaturesSubtitle':
@@ -147,44 +183,63 @@ export async function processMessage(message, currentConfig) {
       
     case 'FeaturesImage':
       updatedConfig.features.image = intent.value;
-      responseMessage = `I've updated the features section image. How does it look?`;
+      responseMessage = `I've updated the features section image to "${intent.value}"?`;
       break;
     
     case 'FeatureItemTitle':
-      const featureItemNumber = parseInt(intent.itemName.replace('item', '')) - 1;
+      const featureItemIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
       if (updatedConfig.features && 
           updatedConfig.features.items && 
-          updatedConfig.features.items[featureItemNumber]) {
-        updatedConfig.features.items[featureItemNumber].title = intent.value;
-        return {
-          message: `Updated feature ${intent.itemName} title to "${intent.value}"`,
-          updatedConfig
-        };
+          featureItemIndex >= 0 && 
+          featureItemIndex < updatedConfig.features.items.length) {
+        updatedConfig.features.items[featureItemIndex].title = intent.value;
+        responseMessage = `Updated the title for features ${intent.itemName} to "${intent.value}".`;
+      } else {
+        responseMessage = `Couldn't find features ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
       }
       break;
       
     case 'FeatureItemDescription':
-      const featureItemDescNumber = parseInt(intent.itemName.replace('item', '')) - 1;
+      const featureDescIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
       if (updatedConfig.features && 
           updatedConfig.features.items && 
-          updatedConfig.features.items[featureItemDescNumber]) {
-        updatedConfig.features.items[featureItemDescNumber].description = intent.value;
-        return {
-          message: `Updated feature ${intent.itemName} description to "${intent.value}"`,
-          updatedConfig
-        };
+          featureDescIndex >= 0 && 
+          featureDescIndex < updatedConfig.features.items.length) {
+        updatedConfig.features.items[featureDescIndex].description = intent.value;
+        responseMessage = `Updated the description for features ${intent.itemName} to "${intent.value}".`;
+      } else {
+        responseMessage = `Couldn't find features ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
       }
       break;
       
+    case 'FeatureItemIcon':
+      const featureIconIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
+      if (updatedConfig.features && 
+          updatedConfig.features.items && 
+          featureIconIndex >= 0 && 
+          featureIconIndex < updatedConfig.features.items.length) {
+        updatedConfig.features.items[featureIconIndex].icon = intent.value;
+        responseMessage = `Updated the icon for features ${intent.itemName} to ${intent.value}.`;
+      } else {
+        responseMessage = `Couldn't find features ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
+      }
+      break;
+    
     // Call to Action section
     case 'CtaBackground':
       updatedConfig.cta.backgroundColor = intent.value;
-      responseMessage = `I've updated the call to action background to ${intent.value}. How does it look?`;
+      responseMessage = `I've updated the call to action background to ${intent.value}?`;
       break;
 
     case 'CtaTitle':
       updatedConfig.cta.title = intent.value;
-      responseMessage = `The call to action title is now "${intent.value}". How does that look?`;
+      responseMessage = `I've updated the call to action title to "${intent.value}"?`;
       break;
       
     case 'CtaSubtitle':
@@ -194,33 +249,33 @@ export async function processMessage(message, currentConfig) {
       
     case 'CtaButtonText':
       updatedConfig.cta.buttonText = intent.value;
-      responseMessage = `The call to action button text now says "${intent.value}". What else would you like to modify?`;
+      responseMessage = `I've updated the call to action button text to "${intent.value}"?`;
       break;
 
     case 'CtaButtonColor':
       updatedConfig.cta.buttonColor = intent.value;
-      responseMessage = `I've d the call to action button color to ${intent.value}. How does that look?`;
+      responseMessage = `I've d the call to action button color to ${intent.value}?`;
       break;
 
     case 'CtaButtonUrl':
       updatedConfig.cta.buttonUrl = intent.value;
-      responseMessage = `The call to action button URL is now "${intent.value}". How does that look?`;
+      responseMessage = `I've updated the call to action button URL to "${intent.value}"?`;
       break;
     
     // Footer section
     case 'footerDescriptionText':
       updatedConfig.footer.description = intent.value;
-      responseMessage = `The footer description is now "${intent.value}". How does that look?`;
+      responseMessage = `I've updated the footer description to "${intent.value}"?`;
       break;
 
     case 'FooterText':
       updatedConfig.footer.text = intent.value;
-      responseMessage = `The footer text now reads "${intent.value}". Anything else you want to ?`;
+      responseMessage = `I've updated the footer text to "${intent.value}"?`;
       break;
 
     case 'FooterBackground':
       updatedConfig.footer.backgroundColor = intent.value;
-      responseMessage = `The footer background color is now ${intent.value}. How does that look?`;
+      responseMessage = `I've updated the footer background color to ${intent.value}?`;
       break;
 
     case 'FooterSocialLink':
@@ -238,27 +293,27 @@ export async function processMessage(message, currentConfig) {
       
       // Update the URL
       updatedConfig.footer.socialLinks[intent.platform].url = intent.value;
-      responseMessage = `I've updated the ${intent.platform} link to ${intent.value}. How does that look?`;
+      responseMessage = `I've updated the ${intent.platform} link to ${intent.value}?`;
       break;
 
     case 'FooterLinks':
       updatedConfig.footer.links = intent.value;
-      responseMessage = `The footer links are now "${intent.value}". How does that look?`;
+      responseMessage = `I've updated the footer links to "${intent.value}"?`;
       break;
 
     case 'FooterAddress':
       updatedConfig.footer.address = intent.value;
-      responseMessage = `The footer address is now "${intent.value}". How does that look?`;
+      responseMessage = `I've updated the footer address to "${intent.value}"?`;
       break;
 
     case 'FooterEmail':
       updatedConfig.footer.email = intent.value;
-      responseMessage = `The footer email is now "${intent.value}". How does that look?`;
+      responseMessage = `I've updated the footer email to "${intent.value}"?`;
       break;
       
     case 'FooterPhone':
       updatedConfig.footer.phone = intent.value;
-      responseMessage = `The footer phone is now "${intent.value}". How does that look?`;
+      responseMessage = `I've updated the footer phone to "${intent.value}"?`;
       break;  
       
     case 'unknown':

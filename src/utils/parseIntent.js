@@ -36,8 +36,6 @@ export function parseIntent(message) {
   // Header section
   // TODO: Website name needs to be updated
   // TODO: header title to random for not overwriting & remove name from deployment
-  // TODO: the guide title to more simple since we are doing a command builder
-  // TODO: How does the user know how to the header color?
   if (lowerMessage.includes('header color') || 
       lowerMessage.includes('header background')) {
     const colorRegex = /#[0-9a-f]{3,6}|(?:blue|red|green|yellow|purple|orange|black|white|gray|pink)/i;
@@ -47,13 +45,21 @@ export function parseIntent(message) {
     }
   }
   
-  // Todo: Logo should also be an image
   if ((lowerMessage.includes('logo text') || 
       lowerMessage.includes('the logo text')) && !lowerMessage.includes('color')) {
     const regex = /(?:the )?logo text(?: to)? ["']?([^"']+)["']?/i;
     const match = message.match(regex);
     if (match && match[1]) {
       return { type: 'LogoText', value: match[1].trim() };
+    }
+  }
+
+  if ((lowerMessage.includes('logo image') || 
+      lowerMessage.includes('the logo image')) && !lowerMessage.includes('color')) {
+    const regex = /(?:the )?logo image(?: to)? ["']?([^"']+)["']?/i;
+    const match = message.match(regex);
+    if (match && match[1]) {
+      return { type: 'LogoImage', value: match[1].trim() };
     }
   }
   
@@ -170,6 +176,31 @@ export function parseIntent(message) {
         itemName: itemName
       };
     }
+
+    // Match pattern like "benefits item1 icon image fas fa-home"
+    const iconRegex = /benefits (item\d+) icon image (fas? fa-[a-z-]+)/i;
+    const iconMatch = message.match(iconRegex);
+    
+    if (iconMatch && iconMatch[1] && iconMatch[2]) {
+      const itemName = iconMatch[1].toLowerCase(); // e.g., "item1"
+      return {
+        type: 'BenefitItemIcon', 
+        value: iconMatch[2].trim(),
+        itemName: itemName
+      };
+    }
+
+    // Match pattern like "benefits item1 icon color"
+    const iconColorRegex = /benefits (item\d+) icon color(?: to)? ["']?([^"']+)["']?/i;
+    const iconColorMatch = message.match(iconColorRegex);
+    if (iconColorMatch && iconColorMatch[1] && iconColorMatch[2]) {
+      const itemName = iconColorMatch[1].toLowerCase(); // e.g., "item1"
+      return {
+        type: 'BenefitItemIconColor',
+        value: iconColorMatch[2].trim(),
+        itemName: itemName
+      };
+    }
   }
   
   // Features section
@@ -209,7 +240,7 @@ export function parseIntent(message) {
     }
   }
 
-  // Handle features subsections
+  // Handle features item subsections
   if (lowerMessage.includes('features item')) {
     // Match pattern like "features item1 title text New Title"
     const itemTitleRegex = /features (item\d+) title(?: text)?(?: to)? ["']?([^"']+)["']?/i;
@@ -231,6 +262,19 @@ export function parseIntent(message) {
       return { 
         type: 'FeatureItemDescription', 
         value: itemDescMatch[2].trim(),
+        itemName: itemName
+      };
+    }
+    
+    // Match pattern like "features item1 icon image fas fa-code"
+    const iconRegex = /features (item\d+) icon image (fas? fa-[a-z-]+)/i;
+    const iconMatch = message.match(iconRegex);
+    
+    if (iconMatch && iconMatch[1] && iconMatch[2]) {
+      const itemName = iconMatch[1].toLowerCase(); // e.g., "item1"
+      return {
+        type: 'FeatureItemIcon', 
+        value: iconMatch[2].trim(),
         itemName: itemName
       };
     }
@@ -343,14 +387,21 @@ export function parseIntent(message) {
     }
     
     // Handle social links using the subsection structure
-    if (lowerMessage.includes('socials')) {
+    if (lowerMessage.includes('social')) {
       // Match pattern like "footer socials facebook url https://facebook.com"
-      const socialUrlRegex = /footer socials (facebook|twitter|instagram|linkedin) (?:url|link)(?: to)? (https?:\/\/[^\s"']+)/i;
+      // Or "footer social facebook url https://facebook.com" (singular form)
+      // Updated regex to handle both singular and plural forms
+      const socialUrlRegex = /footer social(?:s)? (facebook|twitter|instagram|linkedin) (?:url|link)(?: to)? ((?:https?:\/\/)?(?:www\.)?[^\s"']+\.[a-z]{2,}[^\s"']*)/i;
       const socialUrlMatch = message.match(socialUrlRegex);
       
       if (socialUrlMatch && socialUrlMatch[1] && socialUrlMatch[2]) {
         const platform = socialUrlMatch[1].toLowerCase();
-        const url = socialUrlMatch[2];
+        let url = socialUrlMatch[2];
+        
+        // Add https:// if no protocol is specified
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          url = 'https://' + url;
+        }
         
         return { 
           type: 'FooterSocialLink', 
@@ -397,8 +448,6 @@ export function parseIntent(message) {
       return { type: 'FooterSocialLink', platform: 'linkedin', value: match[0] };
     }
   }
-
-  // TODO: command 
   
   // If no intent was matched
   return { type: 'unknown' };

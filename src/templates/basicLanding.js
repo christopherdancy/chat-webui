@@ -14,7 +14,9 @@ const basicTemplate = {
     title: "Modern Business Website",
     backgroundColor: "#4a90e2", // Uses global.primaryColor by default
     textColor: "#ffffff",
-    logo: "YourBrand",
+    logo: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+    logoText: "YourBrand",
+    logoImage: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
     menuItems: [
       { text: "Benefits", url: "#benefits" },
       { text: "Features", url: "#features" },
@@ -133,7 +135,10 @@ export function generateHTML(config, showGuides = false) {
     header: {
       ...config.header,
       backgroundColor: config.header.backgroundColor || config.global.primaryColor,
-      textColor: config.header.textColor || "#ffffff"
+      textColor: config.header.textColor || "#ffffff",
+      logo: config.header.logo || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+      logoText: config.header.logoText || "YourBrand",
+      logoImage: config.header.logoImage || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
     },
     hero: {
       ...config.hero,
@@ -149,17 +154,20 @@ export function generateHTML(config, showGuides = false) {
         {
           ...config.benefits.items[0],
           title: config.benefits.items[0].title || "Premium Quality",
-          iconColor: config.global.primaryColor
+          icon: config.benefits.items[0].icon || "fas fa-check",
+          iconColor: config.benefits.items[0].iconColor || config.global.primaryColor 
         },
         {
           ...config.benefits.items[1],
           title: config.benefits.items[1].title || "Innovative Approach",
-          iconColor: config.global.primaryColor
+          icon: config.benefits.items[1].icon || "fas fa-chart-line",
+          iconColor: config.benefits.items[1].iconColor || config.global.primaryColor
         },
         {
           ...config.benefits.items[2],
           title: config.benefits.items[2].title || "Global Reach",
-          iconColor: config.global.primaryColor
+          icon: config.benefits.items[2].icon || "fas fa-globe",
+          iconColor: config.benefits.items[2].iconColor || config.global.primaryColor
         }
       ]
     },
@@ -172,16 +180,19 @@ export function generateHTML(config, showGuides = false) {
         {
          ...config.features.items[0],
           title: config.features.items[0].title || "Customized Solutions",
+          icon: config.features.items[0].icon || "fas fa-cog",
           iconColor: config.global.primaryColor
         },
         {
           ...config.features.items[1],
           title: config.features.items[1].title || "Modern Technology",
+          icon: config.features.items[1].icon || "fas fa-code",
           iconColor: config.global.primaryColor
         },
         {
           ...config.features.items[2],
           title: config.features.items[2].title || "Dedicated Support",
+          icon: config.features.items[2].icon || "fas fa-smile",
           iconColor: config.global.primaryColor
         }
       ]
@@ -239,7 +250,7 @@ export function generateHTML(config, showGuides = false) {
       position: absolute;
       top: -20px;
       right: 0;
-      background-color: rgba(0, 100, 255, 0.7);
+      background-color: rgba(0, 0, 0, 0.7);
       color: white;
       padding: 3px 6px;
       font-size: 10px;
@@ -304,6 +315,8 @@ export function generateHTML(config, showGuides = false) {
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
   <link href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Add Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --primary-color: ${processedConfig.global.primaryColor};
@@ -329,6 +342,21 @@ export function generateHTML(config, showGuides = false) {
       color: ${processedConfig.header.textColor};
       font-weight: 600;
       font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+    
+    .logo-text {
+      color: ${processedConfig.header.textColor};
+      margin: 0;
     }
     
     .navbar-nav .nav-link {
@@ -442,11 +470,9 @@ export function generateHTML(config, showGuides = false) {
       margin-bottom: 1.5rem;
       margin-left: auto;
       margin-right: auto;
-      background-color: ${processedConfig.global.primaryColor}20;
     }
     
     .benefits .icon i {
-      color: ${processedConfig.global.primaryColor};
       font-size: 1.5rem;
     }
     
@@ -485,6 +511,15 @@ export function generateHTML(config, showGuides = false) {
       font-size: 1.2rem;
       color: ${processedConfig.features.textColor};
       opacity: 0.8;
+    }
+    
+    .features .feature-image {
+      width: 100%;
+      height: auto;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     }
     
     .features .feature-item {
@@ -663,7 +698,11 @@ export function generateHTML(config, showGuides = false) {
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
       ${wrapElementWithGuide('Logo', `
-        <a class="navbar-brand" href="#">${processedConfig.header.logo}</a>
+        <a class="navbar-brand" href="#">
+          ${processedConfig.header.logoImage ? 
+            `<img src="${processedConfig.header.logoImage}" alt="Logo" class="logo-image">` : ''}
+          <span class="logo-text">${processedConfig.header.logoText || processedConfig.header.logo}</span>
+        </a>
       `)}
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -723,9 +762,11 @@ export function generateHTML(config, showGuides = false) {
           <div class="col-md-4 mb-4">
             ${wrapElementWithGuide(`Item ${index + 1}`, `
               <div class="feature-card shadow-sm">
-                <div class="icon">
-                  <i class="${item.icon}"></i>
-                </div>
+                ${wrapElementWithGuide(`Icon`, `
+                  <div class="icon" style="background-color: ${item.iconColor}20; color: ${item.iconColor};">
+                    <i class="${item.icon}"></i>
+                  </div>
+                `)}
                 ${wrapElementWithGuide(`Title`, `
                   <h4>${item.title}</h4>
                 `)}
@@ -757,15 +798,13 @@ export function generateHTML(config, showGuides = false) {
       <div class="row">
         <div class="col-lg-6 mb-4 mb-lg-0">
           ${wrapElementWithGuide('Image', `
-            <img src="${processedConfig.features.image}" alt="Features" class="img-fluid">
+            <img src="${processedConfig.features.image}" alt="Features" class="img-fluid feature-image">
           `)}
         </div>
         <div class="col-lg-6">
           ${processedConfig.features.items.map((item, index) => `
+            ${wrapElementWithGuide(`Item ${index + 1}`, `
               <div class="feature-item">
-                <div class="feature-icon">
-                  <i class="${item.icon}"></i>
-                </div>
                 <div class="feature-content">
                   ${wrapElementWithGuide(`Title`, `
                     <h4>${item.title}</h4>
@@ -775,6 +814,7 @@ export function generateHTML(config, showGuides = false) {
                   `)}
                 </div>
               </div>
+            `)}
           `).join('')}
         </div>
       </div>
