@@ -116,10 +116,15 @@ export function parseIntent(message) {
   if (lowerMessage.includes('hero button url') || 
       lowerMessage.includes('the hero button url') ||
       (lowerMessage.includes('button url') && lowerMessage.includes('hero'))) {
-    const urlRegex = /https?:\/\/[^\s"']+/i;
+    const urlRegex = /(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'HeroButtonUrl', value: match[0] };
+      // Add https:// prefix if not present
+      let url = match[0];
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+      return { type: 'HeroButtonUrl', value: url };
     }
   }
   
@@ -331,10 +336,15 @@ export function parseIntent(message) {
   
   if (lowerMessage.includes('cta button url') || 
       lowerMessage.includes('the cta button url')) {
-    const urlRegex = /https?:\/\/[^\s"']+/i;
+    const urlRegex = /(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'CtaButtonUrl', value: match[0] };
+      // Add https:// prefix if not present
+      let url = match[0];
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+      return { type: 'CtaButtonUrl', value: url };
     }
   }
   
@@ -415,37 +425,57 @@ export function parseIntent(message) {
   // For backward compatibility, keep the old social link patterns
   if (lowerMessage.includes('footer facebook link') || 
       lowerMessage.includes('the facebook link')) {
-    const urlRegex = /https?:\/\/[^\s"']+/i;
+    const urlRegex = /(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'FooterSocialLink', platform: 'facebook', value: match[0] };
+      // Add https:// prefix if not present
+      let url = match[0];
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+      return { type: 'FooterSocialLink', platform: 'facebook', value: url };
     }
   }
 
   if (lowerMessage.includes('footer twitter link') || 
       lowerMessage.includes('the twitter link')) {
-    const urlRegex = /https?:\/\/[^\s"']+/i;
+    const urlRegex = /(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'FooterSocialLink', platform: 'twitter', value: match[0] };
+      // Add https:// prefix if not present
+      let url = match[0];
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+      return { type: 'FooterSocialLink', platform: 'twitter', value: url };
     }
   }
 
   if (lowerMessage.includes('footer instagram link') || 
       lowerMessage.includes('the instagram link')) {
-    const urlRegex = /https?:\/\/[^\s"']+/i;
+    const urlRegex = /(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'FooterSocialLink', platform: 'instagram', value: match[0] };
+      // Add https:// prefix if not present
+      let url = match[0];
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+      return { type: 'FooterSocialLink', platform: 'instagram', value: url };
     }
   }
 
   if (lowerMessage.includes('footer linkedin link') || 
       lowerMessage.includes('the linkedin link')) {
-    const urlRegex = /https?:\/\/[^\s"']+/i;
+    const urlRegex = /(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'FooterSocialLink', platform: 'linkedin', value: match[0] };
+      // Add https:// prefix if not present
+      let url = match[0];
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+      return { type: 'FooterSocialLink', platform: 'linkedin', value: url };
     }
   }
   

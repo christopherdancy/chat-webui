@@ -592,7 +592,6 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
 
     // Check if we should automatically show the image uploader
     if (tokens.length >= 3) {
-       console.log(true);
       const section = tokens[0];
       const property = tokens[1];
       const action = tokens[2];
@@ -1009,7 +1008,6 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
             onImageSelect={(imageUrl) => {
               // Format the command with the image URL
               const command = currentImageContext?.section === "header" ? `${currentImageContext?.section} logo image ${imageUrl}` : `${currentImageContext?.section} image upload ${imageUrl}`;
-              console.log(command);
               
               setInput(command);
               
