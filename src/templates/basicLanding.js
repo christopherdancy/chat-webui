@@ -882,7 +882,7 @@ export function generateHTML(config, showGuides = false) {
         </div>
       </div>
       <div class="copyright">
-        <p>© 2025 ${processedConfig.header.logo}. All rights reserved.</p>
+        <p>© 2025 ${processedConfig.header.logoText}. All rights reserved.</p>
       </div>
     </div>
   </footer>
