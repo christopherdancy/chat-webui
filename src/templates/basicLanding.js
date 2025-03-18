@@ -100,8 +100,8 @@ const basicTemplate = {
     backgroundColor: "#4a90e2", // Uses global.primaryColor by default
     textColor: "#ffffff",
     buttonText: "Contact Us",
-    buttonColor: "#ffffff",
-    buttonTextColor: "#4a90e2", // Uses global.primaryColor by default
+    buttonColor: "#808080",
+    buttonTextColor: "#ffffff", // Uses global.primaryColor by default
     buttonUrl: "#"
   },
   
@@ -823,7 +823,7 @@ export function generateHTML(config, showGuides = false) {
   `)}
 
   <!-- Call to Action -->
-  ${wrapWithGuide('Call to Action', `
+  ${wrapWithGuide('cta', `
   <section class="cta">
     <div class="container">
       <div class="section-title">
