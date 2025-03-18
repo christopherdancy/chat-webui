@@ -88,7 +88,6 @@ export async function processMessage(message, currentConfig) {
       break;
     
     // Benefits section
-    // TODO: Icon in command  site 
     case 'BenefitsBackground':
       updatedConfig.benefits.backgroundColor = intent.value;
       responseMessage = `I've updated the benefits background to ${intent.value}?`;

@@ -277,18 +277,6 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     }
 
     const tokens = input.toLowerCase().trim().split(/\s+/);
-
-    // if ((tokens.length >= 3 && 
-    //     tokens[0] === 'features' && 
-    //     tokens[1] === 'image' && 
-    //     tokens[2] === 'upload') ||
-    //     (input.includes('features image url ') && input.includes('.jpg'))) {
-          
-    //     setCurrentOptions(["[Click to upload an image]"]);
-    //     setCurrentLevel('value');
-    //     setShowImageUploadHint(true);
-    //     return;
-    // }
     
     // Check if we're in the "features image upload" context or if we already have a URL
     if ((tokens.length >= 3 && 
@@ -789,18 +777,18 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     
     if (currentLevel === 'section') {
       // Starting a new command with a section
-      newInput = option;
+      newInput = option + ' ';  // Add space after section
     } else if (currentLevel === 'elementOrSubsection' || 
                currentLevel === 'element' || 
                currentLevel === 'subsection') {
       // Adding an element or subsection to a section
-      newInput = `${tokens[0]} ${option}`;
+      newInput = `${tokens[0]} ${option} `;  // Add space after element/subsection
     } else if (currentLevel === 'property' || currentLevel === 'subsectionElement') {
       // Adding a property to an element or an element to a subsection
-      newInput = `${tokens[0]} ${tokens[1]} ${option}`;
+      newInput = `${tokens[0]} ${tokens[1]} ${option} `;  // Add space after property/element
     } else if (currentLevel === 'subsectionProperty') {
       // Adding a property to a subsection element
-      newInput = `${tokens[0]} ${tokens[1]} ${tokens[2]} ${option}`;
+      newInput = `${tokens[0]} ${tokens[1]} ${tokens[2]} ${option} `;  // Add space after property
     } else if (currentLevel === 'value' || currentLevel === 'subsectionValue') {
       // For values, we'll just focus the input field
       inputRef.current?.focus();
