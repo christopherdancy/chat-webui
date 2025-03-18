@@ -42,24 +42,28 @@ const basicTemplate = {
     subtitle: "What makes us different",
     backgroundColor: "#ffffff",
     textColor: "#333333", // Uses global.textColor by default
+    cardBackgroundColor: "#ffffff", // Global card background color
     items: [
       {
         icon: "fas fa-check",
         title: "Premium Quality",
         description: "Our solutions are built with the highest standards in mind.",
-        iconColor: "#4a90e2" // Uses global.primaryColor by default
+        iconColor: "#4a90e2", // Uses global.primaryColor by default
+        backgroundColor: null // Individual card background color (null means use global)
       },
       {
         icon: "fas fa-chart-line",
         title: "Innovative Approach",
         description: "We use cutting-edge technologies to solve complex problems.",
-        iconColor: "#4a90e2" // Uses global.primaryColor by default
+        iconColor: "#4a90e2", // Uses global.primaryColor by default
+        backgroundColor: null // Individual card background color (null means use global)
       },
       {
         icon: "fas fa-globe",
         title: "Global Reach",
         description: "Our services are available worldwide with local support.",
-        iconColor: "#4a90e2" // Uses global.primaryColor by default
+        iconColor: "#4a90e2", // Uses global.primaryColor by default
+        backgroundColor: null // Individual card background color (null means use global)
       }
     ]
   },
@@ -150,24 +154,28 @@ export function generateHTML(config, showGuides = false) {
       ...config.benefits,
       backgroundColor: config.benefits.backgroundColor || "#ffffff",
       textColor: config.benefits.textColor || config.global.textColor,
+      cardBackgroundColor: config.benefits.cardBackgroundColor || "#ffffff",
       items: [
         {
           ...config.benefits.items[0],
           title: config.benefits.items[0].title || "Premium Quality",
           icon: config.benefits.items[0].icon || "fas fa-check",
-          iconColor: config.benefits.items[0].iconColor || config.global.primaryColor 
+          iconColor: config.benefits.items[0].iconColor || config.global.primaryColor,
+          backgroundColor: config.benefits.items[0].backgroundColor || null
         },
         {
           ...config.benefits.items[1],
           title: config.benefits.items[1].title || "Innovative Approach",
           icon: config.benefits.items[1].icon || "fas fa-chart-line",
-          iconColor: config.benefits.items[1].iconColor || config.global.primaryColor
+          iconColor: config.benefits.items[1].iconColor || config.global.primaryColor,
+          backgroundColor: config.benefits.items[1].backgroundColor || null
         },
         {
           ...config.benefits.items[2],
           title: config.benefits.items[2].title || "Global Reach",
           icon: config.benefits.items[2].icon || "fas fa-globe",
-          iconColor: config.benefits.items[2].iconColor || config.global.primaryColor
+          iconColor: config.benefits.items[2].iconColor || config.global.primaryColor,
+          backgroundColor: config.benefits.items[2].backgroundColor || null
         }
       ]
     },
@@ -761,7 +769,7 @@ export function generateHTML(config, showGuides = false) {
         ${processedConfig.benefits.items.map((item, index) => `
           <div class="col-md-4 mb-4">
             ${wrapElementWithGuide(`Item ${index + 1}`, `
-              <div class="feature-card shadow-sm">
+              <div class="feature-card shadow-sm" style="background-color: ${item.backgroundColor || processedConfig.benefits.cardBackgroundColor};">
                 ${wrapElementWithGuide(`Icon`, `
                   <div class="icon" style="background-color: ${item.iconColor}20; color: ${item.iconColor};">
                     <i class="${item.icon}"></i>

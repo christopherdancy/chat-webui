@@ -61,9 +61,9 @@ export const generateCommandStructure = (websiteConfig) => {
           structure.subsections[section] = ['item1', 'item2', 'item3'];
           
           // Define elements for each subsection
-          structure.subsectionElements[`${section}.item1`] = ['title', 'description', 'icon'];
-          structure.subsectionElements[`${section}.item2`] = ['title', 'description', 'icon'];
-          structure.subsectionElements[`${section}.item3`] = ['title', 'description', 'icon'];
+          structure.subsectionElements[`${section}.item1`] = ['title', 'description', 'icon', 'background'];
+          structure.subsectionElements[`${section}.item2`] = ['title', 'description', 'icon', 'background'];
+          structure.subsectionElements[`${section}.item3`] = ['title', 'description', 'icon', 'background'];
           
           // Define properties for subsection elements
           structure.properties[`${section}.item1.title`] = ['text'];
@@ -75,6 +75,9 @@ export const generateCommandStructure = (websiteConfig) => {
           structure.properties[`${section}.item1.icon`] = ['image', 'color'];
           structure.properties[`${section}.item2.icon`] = ['image', 'color'];
           structure.properties[`${section}.item3.icon`] = ['image', 'color'];
+          structure.properties[`${section}.item1.background`] = ['color'];
+          structure.properties[`${section}.item2.background`] = ['color'];
+          structure.properties[`${section}.item3.background`] = ['color'];
           break;
           
         case 'features':

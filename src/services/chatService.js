@@ -164,6 +164,21 @@ export async function processMessage(message, currentConfig) {
       }
       break;
 
+    case 'BenefitItemBackgroundColor':
+      const benefitBackgroundColorIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
+      if (updatedConfig.benefits && 
+          updatedConfig.benefits.items && 
+          benefitBackgroundColorIndex >= 0 && 
+          benefitBackgroundColorIndex < updatedConfig.benefits.items.length) {
+        updatedConfig.benefits.items[benefitBackgroundColorIndex].backgroundColor = intent.value;
+        responseMessage = `Updated the background color for benefits ${intent.itemName} to ${intent.value}.`;
+      } else {
+        responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
+      }
+      break;
+
     // Features section
     case 'FeaturesBackground':
       updatedConfig.features.backgroundColor = intent.value;

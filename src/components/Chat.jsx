@@ -225,6 +225,8 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
         command = `${section} text color ${colorValue}`;
       } else if (tokens.length >= 2 && tokens[1].toLowerCase() === 'button') {
         command = `${section} button color ${colorValue}`;
+      } else if (tokens.length >= 3 && tokens[2].toLowerCase() === 'background') {
+        command = `${section} ${tokens[1]} background color ${colorValue}`;
       } else {
         // For simple properties like "color"
         command = `${section} ${property} ${colorValue}`;
