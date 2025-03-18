@@ -318,15 +318,7 @@ export async function processMessage(message, currentConfig) {
     case 'unknown':
     default:
       // No s to the config
-      responseMessage = "I'm not sure how to make that . You can modify various parts of the website including:\n\n" +
-        "- Global colors (primary, secondary, text)\n" +
-        "- Header (title, color, logo)\n" +
-        "- Hero section (title, subtitle, button, background)\n" +
-        "- Benefits section (title, subtitle)\n" +
-        "- Features section (title, subtitle, image)\n" +
-        "- Call to Action section (title, subtitle, button)\n" +
-        "- Footer text\n\n" +
-        "For example, try saying ' the header title to My Website' or ' the primary color to blue'.";
+      responseMessage = "I'm not sure how to make that change. Customize your website by typing a command like 'header background color green'";
       return { message: responseMessage, updatedConfig: null };
   }
   
