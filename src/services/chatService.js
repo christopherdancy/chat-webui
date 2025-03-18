@@ -329,7 +329,14 @@ export async function processMessage(message, currentConfig) {
       updatedConfig.footer.phone = intent.value;
       responseMessage = `I've updated the footer phone to "${intent.value}"?`;
       break;  
-      
+
+    case 'HideSocialLink':
+      updatedConfig.footer.socialLinks[intent.platform].hidden = intent.value;
+      responseMessage = intent.value 
+        ? `I've updated the ${intent.platform} icon to be hidden.`
+        : `I've updated the ${intent.platform} icon to be visible.`;
+      break;
+
     case 'unknown':
     default:
       // No s to the config

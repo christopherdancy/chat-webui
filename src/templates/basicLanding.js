@@ -115,10 +115,10 @@ const basicTemplate = {
     backgroundColor: "#2d3748",
     textColor: "#ffffff",
     socialLinks: {
-      facebook: { url: "https://www.facebook.com", icon: "fab fa-facebook-f" },
-      twitter: { url: "https://www.twitter.com", icon: "fab fa-twitter" },
-      instagram: { url: "https://www.instagram.com", icon: "fab fa-instagram" },
-      linkedin: { url: "https://www.linkedin.com", icon: "fab fa-linkedin-in" }
+      facebook: { url: "https://www.facebook.com", icon: "fab fa-facebook-f", hidden: false },
+      twitter: { url: "https://www.twitter.com", icon: "fab fa-twitter", hidden: false },
+      instagram: { url: "https://www.instagram.com", icon: "fab fa-instagram", hidden: false },
+      linkedin: { url: "https://www.linkedin.com", icon: "fab fa-linkedin-in", hidden: false }
     },
     links: [
       { text: "Home", url: "#" },
@@ -218,10 +218,10 @@ export function generateHTML(config, showGuides = false) {
       textColor: config.footer.textColor || config.global.textColor,
       description: config.footer.description || "We are a team of passionate professionals dedicated to helping businesses grow and succeed in the digital age.",
       socialLinks: config.footer.socialLinks || {
-        facebook: { url: "https://www.facebook.com", icon: "fab fa-facebook-f" },
-        twitter: { url: "https://www.twitter.com", icon: "fab fa-twitter" },
-        instagram: { url: "https://www.instagram.com", icon: "fab fa-instagram" },
-        linkedin: { url: "https://www.linkedin.com", icon: "fab fa-linkedin-in" }
+        facebook: { url: "https://www.facebook.com", icon: "fab fa-facebook-f", hidden: false },
+        twitter: { url: "https://www.twitter.com", icon: "fab fa-twitter", hidden: false },
+        instagram: { url: "https://www.instagram.com", icon: "fab fa-instagram", hidden: false },
+        linkedin: { url: "https://www.linkedin.com", icon: "fab fa-linkedin-in", hidden: false }
       },
       links: config.footer.links || [
         { text: "Home", url: "#" },
@@ -861,10 +861,14 @@ export function generateHTML(config, showGuides = false) {
           `)}
           <div class="social-links">
             ${wrapElementWithGuide('Social Links', `
-              <a href="${processedConfig.footer.socialLinks.facebook.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.facebook.icon}"></i></a>
-              <a href="${processedConfig.footer.socialLinks.twitter.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.twitter.icon}"></i></a>
-              <a href="${processedConfig.footer.socialLinks.instagram.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.instagram.icon}"></i></a>
-              <a href="${processedConfig.footer.socialLinks.linkedin.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.linkedin.icon}"></i></a>
+              ${!processedConfig.footer.socialLinks.facebook.hidden ? 
+                `<a href="${processedConfig.footer.socialLinks.facebook.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.facebook.icon}"></i></a>` : ''}
+              ${!processedConfig.footer.socialLinks.twitter.hidden ? 
+                `<a href="${processedConfig.footer.socialLinks.twitter.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.twitter.icon}"></i></a>` : ''}
+              ${!processedConfig.footer.socialLinks.instagram.hidden ? 
+                `<a href="${processedConfig.footer.socialLinks.instagram.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.instagram.icon}"></i></a>` : ''}
+              ${!processedConfig.footer.socialLinks.linkedin.hidden ? 
+                `<a href="${processedConfig.footer.socialLinks.linkedin.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.linkedin.icon}"></i></a>` : ''}
             `)}
           </div>
         </div>

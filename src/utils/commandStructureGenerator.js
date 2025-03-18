@@ -130,10 +130,10 @@ export const generateCommandStructure = (websiteConfig) => {
           structure.subsectionElements[`${section}.social`] = ['facebook', 'twitter', 'instagram', 'linkedin'];
 
           // Define properties for subsection elements
-          structure.properties[`${section}.social.facebook`] = ['url'];
-          structure.properties[`${section}.social.twitter`] = ['url'];
-          structure.properties[`${section}.social.instagram`] = ['url'];
-          structure.properties[`${section}.social.linkedin`] = ['url'];
+          structure.properties[`${section}.social.facebook`] = ['url', 'hide', 'show'];
+          structure.properties[`${section}.social.twitter`] = ['url', 'hide', 'show'];
+          structure.properties[`${section}.social.instagram`] = ['url', 'hide', 'show'];
+          structure.properties[`${section}.social.linkedin`] = ['url', 'hide', 'show'];
           break;
           
         default:

@@ -408,11 +408,9 @@ export function parseIntent(message) {
       }
     }
     
-    // Handle social links using the subsection structure
+    // Handle social links - consolidated approach
     if (lowerMessage.includes('social')) {
-      // Match pattern like "footer socials facebook url https://facebook.com"
-      // Or "footer social facebook url https://facebook.com" (singular form)
-      // Updated regex to handle both singular and plural forms
+      // Handle social link URLs
       const socialUrlRegex = /footer social(?:s)? (facebook|twitter|instagram|linkedin) (?:url|link)(?: to)? ((?:https?:\/\/)?(?:www\.)?[^\s"']+\.[a-z]{2,}[^\s"']*)/i;
       const socialUrlMatch = message.match(socialUrlRegex);
       
@@ -431,63 +429,52 @@ export function parseIntent(message) {
           value: url
         };
       }
+      
+      // Handle hide/show commands
+      const socialVisibilityRegex = /footer social(?:s)? (facebook|twitter|instagram|linkedin) (hide|show)/i;
+      const socialVisibilityMatch = message.match(socialVisibilityRegex);
+      
+      if (socialVisibilityMatch && socialVisibilityMatch[1] && socialVisibilityMatch[2]) {
+        const platform = socialVisibilityMatch[1].toLowerCase();
+        const action = socialVisibilityMatch[2].toLowerCase();
+        
+        return { 
+          type: 'HideSocialLink', 
+          platform: platform,
+          value: action === 'hide' 
+        };
+      }
     }
   }
 
-  // For backward compatibility, keep the old social link patterns
-  if (lowerMessage.includes('footer facebook link') || 
-      lowerMessage.includes('the facebook link')) {
-    const urlRegex = /(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?/i;
-    const match = message.match(urlRegex);
-    if (match) {
-      // Add https:// prefix if not present
-      let url = match[0];
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        url = 'https://' + url;
+  // For backward compatibility, handle legacy social link patterns
+  const platforms = ['facebook', 'twitter', 'instagram', 'linkedin'];
+  for (const platform of platforms) {
+    if (lowerMessage.includes(`footer ${platform} link`) || 
+        lowerMessage.includes(`the ${platform} link`)) {
+      const urlRegex = /(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?/i;
+      const match = message.match(urlRegex);
+      if (match) {
+        // Add https:// prefix if not present
+        let url = match[0];
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          url = 'https://' + url;
+        }
+        return { type: 'FooterSocialLink', platform: platform, value: url };
       }
-      return { type: 'FooterSocialLink', platform: 'facebook', value: url };
     }
-  }
-
-  if (lowerMessage.includes('footer twitter link') || 
-      lowerMessage.includes('the twitter link')) {
-    const urlRegex = /(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?/i;
-    const match = message.match(urlRegex);
-    if (match) {
-      // Add https:// prefix if not present
-      let url = match[0];
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        url = 'https://' + url;
-      }
-      return { type: 'FooterSocialLink', platform: 'twitter', value: url };
+    
+    // Legacy hide/show commands
+    if (lowerMessage.includes(`hide ${platform}`) || 
+        lowerMessage.includes(`hide ${platform} link`) ||
+        lowerMessage.includes(`remove ${platform}`)) {
+      return { type: 'HideSocialLink', platform: platform, value: true };
     }
-  }
-
-  if (lowerMessage.includes('footer instagram link') || 
-      lowerMessage.includes('the instagram link')) {
-    const urlRegex = /(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?/i;
-    const match = message.match(urlRegex);
-    if (match) {
-      // Add https:// prefix if not present
-      let url = match[0];
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        url = 'https://' + url;
-      }
-      return { type: 'FooterSocialLink', platform: 'instagram', value: url };
-    }
-  }
-
-  if (lowerMessage.includes('footer linkedin link') || 
-      lowerMessage.includes('the linkedin link')) {
-    const urlRegex = /(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?/i;
-    const match = message.match(urlRegex);
-    if (match) {
-      // Add https:// prefix if not present
-      let url = match[0];
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        url = 'https://' + url;
-      }
-      return { type: 'FooterSocialLink', platform: 'linkedin', value: url };
+    
+    if (lowerMessage.includes(`show ${platform}`) || 
+        lowerMessage.includes(`show ${platform} link`) ||
+        lowerMessage.includes(`unhide ${platform}`)) {
+      return { type: 'HideSocialLink', platform: platform, value: false };
     }
   }
   
