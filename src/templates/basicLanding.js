@@ -848,7 +848,7 @@ export function generateHTML(config, showGuides = false) {
       <div class="row">
         <div class="col-lg-4 mb-4 mb-lg-0">
           <h5>About Us</h5>
-          ${wrapElementWithGuide('company description', `
+          ${wrapElementWithGuide('Description', `
             <p>${processedConfig.footer.description}</p>
           `)}
           <div class="social-links">
