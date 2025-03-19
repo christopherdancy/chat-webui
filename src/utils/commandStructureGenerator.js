@@ -29,12 +29,12 @@ export const generateCommandStructure = (websiteConfig) => {
       
       // Extract elements based on section type
       switch (section) {
-        case 'global':
-          structure.elements[section] = ['primaryColor', 'secondaryColor', 'textColor'];
-          structure.properties[`${section}.primaryColor`] = ['color'];
-          structure.properties[`${section}.secondaryColor`] = ['color'];
-          structure.properties[`${section}.textColor`] = ['color'];
-          break;
+        // case 'global':
+        //   structure.elements[section] = ['primary', 'secondaryColor'];
+        //   structure.properties[`${section}.primary`] = ['color'];
+        //   structure.properties[`${section}.secondaryColor`] = ['color'];
+        //   structure.properties[`${section}.textColor`] = ['color'];
+        //   break;
         
         case 'header':
             structure.elements[section] = ['logo', 'background'];
