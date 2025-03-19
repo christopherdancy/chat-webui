@@ -34,7 +34,7 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>Website Chat Editor</h1>
+        <h1>VibeSite</h1>
         <p>Edit your website through chat and deploy it with one click</p>
       </header>
       
@@ -53,7 +53,7 @@ function App() {
       </main>
       
       <footer className="app-footer">
-        <p>Website Chat Editor POC &copy; 2025</p>
+        <p>VibeSite POC &copy; 2025</p>
       </footer>
     </div>
   );

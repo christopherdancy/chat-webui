@@ -9,7 +9,12 @@
     { "src": "api/**/*.js", "use": "@vercel/node" }
   ],
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1.js" }
+    { "source": "/api/(.*)", "destination": "/api/$1.js" },
+    { "source": "/static/(.*)", "destination": "/static/$1" },
+    { "source": "/favicon.ico", "destination": "/favicon.ico" },
+    { "source": "/manifest.json", "destination": "/manifest.json" },
+    { "source": "/asset-manifest.json", "destination": "/asset-manifest.json" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     {

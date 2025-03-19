@@ -930,7 +930,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     <div className="chat-container">
       <div className="chat-messages">
         <div className="system-message">
-          Welcome to Website Chat Editor! Type commands or click on options below to make changes to your website.
+          Welcome to VibeSite! Type commands or click on options below to make changes to your website.
         </div>
         {messages.map((msg, index) => (
           <ChatMessage 
