@@ -8,13 +8,8 @@
     },
     { "src": "api/**/*.js", "use": "@vercel/node" }
   ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1.js" },
-    { "src": "^/static/(.*)", "dest": "/static/$1" },
-    { "src": "^/favicon.ico", "dest": "/favicon.ico" },
-    { "src": "^/manifest.json", "dest": "/manifest.json" },
-    { "src": "^/asset-manifest.json", "dest": "/asset-manifest.json" },
-    { "src": ".*", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1.js" }
   ],
   "headers": [
     {
@@ -34,5 +29,7 @@
         }
       ]
     }
-  ]
+  ],
+  "trailingSlash": false,
+  "cleanUrls": true
 } 
