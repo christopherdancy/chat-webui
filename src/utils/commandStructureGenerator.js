@@ -16,7 +16,7 @@ export const generateCommandStructure = (websiteConfig) => {
   // Extract sections from the config
   if (websiteConfig) {
     // Add standard sections
-    const standardSections = ['global', 'header', 'hero', 'benefits', 'features', 'cta', 'footer'];
+    const standardSections = ['header', 'hero', 'benefits', 'features', 'cta', 'footer'];
     
     // Filter to only include sections that exist in the config
     structure.sections = standardSections.filter(section => websiteConfig[section]);
