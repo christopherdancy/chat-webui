@@ -7,13 +7,9 @@ import './styles.css';
 
 function App() {
   const [error, setError] = useState(null);
-  const [websiteConfig, setWebsiteConfig] = useState(() => {
-    try {
-      return basicTemplate;
-    } catch (err) {
-      setError('Failed to load template');
-      return {};
-    }
+  const [config, setConfig] = useState(() => {
+    const savedConfig = localStorage.getItem('websiteConfig');
+    return savedConfig ? JSON.parse(savedConfig) : basicTemplate;
   });
   
   useEffect(() => {
@@ -29,7 +25,7 @@ function App() {
   }, []);
 
   const handlePreviewUpdate = (updatedConfig) => {
-    setWebsiteConfig(updatedConfig);
+    setConfig(updatedConfig);
   };
   
   if (error) {
@@ -53,15 +49,16 @@ function App() {
         <div className="left-panel" style={{ height: 'calc(100vh - 150px)', display: 'flex', flexDirection: 'column' }}>
           <Chat 
             onPreviewUpdate={handlePreviewUpdate}
-            websiteConfig={websiteConfig}
+            websiteConfig={config}
+            setConfig={setConfig}
           />
         </div>
         
         <div className="right-panel" style={{ height: 'calc(100vh - 150px)', display: 'flex', flexDirection: 'column' }}>
           <div style={{ flex: 1, overflow: 'auto', minHeight: '500px' }}>
-            <WebsitePreview config={websiteConfig} />
+            <WebsitePreview config={config} setConfig={setConfig} />
           </div>
-          <DeployButton websiteConfig={websiteConfig} />
+          <DeployButton websiteConfig={config} />
         </div>
       </main>
       
