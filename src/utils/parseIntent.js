@@ -116,10 +116,15 @@ export function parseIntent(message) {
   if (lowerMessage.includes('hero button url') || 
       lowerMessage.includes('the hero button url') ||
       (lowerMessage.includes('button url') && lowerMessage.includes('hero'))) {
-    const urlRegex = /https?:\/\/[^\s"']+/i;
+    const urlRegex = /(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'HeroButtonUrl', value: match[0] };
+      // Add https:// prefix if not present
+      let url = match[0];
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+      return { type: 'HeroButtonUrl', value: url };
     }
   }
   
@@ -198,6 +203,18 @@ export function parseIntent(message) {
       return {
         type: 'BenefitItemIconColor',
         value: iconColorMatch[2].trim(),
+        itemName: itemName
+      };
+    }
+
+    // Match pattern like "benefits item1 background color"
+    const backgroundColorRegex = /benefits (item\d+) background color(?: to)? ["']?([^"']+)["']?/i;
+    const backgroundColorMatch = message.match(backgroundColorRegex);
+    if (backgroundColorMatch && backgroundColorMatch[1] && backgroundColorMatch[2]) {
+      const itemName = backgroundColorMatch[1].toLowerCase(); // e.g., "item1"
+      return {
+        type: 'BenefitItemBackgroundColor',
+        value: backgroundColorMatch[2].trim(),
         itemName: itemName
       };
     }
@@ -331,10 +348,15 @@ export function parseIntent(message) {
   
   if (lowerMessage.includes('cta button url') || 
       lowerMessage.includes('the cta button url')) {
-    const urlRegex = /https?:\/\/[^\s"']+/i;
+    const urlRegex = /(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?/i;
     const match = message.match(urlRegex);
     if (match) {
-      return { type: 'CtaButtonUrl', value: match[0] };
+      // Add https:// prefix if not present
+      let url = match[0];
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+      return { type: 'CtaButtonUrl', value: url };
     }
   }
   
@@ -386,11 +408,9 @@ export function parseIntent(message) {
       }
     }
     
-    // Handle social links using the subsection structure
+    // Handle social links - consolidated approach
     if (lowerMessage.includes('social')) {
-      // Match pattern like "footer socials facebook url https://facebook.com"
-      // Or "footer social facebook url https://facebook.com" (singular form)
-      // Updated regex to handle both singular and plural forms
+      // Handle social link URLs
       const socialUrlRegex = /footer social(?:s)? (facebook|twitter|instagram|linkedin) (?:url|link)(?: to)? ((?:https?:\/\/)?(?:www\.)?[^\s"']+\.[a-z]{2,}[^\s"']*)/i;
       const socialUrlMatch = message.match(socialUrlRegex);
       
@@ -409,43 +429,52 @@ export function parseIntent(message) {
           value: url
         };
       }
+      
+      // Handle hide/show commands
+      const socialVisibilityRegex = /footer social(?:s)? (facebook|twitter|instagram|linkedin) (hide|show)/i;
+      const socialVisibilityMatch = message.match(socialVisibilityRegex);
+      
+      if (socialVisibilityMatch && socialVisibilityMatch[1] && socialVisibilityMatch[2]) {
+        const platform = socialVisibilityMatch[1].toLowerCase();
+        const action = socialVisibilityMatch[2].toLowerCase();
+        
+        return { 
+          type: 'HideSocialLink', 
+          platform: platform,
+          value: action === 'hide' 
+        };
+      }
     }
   }
 
-  // For backward compatibility, keep the old social link patterns
-  if (lowerMessage.includes('footer facebook link') || 
-      lowerMessage.includes('the facebook link')) {
-    const urlRegex = /https?:\/\/[^\s"']+/i;
-    const match = message.match(urlRegex);
-    if (match) {
-      return { type: 'FooterSocialLink', platform: 'facebook', value: match[0] };
+  // For backward compatibility, handle legacy social link patterns
+  const platforms = ['facebook', 'twitter', 'instagram', 'linkedin'];
+  for (const platform of platforms) {
+    if (lowerMessage.includes(`footer ${platform} link`) || 
+        lowerMessage.includes(`the ${platform} link`)) {
+      const urlRegex = /(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?/i;
+      const match = message.match(urlRegex);
+      if (match) {
+        // Add https:// prefix if not present
+        let url = match[0];
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          url = 'https://' + url;
+        }
+        return { type: 'FooterSocialLink', platform: platform, value: url };
+      }
     }
-  }
-
-  if (lowerMessage.includes('footer twitter link') || 
-      lowerMessage.includes('the twitter link')) {
-    const urlRegex = /https?:\/\/[^\s"']+/i;
-    const match = message.match(urlRegex);
-    if (match) {
-      return { type: 'FooterSocialLink', platform: 'twitter', value: match[0] };
+    
+    // Legacy hide/show commands
+    if (lowerMessage.includes(`hide ${platform}`) || 
+        lowerMessage.includes(`hide ${platform} link`) ||
+        lowerMessage.includes(`remove ${platform}`)) {
+      return { type: 'HideSocialLink', platform: platform, value: true };
     }
-  }
-
-  if (lowerMessage.includes('footer instagram link') || 
-      lowerMessage.includes('the instagram link')) {
-    const urlRegex = /https?:\/\/[^\s"']+/i;
-    const match = message.match(urlRegex);
-    if (match) {
-      return { type: 'FooterSocialLink', platform: 'instagram', value: match[0] };
-    }
-  }
-
-  if (lowerMessage.includes('footer linkedin link') || 
-      lowerMessage.includes('the linkedin link')) {
-    const urlRegex = /https?:\/\/[^\s"']+/i;
-    const match = message.match(urlRegex);
-    if (match) {
-      return { type: 'FooterSocialLink', platform: 'linkedin', value: match[0] };
+    
+    if (lowerMessage.includes(`show ${platform}`) || 
+        lowerMessage.includes(`show ${platform} link`) ||
+        lowerMessage.includes(`unhide ${platform}`)) {
+      return { type: 'HideSocialLink', platform: platform, value: false };
     }
   }
   

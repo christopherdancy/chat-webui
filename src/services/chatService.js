@@ -88,7 +88,6 @@ export async function processMessage(message, currentConfig) {
       break;
     
     // Benefits section
-    // TODO: Icon in command  site 
     case 'BenefitsBackground':
       updatedConfig.benefits.backgroundColor = intent.value;
       responseMessage = `I've updated the benefits background to ${intent.value}?`;
@@ -159,6 +158,21 @@ export async function processMessage(message, currentConfig) {
           benefitIconColorIndex < updatedConfig.benefits.items.length) {
         updatedConfig.benefits.items[benefitIconColorIndex].iconColor = intent.value;
         responseMessage = `Updated the icon color for benefits ${intent.itemName} to ${intent.value}.`;
+      } else {
+        responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
+        return { message: responseMessage, updatedConfig: null };
+      }
+      break;
+
+    case 'BenefitItemBackgroundColor':
+      const benefitBackgroundColorIndex = parseInt(intent.itemName.replace('item', '')) - 1;
+      
+      if (updatedConfig.benefits && 
+          updatedConfig.benefits.items && 
+          benefitBackgroundColorIndex >= 0 && 
+          benefitBackgroundColorIndex < updatedConfig.benefits.items.length) {
+        updatedConfig.benefits.items[benefitBackgroundColorIndex].backgroundColor = intent.value;
+        responseMessage = `Updated the background color for benefits ${intent.itemName} to ${intent.value}.`;
       } else {
         responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
         return { message: responseMessage, updatedConfig: null };
@@ -315,19 +329,18 @@ export async function processMessage(message, currentConfig) {
       updatedConfig.footer.phone = intent.value;
       responseMessage = `I've updated the footer phone to "${intent.value}"?`;
       break;  
-      
+
+    case 'HideSocialLink':
+      updatedConfig.footer.socialLinks[intent.platform].hidden = intent.value;
+      responseMessage = intent.value 
+        ? `I've updated the ${intent.platform} icon to be hidden.`
+        : `I've updated the ${intent.platform} icon to be visible.`;
+      break;
+
     case 'unknown':
     default:
       // No s to the config
-      responseMessage = "I'm not sure how to make that . You can modify various parts of the website including:\n\n" +
-        "- Global colors (primary, secondary, text)\n" +
-        "- Header (title, color, logo)\n" +
-        "- Hero section (title, subtitle, button, background)\n" +
-        "- Benefits section (title, subtitle)\n" +
-        "- Features section (title, subtitle, image)\n" +
-        "- Call to Action section (title, subtitle, button)\n" +
-        "- Footer text\n\n" +
-        "For example, try saying ' the header title to My Website' or ' the primary color to blue'.";
+      responseMessage = "I'm not sure how to make that change. Customize your website by typing a command like 'header background color green'";
       return { message: responseMessage, updatedConfig: null };
   }
   

@@ -16,7 +16,7 @@ export const generateCommandStructure = (websiteConfig) => {
   // Extract sections from the config
   if (websiteConfig) {
     // Add standard sections
-    const standardSections = ['global', 'hero', 'header', 'benefits', 'features', 'cta', 'footer'];
+    const standardSections = ['header', 'hero', 'benefits', 'features', 'cta', 'footer'];
     
     // Filter to only include sections that exist in the config
     structure.sections = standardSections.filter(section => websiteConfig[section]);
@@ -29,14 +29,13 @@ export const generateCommandStructure = (websiteConfig) => {
       
       // Extract elements based on section type
       switch (section) {
-        case 'global':
-          structure.elements[section] = ['primaryColor', 'secondaryColor', 'textColor'];
-          structure.properties[`${section}.primaryColor`] = ['color'];
-          structure.properties[`${section}.secondaryColor`] = ['color'];
-          structure.properties[`${section}.textColor`] = ['color'];
-          break;
+        // case 'global':
+        //   structure.elements[section] = ['primary', 'secondaryColor'];
+        //   structure.properties[`${section}.primary`] = ['color'];
+        //   structure.properties[`${section}.secondaryColor`] = ['color'];
+        //   structure.properties[`${section}.textColor`] = ['color'];
+        //   break;
         
-        // TODO: Options for colors and fonts and icons
         case 'header':
             structure.elements[section] = ['logo', 'background'];
             structure.properties[`${section}.logo`] = ['text', 'image'];
@@ -62,9 +61,9 @@ export const generateCommandStructure = (websiteConfig) => {
           structure.subsections[section] = ['item1', 'item2', 'item3'];
           
           // Define elements for each subsection
-          structure.subsectionElements[`${section}.item1`] = ['title', 'description', 'icon'];
-          structure.subsectionElements[`${section}.item2`] = ['title', 'description', 'icon'];
-          structure.subsectionElements[`${section}.item3`] = ['title', 'description', 'icon'];
+          structure.subsectionElements[`${section}.item1`] = ['title', 'description', 'icon', 'background'];
+          structure.subsectionElements[`${section}.item2`] = ['title', 'description', 'icon', 'background'];
+          structure.subsectionElements[`${section}.item3`] = ['title', 'description', 'icon', 'background'];
           
           // Define properties for subsection elements
           structure.properties[`${section}.item1.title`] = ['text'];
@@ -76,6 +75,9 @@ export const generateCommandStructure = (websiteConfig) => {
           structure.properties[`${section}.item1.icon`] = ['image', 'color'];
           structure.properties[`${section}.item2.icon`] = ['image', 'color'];
           structure.properties[`${section}.item3.icon`] = ['image', 'color'];
+          structure.properties[`${section}.item1.background`] = ['color'];
+          structure.properties[`${section}.item2.background`] = ['color'];
+          structure.properties[`${section}.item3.background`] = ['color'];
           break;
           
         case 'features':
@@ -128,10 +130,10 @@ export const generateCommandStructure = (websiteConfig) => {
           structure.subsectionElements[`${section}.social`] = ['facebook', 'twitter', 'instagram', 'linkedin'];
 
           // Define properties for subsection elements
-          structure.properties[`${section}.social.facebook`] = ['url'];
-          structure.properties[`${section}.social.twitter`] = ['url'];
-          structure.properties[`${section}.social.instagram`] = ['url'];
-          structure.properties[`${section}.social.linkedin`] = ['url'];
+          structure.properties[`${section}.social.facebook`] = ['url', 'hide', 'show'];
+          structure.properties[`${section}.social.twitter`] = ['url', 'hide', 'show'];
+          structure.properties[`${section}.social.instagram`] = ['url', 'hide', 'show'];
+          structure.properties[`${section}.social.linkedin`] = ['url', 'hide', 'show'];
           break;
           
         default:

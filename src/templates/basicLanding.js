@@ -42,24 +42,28 @@ const basicTemplate = {
     subtitle: "What makes us different",
     backgroundColor: "#ffffff",
     textColor: "#333333", // Uses global.textColor by default
+    cardBackgroundColor: "#ffffff", // Global card background color
     items: [
       {
         icon: "fas fa-check",
         title: "Premium Quality",
         description: "Our solutions are built with the highest standards in mind.",
-        iconColor: "#4a90e2" // Uses global.primaryColor by default
+        iconColor: "#4a90e2", // Uses global.primaryColor by default
+        backgroundColor: null // Individual card background color (null means use global)
       },
       {
         icon: "fas fa-chart-line",
         title: "Innovative Approach",
         description: "We use cutting-edge technologies to solve complex problems.",
-        iconColor: "#4a90e2" // Uses global.primaryColor by default
+        iconColor: "#4a90e2", // Uses global.primaryColor by default
+        backgroundColor: null // Individual card background color (null means use global)
       },
       {
         icon: "fas fa-globe",
         title: "Global Reach",
         description: "Our services are available worldwide with local support.",
-        iconColor: "#4a90e2" // Uses global.primaryColor by default
+        iconColor: "#4a90e2", // Uses global.primaryColor by default
+        backgroundColor: null // Individual card background color (null means use global)
       }
     ]
   },
@@ -100,8 +104,8 @@ const basicTemplate = {
     backgroundColor: "#4a90e2", // Uses global.primaryColor by default
     textColor: "#ffffff",
     buttonText: "Contact Us",
-    buttonColor: "#ffffff",
-    buttonTextColor: "#4a90e2", // Uses global.primaryColor by default
+    buttonColor: "#808080",
+    buttonTextColor: "#ffffff", // Uses global.primaryColor by default
     buttonUrl: "#"
   },
   
@@ -111,10 +115,10 @@ const basicTemplate = {
     backgroundColor: "#2d3748",
     textColor: "#ffffff",
     socialLinks: {
-      facebook: { url: "https://www.facebook.com", icon: "fab fa-facebook-f" },
-      twitter: { url: "https://www.twitter.com", icon: "fab fa-twitter" },
-      instagram: { url: "https://www.instagram.com", icon: "fab fa-instagram" },
-      linkedin: { url: "https://www.linkedin.com", icon: "fab fa-linkedin-in" }
+      facebook: { url: "https://www.facebook.com", icon: "fab fa-facebook-f", hidden: false },
+      twitter: { url: "https://www.twitter.com", icon: "fab fa-twitter", hidden: false },
+      instagram: { url: "https://www.instagram.com", icon: "fab fa-instagram", hidden: false },
+      linkedin: { url: "https://www.linkedin.com", icon: "fab fa-linkedin-in", hidden: false }
     },
     links: [
       { text: "Home", url: "#" },
@@ -150,24 +154,28 @@ export function generateHTML(config, showGuides = false) {
       ...config.benefits,
       backgroundColor: config.benefits.backgroundColor || "#ffffff",
       textColor: config.benefits.textColor || config.global.textColor,
+      cardBackgroundColor: config.benefits.cardBackgroundColor || "#ffffff",
       items: [
         {
           ...config.benefits.items[0],
           title: config.benefits.items[0].title || "Premium Quality",
           icon: config.benefits.items[0].icon || "fas fa-check",
-          iconColor: config.benefits.items[0].iconColor || config.global.primaryColor 
+          iconColor: config.benefits.items[0].iconColor || config.global.primaryColor,
+          backgroundColor: config.benefits.items[0].backgroundColor || null
         },
         {
           ...config.benefits.items[1],
           title: config.benefits.items[1].title || "Innovative Approach",
           icon: config.benefits.items[1].icon || "fas fa-chart-line",
-          iconColor: config.benefits.items[1].iconColor || config.global.primaryColor
+          iconColor: config.benefits.items[1].iconColor || config.global.primaryColor,
+          backgroundColor: config.benefits.items[1].backgroundColor || null
         },
         {
           ...config.benefits.items[2],
           title: config.benefits.items[2].title || "Global Reach",
           icon: config.benefits.items[2].icon || "fas fa-globe",
-          iconColor: config.benefits.items[2].iconColor || config.global.primaryColor
+          iconColor: config.benefits.items[2].iconColor || config.global.primaryColor,
+          backgroundColor: config.benefits.items[2].backgroundColor || null
         }
       ]
     },
@@ -210,10 +218,10 @@ export function generateHTML(config, showGuides = false) {
       textColor: config.footer.textColor || config.global.textColor,
       description: config.footer.description || "We are a team of passionate professionals dedicated to helping businesses grow and succeed in the digital age.",
       socialLinks: config.footer.socialLinks || {
-        facebook: { url: "https://www.facebook.com", icon: "fab fa-facebook-f" },
-        twitter: { url: "https://www.twitter.com", icon: "fab fa-twitter" },
-        instagram: { url: "https://www.instagram.com", icon: "fab fa-instagram" },
-        linkedin: { url: "https://www.linkedin.com", icon: "fab fa-linkedin-in" }
+        facebook: { url: "https://www.facebook.com", icon: "fab fa-facebook-f", hidden: false },
+        twitter: { url: "https://www.twitter.com", icon: "fab fa-twitter", hidden: false },
+        instagram: { url: "https://www.instagram.com", icon: "fab fa-instagram", hidden: false },
+        linkedin: { url: "https://www.linkedin.com", icon: "fab fa-linkedin-in", hidden: false }
       },
       links: config.footer.links || [
         { text: "Home", url: "#" },
@@ -761,7 +769,7 @@ export function generateHTML(config, showGuides = false) {
         ${processedConfig.benefits.items.map((item, index) => `
           <div class="col-md-4 mb-4">
             ${wrapElementWithGuide(`Item ${index + 1}`, `
-              <div class="feature-card shadow-sm">
+              <div class="feature-card shadow-sm" style="background-color: ${item.backgroundColor || processedConfig.benefits.cardBackgroundColor};">
                 ${wrapElementWithGuide(`Icon`, `
                   <div class="icon" style="background-color: ${item.iconColor}20; color: ${item.iconColor};">
                     <i class="${item.icon}"></i>
@@ -823,7 +831,7 @@ export function generateHTML(config, showGuides = false) {
   `)}
 
   <!-- Call to Action -->
-  ${wrapWithGuide('Call to Action', `
+  ${wrapWithGuide('cta', `
   <section class="cta">
     <div class="container">
       <div class="section-title">
@@ -848,15 +856,19 @@ export function generateHTML(config, showGuides = false) {
       <div class="row">
         <div class="col-lg-4 mb-4 mb-lg-0">
           <h5>About Us</h5>
-          ${wrapElementWithGuide('company description', `
+          ${wrapElementWithGuide('Description', `
             <p>${processedConfig.footer.description}</p>
           `)}
           <div class="social-links">
             ${wrapElementWithGuide('Social Links', `
-              <a href="${processedConfig.footer.socialLinks.facebook.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.facebook.icon}"></i></a>
-              <a href="${processedConfig.footer.socialLinks.twitter.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.twitter.icon}"></i></a>
-              <a href="${processedConfig.footer.socialLinks.instagram.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.instagram.icon}"></i></a>
-              <a href="${processedConfig.footer.socialLinks.linkedin.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.linkedin.icon}"></i></a>
+              ${!processedConfig.footer.socialLinks.facebook.hidden ? 
+                `<a href="${processedConfig.footer.socialLinks.facebook.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.facebook.icon}"></i></a>` : ''}
+              ${!processedConfig.footer.socialLinks.twitter.hidden ? 
+                `<a href="${processedConfig.footer.socialLinks.twitter.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.twitter.icon}"></i></a>` : ''}
+              ${!processedConfig.footer.socialLinks.instagram.hidden ? 
+                `<a href="${processedConfig.footer.socialLinks.instagram.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.instagram.icon}"></i></a>` : ''}
+              ${!processedConfig.footer.socialLinks.linkedin.hidden ? 
+                `<a href="${processedConfig.footer.socialLinks.linkedin.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.linkedin.icon}"></i></a>` : ''}
             `)}
           </div>
         </div>
@@ -882,7 +894,7 @@ export function generateHTML(config, showGuides = false) {
         </div>
       </div>
       <div class="copyright">
-        <p>© 2025 ${processedConfig.header.logo}. All rights reserved.</p>
+        <p>© 2025 ${processedConfig.header.logoText}. All rights reserved.</p>
       </div>
     </div>
   </footer>
