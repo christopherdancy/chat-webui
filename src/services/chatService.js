@@ -30,7 +30,7 @@ export async function processMessage(message, currentConfig) {
       
     case 'TextColor':
       updatedConfig.global.textColor = intent.value;
-      responseMessage = `I've d the main text color to ${intent.value}?`;
+      responseMessage = `I've updated the main text color to ${intent.value}?`;
       break;
     
     // Header section
@@ -42,7 +42,7 @@ export async function processMessage(message, currentConfig) {
     // TODO: System wide and prompt a  and not ask a question?
     case 'HeaderColor':
       updatedConfig.header.backgroundColor = intent.value;
-      responseMessage = `I've d the header background color to ${intent.value}?`;
+      responseMessage = `I've updated the header background color to ${intent.value}?`;
       break;
       
     case 'LogoText':
@@ -79,7 +79,7 @@ export async function processMessage(message, currentConfig) {
     
     case 'HeroButtonColor':
       updatedConfig.hero.buttonColor = intent.value;
-      responseMessage = `I've d the hero button color to ${intent.value}?`;
+      responseMessage = `I've updated the hero button color to ${intent.value}?`;
       break;
       
     case 'HeroButtonUrl':
