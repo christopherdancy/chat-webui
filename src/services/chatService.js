@@ -30,77 +30,77 @@ export async function processMessage(message, currentConfig) {
       
     case 'TextColor':
       updatedConfig.global.textColor = intent.value;
-      responseMessage = `I've updated the main text color to ${intent.value}?`;
+      responseMessage = `I've updated the main text color to ${intent.value}`;
       break;
     
     // Header section
     case 'HeaderTitle':
       updatedConfig.header.title = intent.value;
-      responseMessage = `I've updated the header title to "${intent.value}"?`;
+      responseMessage = `I've updated the header title to "${intent.value}"`;
       break;
     
     // TODO: System wide and prompt a  and not ask a question?
     case 'HeaderColor':
       updatedConfig.header.backgroundColor = intent.value;
-      responseMessage = `I've updated the header background color to ${intent.value}?`;
+      responseMessage = `I've updated the header background color to ${intent.value}`;
       break;
       
     case 'LogoText':
       updatedConfig.header.logoText = intent.value;
       updatedConfig.header.title = intent.value;
-      responseMessage = `I've updated the logo text to "${intent.value}"?`;
+      responseMessage = `I've updated the logo text to "${intent.value}"`;
       break;
 
     case 'LogoImage':
       updatedConfig.header.logoImage = intent.value;
-      responseMessage = `I've updated the logo image to "${intent.value}"?`;
+      responseMessage = `I've updated the logo image to "${intent.value}"`;
       break;
     
     // Hero section
     case 'HeroBackground':
       updatedConfig.hero.backgroundColor = intent.value;
-      responseMessage = `I've updated the hero background to ${intent.value}?`;
+      responseMessage = `I've updated the hero background to ${intent.value}`;
       break;
 
     case 'HeroTitle':
       updatedConfig.hero.title = intent.value;
-      responseMessage = `The hero title is now "${intent.value}". Anything else you'd like to ?`;
+      responseMessage = `The hero title is now "${intent.value}"`;
       break;
       
     case 'HeroSubtitle':
       updatedConfig.hero.subtitle = intent.value;
-      responseMessage = `I've updated the hero subtitle to "${intent.value}"?`;
+      responseMessage = `I've updated the hero subtitle to "${intent.value}"`;
       break;
       
     case 'HeroButtonText':
       updatedConfig.hero.buttonText = intent.value;
-      responseMessage = `I've updated the hero button text to "${intent.value}"?`;
+      responseMessage = `I've updated the hero button text to "${intent.value}"`;
       break;
     
     case 'HeroButtonColor':
       updatedConfig.hero.buttonColor = intent.value;
-      responseMessage = `I've updated the hero button color to ${intent.value}?`;
+      responseMessage = `I've updated the hero button color to ${intent.value}`;
       break;
       
     case 'HeroButtonUrl':
       updatedConfig.hero.buttonUrl = intent.value;
-      responseMessage = `I've updated the hero button URL to "${intent.value}"?`;
+      responseMessage = `I've updated the hero button URL to "${intent.value}"`;
       break;
     
     // Benefits section
     case 'BenefitsBackground':
       updatedConfig.benefits.backgroundColor = intent.value;
-      responseMessage = `I've updated the benefits background to ${intent.value}?`;
+      responseMessage = `I've updated the benefits background to ${intent.value}`;
       break;
 
     case 'BenefitsTitle':
       updatedConfig.benefits.title = intent.value;
-      responseMessage = `I've updated the benefits section title to "${intent.value}"?`;
+      responseMessage = `I've updated the benefits section title to "${intent.value}"`;
       break;
       
     case 'BenefitsSubtitle':
       updatedConfig.benefits.subtitle = intent.value;
-      responseMessage = `I've updated the benefits subtitle to "${intent.value}"?`;
+      responseMessage = `I've updated the benefits subtitle to "${intent.value}"`;
       break;
 
     case 'BenefitItemTitle':
@@ -112,7 +112,7 @@ export async function processMessage(message, currentConfig) {
           benefitItemIndex >= 0 && 
           benefitItemIndex < updatedConfig.benefits.items.length) {
         updatedConfig.benefits.items[benefitItemIndex].title = intent.value;
-        responseMessage = `Updated the title for benefits ${intent.itemName} to "${intent.value}".`;
+        responseMessage = `I've updated the title for benefits ${intent.itemName} to "${intent.value}"`;
       } else {
         responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
         return { message: responseMessage, updatedConfig: null };
@@ -127,7 +127,7 @@ export async function processMessage(message, currentConfig) {
           benefitDescIndex >= 0 && 
           benefitDescIndex < updatedConfig.benefits.items.length) {
         updatedConfig.benefits.items[benefitDescIndex].description = intent.value;
-        responseMessage = `Updated the description for benefits ${intent.itemName} to "${intent.value}".`;
+        responseMessage = `I've updated the description for benefits ${intent.itemName} to "${intent.value}"`;
       } else {
         responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
         return { message: responseMessage, updatedConfig: null };
@@ -142,7 +142,7 @@ export async function processMessage(message, currentConfig) {
           benefitIconIndex >= 0 && 
           benefitIconIndex < updatedConfig.benefits.items.length) {
         updatedConfig.benefits.items[benefitIconIndex].icon = intent.value;
-        responseMessage = `Updated the icon for benefits ${intent.itemName} to ${intent.value}.`;
+        responseMessage = `I've updated the icon for benefits ${intent.itemName} to ${intent.value}`;
       } else {
         responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
         return { message: responseMessage, updatedConfig: null };
@@ -157,7 +157,7 @@ export async function processMessage(message, currentConfig) {
           benefitIconColorIndex >= 0 && 
           benefitIconColorIndex < updatedConfig.benefits.items.length) {
         updatedConfig.benefits.items[benefitIconColorIndex].iconColor = intent.value;
-        responseMessage = `Updated the icon color for benefits ${intent.itemName} to ${intent.value}.`;
+        responseMessage = `I've updated the icon color for benefits ${intent.itemName} to ${intent.value}`;
       } else {
         responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
         return { message: responseMessage, updatedConfig: null };
@@ -172,7 +172,7 @@ export async function processMessage(message, currentConfig) {
           benefitBackgroundColorIndex >= 0 && 
           benefitBackgroundColorIndex < updatedConfig.benefits.items.length) {
         updatedConfig.benefits.items[benefitBackgroundColorIndex].backgroundColor = intent.value;
-        responseMessage = `Updated the background color for benefits ${intent.itemName} to ${intent.value}.`;
+        responseMessage = `I've updated the background color for benefits ${intent.itemName} to ${intent.value}`;
       } else {
         responseMessage = `Couldn't find benefits ${intent.itemName} to update.`;
         return { message: responseMessage, updatedConfig: null };
@@ -182,22 +182,22 @@ export async function processMessage(message, currentConfig) {
     // Features section
     case 'FeaturesBackground':
       updatedConfig.features.backgroundColor = intent.value;
-      responseMessage = `I've updated the features background to ${intent.value}?`;
+      responseMessage = `I've updated the features background to ${intent.value}`;
       break;
 
     case 'FeaturesTitle':
       updatedConfig.features.title = intent.value;
-      responseMessage = `I've updated the features section title to "${intent.value}"?`;
+      responseMessage = `I've updated the features section title to "${intent.value}"`;
       break;
       
     case 'FeaturesSubtitle':
       updatedConfig.features.subtitle = intent.value;
-      responseMessage = `I've updated the features subtitle to "${intent.value}". Anything else you'd like to ?`;
+      responseMessage = `I've updated the features subtitle to "${intent.value}"`;
       break;
       
     case 'FeaturesImage':
       updatedConfig.features.image = intent.value;
-      responseMessage = `I've updated the features section image to "${intent.value}"?`;
+      responseMessage = `I've updated the features section image to "${intent.value}"`;
       break;
     
     case 'FeatureItemTitle':
@@ -208,7 +208,7 @@ export async function processMessage(message, currentConfig) {
           featureItemIndex >= 0 && 
           featureItemIndex < updatedConfig.features.items.length) {
         updatedConfig.features.items[featureItemIndex].title = intent.value;
-        responseMessage = `Updated the title for features ${intent.itemName} to "${intent.value}".`;
+        responseMessage = `I've updated the title for features ${intent.itemName} to "${intent.value}"`;
       } else {
         responseMessage = `Couldn't find features ${intent.itemName} to update.`;
         return { message: responseMessage, updatedConfig: null };
@@ -223,7 +223,7 @@ export async function processMessage(message, currentConfig) {
           featureDescIndex >= 0 && 
           featureDescIndex < updatedConfig.features.items.length) {
         updatedConfig.features.items[featureDescIndex].description = intent.value;
-        responseMessage = `Updated the description for features ${intent.itemName} to "${intent.value}".`;
+        responseMessage = `I've updated the description for features ${intent.itemName} to "${intent.value}"`;
       } else {
         responseMessage = `Couldn't find features ${intent.itemName} to update.`;
         return { message: responseMessage, updatedConfig: null };
@@ -238,7 +238,7 @@ export async function processMessage(message, currentConfig) {
           featureIconIndex >= 0 && 
           featureIconIndex < updatedConfig.features.items.length) {
         updatedConfig.features.items[featureIconIndex].icon = intent.value;
-        responseMessage = `Updated the icon for features ${intent.itemName} to ${intent.value}.`;
+        responseMessage = `I've updated the icon for features ${intent.itemName} to ${intent.value}`;
       } else {
         responseMessage = `Couldn't find features ${intent.itemName} to update.`;
         return { message: responseMessage, updatedConfig: null };
@@ -248,48 +248,48 @@ export async function processMessage(message, currentConfig) {
     // Call to Action section
     case 'CtaBackground':
       updatedConfig.cta.backgroundColor = intent.value;
-      responseMessage = `I've updated the call to action background to ${intent.value}?`;
+      responseMessage = `I've updated the call to action background to ${intent.value}`;
       break;
 
     case 'CtaTitle':
       updatedConfig.cta.title = intent.value;
-      responseMessage = `I've updated the call to action title to "${intent.value}"?`;
+      responseMessage = `I've updated the call to action title to "${intent.value}"`;
       break;
       
     case 'CtaSubtitle':
       updatedConfig.cta.subtitle = intent.value;
-      responseMessage = `I've updated the call to action subtitle to "${intent.value}". Anything else you'd like to ?`;
+      responseMessage = `I've updated the call to action subtitle to "${intent.value}"`;
       break;
       
     case 'CtaButtonText':
       updatedConfig.cta.buttonText = intent.value;
-      responseMessage = `I've updated the call to action button text to "${intent.value}"?`;
+      responseMessage = `I've updated the call to action button text to "${intent.value}"`;
       break;
 
     case 'CtaButtonColor':
       updatedConfig.cta.buttonColor = intent.value;
-      responseMessage = `I've d the call to action button color to ${intent.value}?`;
+      responseMessage = `I've updated the call to action button color to ${intent.value}`;
       break;
 
     case 'CtaButtonUrl':
       updatedConfig.cta.buttonUrl = intent.value;
-      responseMessage = `I've updated the call to action button URL to "${intent.value}"?`;
+      responseMessage = `I've updated the call to action button URL to "${intent.value}"`;
       break;
     
     // Footer section
     case 'footerDescriptionText':
       updatedConfig.footer.description = intent.value;
-      responseMessage = `I've updated the footer description to "${intent.value}"?`;
+      responseMessage = `I've updated the footer description to "${intent.value}"`;
       break;
 
     case 'FooterText':
       updatedConfig.footer.text = intent.value;
-      responseMessage = `I've updated the footer text to "${intent.value}"?`;
+      responseMessage = `I've updated the footer text to "${intent.value}"`;
       break;
 
     case 'FooterBackground':
       updatedConfig.footer.backgroundColor = intent.value;
-      responseMessage = `I've updated the footer background color to ${intent.value}?`;
+      responseMessage = `I've updated the footer background color to ${intent.value}`;
       break;
 
     case 'FooterSocialLink':
@@ -307,27 +307,27 @@ export async function processMessage(message, currentConfig) {
       
       // Update the URL
       updatedConfig.footer.socialLinks[intent.platform].url = intent.value;
-      responseMessage = `I've updated the ${intent.platform} link to ${intent.value}?`;
+      responseMessage = `I've updated the ${intent.platform} link to ${intent.value}`;
       break;
 
     case 'FooterLinks':
       updatedConfig.footer.links = intent.value;
-      responseMessage = `I've updated the footer links to "${intent.value}"?`;
+      responseMessage = `I've updated the footer links to "${intent.value}"`;
       break;
 
     case 'FooterAddress':
       updatedConfig.footer.address = intent.value;
-      responseMessage = `I've updated the footer address to "${intent.value}"?`;
+      responseMessage = `I've updated the footer address to "${intent.value}"`;
       break;
 
     case 'FooterEmail':
       updatedConfig.footer.email = intent.value;
-      responseMessage = `I've updated the footer email to "${intent.value}"?`;
+      responseMessage = `I've updated the footer email to "${intent.value}"`;
       break;
       
     case 'FooterPhone':
       updatedConfig.footer.phone = intent.value;
-      responseMessage = `I've updated the footer phone to "${intent.value}"?`;
+      responseMessage = `I've updated the footer phone to "${intent.value}"`;
       break;  
 
     case 'HideSocialLink':
