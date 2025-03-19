@@ -198,6 +198,9 @@
     max-width: 70%;
     padding: 0.8rem;
     border-radius: 8px;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
   }
   
   .user-message .message-content {
