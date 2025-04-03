@@ -2,16 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Chat from './components/Chat';
 import WebsitePreview from './components/WebsitePreview';
 import DeployButton from './components/DeployButton';
-import basicTemplate from './templates/basicLanding';
-import moonlightTemplate from './templates/moonlightTemplate';
+import { getTemplateRegistry, createNewTemplate } from './templates/templateRegistry';
 import './styles.css';
 
-// Simple Template Selector Component
+// Updated Template Selector Component to use the registry
 const TemplateSelector = ({ currentTemplate, onTemplateSelect }) => {
-  const templates = [
-    { id: 'basic', name: 'Basic Business', template: basicTemplate },
-    { id: 'moonlight', name: 'Moonlight', template: moonlightTemplate }
-  ];
+  const templates = getTemplateRegistry();
   
   return (
     <div className="template-selector">
@@ -19,8 +15,9 @@ const TemplateSelector = ({ currentTemplate, onTemplateSelect }) => {
       <select 
         value={currentTemplate.id || 'basic'} 
         onChange={(e) => {
-          const selected = templates.find(t => t.id === e.target.value);
-          if (selected) onTemplateSelect(selected.template, selected.id);
+          const templateId = e.target.value;
+          const newTemplate = createNewTemplate(templateId);
+          onTemplateSelect(newTemplate, templateId);
         }}
       >
         {templates.map(t => (
@@ -33,11 +30,25 @@ const TemplateSelector = ({ currentTemplate, onTemplateSelect }) => {
 
 function App() {
   const [error, setError] = useState(null);
-  const [templateId, setTemplateId] = useState('basic');
   const [config, setConfig] = useState(() => {
-    const savedConfig = localStorage.getItem('websiteConfig');
-    return savedConfig ? JSON.parse(savedConfig) : basicTemplate;
+    try {
+      const savedConfig = localStorage.getItem('websiteConfig');
+      // If there's a saved config, use it
+      if (savedConfig) {
+        return JSON.parse(savedConfig);
+      }
+      // Otherwise create a new template from the default
+      return createNewTemplate('basic');
+    } catch (err) {
+      console.error('Error loading config:', err);
+      return createNewTemplate('basic');
+    }
   });
+  
+  // Get the current template ID from the config or default to 'basic'
+  const getCurrentTemplateId = () => {
+    return config._templateId || 'basic';
+  };
   
   useEffect(() => {
     // Basic error boundary for the entire app
@@ -58,7 +69,6 @@ function App() {
   const handleTemplateSelect = (templateConfig, id) => {
     if (window.confirm('Changing templates will reset all customizations. Are you sure?')) {
       setConfig(templateConfig);
-      setTemplateId(id);
       localStorage.setItem('websiteConfig', JSON.stringify(templateConfig));
     }
   };
@@ -79,7 +89,7 @@ function App() {
         <h1>VibeSite</h1>
         <p>Edit your website through chat and deploy it with one click</p>
         <TemplateSelector 
-          currentTemplate={{ id: templateId }} 
+          currentTemplate={{ id: getCurrentTemplateId() }} 
           onTemplateSelect={handleTemplateSelect} 
         />
       </header>

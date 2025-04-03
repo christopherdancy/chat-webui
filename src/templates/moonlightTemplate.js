@@ -1,5 +1,9 @@
 // Default configuration for the Moonlight Website template
 const moonlightTemplate = {
+  // Template metadata
+  _templateId: 'portfolio_moonlight',
+  _templateVersion: '1.0.0',
+  
   // Global settings
   global: {
     primaryColor: "#f5a425",

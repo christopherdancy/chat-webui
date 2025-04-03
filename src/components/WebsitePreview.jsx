@@ -1,19 +1,33 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { generateHTML as generateBasicHTML } from '../templates/basicLanding';
-import { generateHTML as generateMoonlightHTML } from '../templates/moonlightTemplate';
+import { getTemplateRegistryById, getTemplateRegistry } from '../templates/templateRegistry';
 import basicTemplate from '../templates/basicLanding';
 
 const WebsitePreview = ({ config, setConfig }) => {
   const iframeRef = useRef(null);
   const [showGuides, setShowGuides] = useState(true);
   
-  // Helper function to determine which template's generateHTML to use
+  // Get template renderer from registry based on template type or properties
   const getTemplateRenderer = (config) => {
-    // Check specific properties or structure to identify the template
-    if (config.navigation && config.navigation.items) {
-      return generateMoonlightHTML; // Moonlight template has navigation.items
+    // First try to get template by id if available
+    if (config._templateId) {
+      const template = getTemplateRegistryById(config._templateId);
+      console.log(config._templateId);
+      if (template) {
+        return template.generateHTML;
+      }
     }
-    return generateBasicHTML; // Default to basic template
+    
+    // Fallback to identification by template properties
+    const templateRegistry = getTemplateRegistry();
+    for (const template of templateRegistry) {
+      if (template.identifyTemplate(config)) {
+        return template.generateHTML;
+      }
+    }
+    
+    // Ultimate fallback to basic template
+    const basicTemplateInfo = getTemplateRegistryById('basic');
+    return basicTemplateInfo.generateHTML;
   };
   
   useEffect(() => {

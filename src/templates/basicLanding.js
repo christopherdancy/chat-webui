@@ -1,5 +1,9 @@
 // Default configuration for the Basic Business Website template
 const basicTemplate = {
+  // Template metadata
+  _templateId: 'landing_business',
+  _templateVersion: '1.0.0',
+  
   // Global settings
   global: {
     primaryColor: "#4a90e2",
