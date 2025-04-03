@@ -26,7 +26,8 @@ export const sectionHandlers = {
         default:
           return ['Text'];
       }
-    }
+    },
+    getSocialOptions: (platform) => ['URL', 'Hide', 'Show']
   },
   
   Benefits: {
@@ -73,18 +74,34 @@ export const sectionHandlers = {
 };
 
 export const buildCommand = (context, option) => {
-  const { section, element, property, value } = context;
+  const { section, element, property } = context;
   
+  // Handle social media links in footer
   if (section === 'Footer' && element === 'social') {
-    return `footer social ${property.toLowerCase()} url ${option}`;
+    const platform = property.toLowerCase();
+    if (option === 'URL') {
+      return null; // Return null to indicate we need to prompt for URL value
+    }
+    if (option === 'Hide' || option === 'Show') {
+      return `footer social ${platform} ${option.toLowerCase()}`;
+    }
+    // If we get here, it means we're setting the URL value
+    return `footer social ${platform} url ${option}`;
   }
   
-  if (property === 'icon color') {
-    return `${section} ${element} icon color ${option}`;
+  // Handle icon color selection
+  if (property === 'icon' && option === 'Icon Color') {
+    return null; // Return null to indicate this is just a selection, not a command
   }
   
+  // Handle icon selection
   if (property === 'icon' && option.startsWith('fa')) {
     return `${section} ${element} icon image ${option}`;
+  }
+  
+  // Handle direct color value for icon
+  if (property === 'icon' && option.startsWith('#')) {
+    return `${section} ${element} icon color ${option}`;
   }
   
   return `${section} ${element} ${property} ${option}`;

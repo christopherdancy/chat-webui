@@ -65,6 +65,11 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     const normalizedElement = element.toLowerCase().replace(/\s+/g, '');
     updateContext({ element: normalizedElement });
     
+    // Special handling for Social Links in Footer
+    if (element === 'Social Links' && currentContext.section === 'Footer') {
+      updateContext({ element: 'social' }); // Update to match the command structure
+    }
+    
     const options = sectionHandlers[currentContext.section].getElementOptions(element);
     setMessages(prev => [...prev, {
       text: `What would you like to change about ${element}?`,
@@ -75,6 +80,17 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const handlePropertySelection = (property) => {
     const normalizedProperty = property.toLowerCase();
     updateContext({ property: normalizedProperty });
+    
+    // Handle social media platforms in Footer
+    if (currentContext.section === 'Footer' && currentContext.element === 'social') {
+      // When a social platform is selected, show its options
+      const options = sectionHandlers.Footer.getSocialOptions(property);
+      setMessages(prev => [...prev, {
+        text: `What would you like to do with ${property}?`,
+        buttons: options
+      }]);
+      return;
+    }
     
     if (normalizedProperty === 'color') {
       setShowColorPicker(true);
@@ -94,7 +110,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
         }]);
       }
     }
-    else if (normalizedProperty === 'image') {
+    else if (normalizedProperty === 'upload' || normalizedProperty === 'image') {
       setShowImageUploader(true);
       setCurrentImageContext({
         section: currentContext.section
@@ -123,7 +139,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
         setCurrentColorContext({
           section: currentContext.section,
           item: currentContext.element,
-          property: 'icon color'
+          property: 'icon'
         });
         return;
       }
@@ -132,6 +148,19 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     try {
       setIsProcessing(true);
       const command = buildCommand(currentContext, value);
+      
+      // If command is null, it means we need to prompt for a value (like URL)
+      if (command === null) {
+        if (value === 'URL') {
+          setMessages(prev => [...prev, {
+            text: `Please enter the URL for ${currentContext.property}:`,
+            isValuePrompt: true
+          }]);
+        }
+        setIsProcessing(false);
+        return;
+      }
+      
       const response = await processMessage(command, websiteConfig);
       
       setMessages(prev => [...prev, { text: response.message, isUser: false }]);
