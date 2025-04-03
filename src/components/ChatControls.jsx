@@ -14,6 +14,7 @@ const ChatControls = ({
   currentIconContext,
   currentColorContext,
   currentImageContext,
+  showInput,
   onSubmit,
   onIconSelect,
   onColorSelect,
@@ -77,25 +78,28 @@ const ChatControls = ({
         </div>
       )}
       
-      <form className="chat-input-form" onSubmit={onSubmit}>
-        <div className="input-container">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={currentContext.property ? "Enter your value here..." : "Type here if you need something specific..."}
-            className="chat-input"
-            disabled={isProcessing}
-          />
-        </div>
-        <button 
-          type="submit" 
-          className="chat-submit-button"
-          disabled={isProcessing || (!currentContext.property && !input.trim())}
-        >
-          {isProcessing ? "..." : "Send"}
-        </button>
-      </form>
+      {showInput && (
+        <form className="chat-input-form" onSubmit={onSubmit}>
+          <div className="input-container">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={currentContext.property ? "Enter your value here..." : "Type here if you need something specific..."}
+              className="chat-input"
+              disabled={isProcessing}
+              autoFocus
+            />
+          </div>
+          <button 
+            type="submit" 
+            className="chat-submit-button"
+            disabled={isProcessing || !input.trim()}
+          >
+            {isProcessing ? "..." : "Send"}
+          </button>
+        </form>
+      )}
     </>
   );
 };

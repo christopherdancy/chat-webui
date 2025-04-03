@@ -47,7 +47,7 @@ export const sectionHandlers = {
     getOptions: () => ['Title', 'Subtitle', 'Background', 'Image', 'Item 1', 'Item 2', 'Item 3'],
     getElementOptions: (element) => {
       if (element.startsWith('Item')) {
-        return ['Title', 'Description', 'Icon'];
+        return ['Title', 'Description'];
       } else if (element === 'Background') {
         return ['Color'];
       } else if (element === 'Image') {
@@ -63,7 +63,7 @@ export const sectionHandlers = {
     getElementOptions: (element) => {
       switch (element) {
         case 'Background':
-          return ['Color', 'Image'];
+          return ['Color'];
         case 'Button':
           return ['Text', 'Color'];
         default:
