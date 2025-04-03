@@ -4,6 +4,244 @@ const basicTemplate = {
   _templateId: 'landing_business',
   _templateVersion: '1.0.0',
   
+  // Template structure metadata - defines editable sections and properties
+  _structure: {
+    sections: [
+      {
+        id: 'header',
+        name: 'Header',
+        elements: [
+          { 
+            id: 'logo', 
+            name: 'Logo',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' },
+              { id: 'image', name: 'Image', type: 'image' }
+            ]
+          },
+          { 
+            id: 'background', 
+            name: 'Background',
+            properties: [
+              { id: 'color', name: 'Color', type: 'color' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'hero',
+        name: 'Hero',
+        elements: [
+          { 
+            id: 'title', 
+            name: 'Title',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' }
+            ]
+          },
+          { 
+            id: 'subtitle', 
+            name: 'Subtitle',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' }
+            ]
+          },
+          { 
+            id: 'button', 
+            name: 'Button',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' },
+              { id: 'color', name: 'Color', type: 'color' },
+              { id: 'url', name: 'URL', type: 'url' }
+            ]
+          },
+          { 
+            id: 'background', 
+            name: 'Background',
+            properties: [
+              { id: 'color', name: 'Color', type: 'color' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'benefits',
+        name: 'Benefits',
+        elements: [
+          { 
+            id: 'title', 
+            name: 'Title',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' }
+            ]
+          },
+          { 
+            id: 'subtitle', 
+            name: 'Subtitle',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' }
+            ]
+          },
+          { 
+            id: 'background', 
+            name: 'Background',
+            properties: [
+              { id: 'color', name: 'Color', type: 'color' }
+            ]
+          }
+        ],
+        items: [
+          {
+            id: 'item1',
+            name: 'Item 1',
+            properties: [
+              { id: 'title', name: 'Title', type: 'text' },
+              { id: 'description', name: 'Description', type: 'text' },
+              { id: 'icon', name: 'Icon', type: 'icon' },
+              { id: 'background', name: 'Background', type: 'color' }
+            ]
+          },
+          {
+            id: 'item2',
+            name: 'Item 2',
+            properties: [
+              { id: 'title', name: 'Title', type: 'text' },
+              { id: 'description', name: 'Description', type: 'text' },
+              { id: 'icon', name: 'Icon', type: 'icon' },
+              { id: 'background', name: 'Background', type: 'color' }
+            ]
+          },
+          {
+            id: 'item3',
+            name: 'Item 3',
+            properties: [
+              { id: 'title', name: 'Title', type: 'text' },
+              { id: 'description', name: 'Description', type: 'text' },
+              { id: 'icon', name: 'Icon', type: 'icon' },
+              { id: 'background', name: 'Background', type: 'color' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'features',
+        name: 'Features',
+        elements: [
+          { 
+            id: 'title', 
+            name: 'Title',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' }
+            ]
+          },
+          { 
+            id: 'subtitle', 
+            name: 'Subtitle',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' }
+            ]
+          },
+          { 
+            id: 'background', 
+            name: 'Background',
+            properties: [
+              { id: 'color', name: 'Color', type: 'color' }
+            ]
+          },
+          { 
+            id: 'image', 
+            name: 'Image',
+            properties: [
+              { id: 'upload', name: 'Upload', type: 'image' }
+            ]
+          }
+        ],
+        items: [
+          {
+            id: 'item1',
+            name: 'Item 1',
+            properties: [
+              { id: 'title', name: 'Title', type: 'text' },
+              { id: 'description', name: 'Description', type: 'text' },
+              { id: 'icon', name: 'Icon', type: 'icon' }
+            ]
+          },
+          {
+            id: 'item2',
+            name: 'Item 2',
+            properties: [
+              { id: 'title', name: 'Title', type: 'text' },
+              { id: 'description', name: 'Description', type: 'text' },
+              { id: 'icon', name: 'Icon', type: 'icon' }
+            ]
+          },
+          {
+            id: 'item3',
+            name: 'Item 3',
+            properties: [
+              { id: 'title', name: 'Title', type: 'text' },
+              { id: 'description', name: 'Description', type: 'text' },
+              { id: 'icon', name: 'Icon', type: 'icon' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'footer',
+        name: 'Footer',
+        elements: [
+          { 
+            id: 'description', 
+            name: 'Description',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' }
+            ]
+          },
+          { 
+            id: 'address', 
+            name: 'Address',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' }
+            ]
+          },
+          { 
+            id: 'phone', 
+            name: 'Phone',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' }
+            ]
+          },
+          { 
+            id: 'email', 
+            name: 'Email',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' }
+            ]
+          },
+          { 
+            id: 'background', 
+            name: 'Background',
+            properties: [
+              { id: 'color', name: 'Color', type: 'color' }
+            ]
+          }
+        ],
+        items: [
+          {
+            id: 'social',
+            name: 'Social Links',
+            properties: [
+              { id: 'facebook', name: 'Facebook', type: 'social', actions: ['url', 'hide', 'show'] },
+              { id: 'twitter', name: 'Twitter', type: 'social', actions: ['url', 'hide', 'show'] },
+              { id: 'instagram', name: 'Instagram', type: 'social', actions: ['url', 'hide', 'show'] },
+              { id: 'linkedin', name: 'LinkedIn', type: 'social', actions: ['url', 'hide', 'show'] }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  
   // Global settings
   global: {
     primaryColor: "#4a90e2",

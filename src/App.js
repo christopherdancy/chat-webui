@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Chat from './components/Chat';
 import WebsitePreview from './components/WebsitePreview';
 import DeployButton from './components/DeployButton';
-import { getTemplateRegistry, createNewTemplate } from './templates/templateRegistry';
+import { getTemplateRegistry, createNewTemplate, getTemplateRegistryById } from './templates/templateRegistry';
 import './styles.css';
 
 // Updated Template Selector Component to use the registry
@@ -35,13 +35,28 @@ function App() {
       const savedConfig = localStorage.getItem('websiteConfig');
       // If there's a saved config, use it
       if (savedConfig) {
-        return JSON.parse(savedConfig);
+        const parsedConfig = JSON.parse(savedConfig);
+        
+        // Ensure it has the correct structure
+        if (!parsedConfig._structure && parsedConfig._templateId) {
+          console.log('Adding missing structure to saved config');
+          const template = getTemplateRegistryById(parsedConfig._templateId);
+          if (template && template.template._structure) {
+            parsedConfig._structure = JSON.parse(JSON.stringify(template.template._structure));
+          } else {
+            // Use createNewTemplate to generate a fallback structure
+            const newTemplate = createNewTemplate(parsedConfig._templateId);
+            parsedConfig._structure = newTemplate._structure;
+          }
+        }
+        
+        return parsedConfig;
       }
       // Otherwise create a new template from the default
-      return createNewTemplate('basic');
+      return createNewTemplate('landing_business');
     } catch (err) {
       console.error('Error loading config:', err);
-      return createNewTemplate('basic');
+      return createNewTemplate('landing_business');
     }
   });
   
@@ -63,11 +78,32 @@ function App() {
   }, []);
 
   const handlePreviewUpdate = (updatedConfig) => {
+    // Make sure we don't lose the _structure field if it exists in the current config
+    if (config._structure && !updatedConfig._structure) {
+      console.log('Preserving _structure field in updated config');
+      updatedConfig._structure = config._structure;
+    }
+    
+    // Save the updated config to localStorage
+    localStorage.setItem('websiteConfig', JSON.stringify(updatedConfig));
     setConfig(updatedConfig);
   };
   
   const handleTemplateSelect = (templateConfig, id) => {
     if (window.confirm('Changing templates will reset all customizations. Are you sure?')) {
+      // Ensure structure exists in the template
+      if (!templateConfig._structure) {
+        console.log('Adding structure to template:', id);
+        const template = getTemplateRegistryById(id);
+        if (template && template.template._structure) {
+          templateConfig._structure = JSON.parse(JSON.stringify(template.template._structure));
+        }
+      }
+      
+      // Double check template ID is set
+      templateConfig._templateId = id;
+      
+      console.log('Setting template:', templateConfig);
       setConfig(templateConfig);
       localStorage.setItem('websiteConfig', JSON.stringify(templateConfig));
     }

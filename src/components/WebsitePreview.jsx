@@ -11,7 +11,6 @@ const WebsitePreview = ({ config, setConfig }) => {
     // First try to get template by id if available
     if (config._templateId) {
       const template = getTemplateRegistryById(config._templateId);
-      console.log(config._templateId);
       if (template) {
         return template.generateHTML;
       }

@@ -3,15 +3,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
 import ChatControls from './ChatControls';
 import { processMessage } from '../services/chatService';
-import { generateCommandStructure } from '../utils/commandStructureGenerator';
+import { getTemplateSections, getSectionElements, getElementProperties, mapToInternalStructure } from '../utils/templateStructureReader';
 import { sectionHandlers, buildCommand } from '../utils/sectionHandlers';
 import useChatContext from '../hooks/useChatContext';
 
-const Chat = ({ onPreviewUpdate, websiteConfig }) => {
+const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
   const [messages, setMessages] = useState([
     { 
       text: "Hi, I'm your website editor assistant. Below you can find a selection of topics I can help you with.",
-      buttons: ['Header', 'Hero', 'Benefits', 'Features', 'Footer']
+      buttons: [] // Will be populated in useEffect
     }
   ]);
   const [input, setInput] = useState('');
@@ -29,9 +29,45 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const [navigationStack, setNavigationStack] = useState([]);
   const [commandCompleted, setCommandCompleted] = useState(false);
   const [commandId, setCommandId] = useState(0); // Track current command ID
+  // eslint-disable-next-line no-unused-vars
+  const [availableSections, setAvailableSections] = useState([]);
 
-  // Generate command structure from website config
-  const commandStructure = React.useMemo(() => generateCommandStructure(websiteConfig), [websiteConfig]);
+  // Get available sections from template structure
+  const sectionsRef = useRef([]);
+
+  useEffect(() => {
+    if (websiteConfig) {
+      // Get available sections for this template
+      const sections = getTemplateSections(websiteConfig);
+      
+      // Only update if sections have changed to prevent unnecessary rerenders
+      const previousSections = sectionsRef.current;
+      const sectionsHaveChanged = 
+        !Array.isArray(previousSections) || 
+        previousSections.length !== sections.length ||
+        sections.some((section, i) => previousSections[i] !== section);
+      
+      if (sectionsHaveChanged) {
+        sectionsRef.current = sections;
+        setAvailableSections(sections);
+        
+        // Set the initial context if not already set and there are sections
+        if (!currentContext.section && sections.length > 0) {
+          updateContext({ section: sections[0] });
+        }
+        
+        // Update initial message buttons with available sections
+        setMessages([{
+          text: "Hi, I'm your website editor assistant. Below you can find a selection of topics I can help you with.",
+          buttons: sections,
+          commandId: 0
+        }]);
+      }
+    }
+    // We intentionally don't include currentContext or updateContext in dependencies
+    // to avoid circular updates and infinite rerenders
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [websiteConfig]);
 
   // Auto-scroll to bottom of messages
   useEffect(() => {
@@ -73,9 +109,14 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     setShowImageUploader(false);
     setCommandCompleted(false);
     setCommandId(prev => prev + 1); // Increment command ID to start fresh
+    
+    // Get sections from template structure
+    const sections = getTemplateSections(websiteConfig);
+    
     setMessages([{
       text: "Hi, I'm your website editor assistant. Below you can find a selection of topics I can help you with.",
-      buttons: ['Header', 'Hero', 'Benefits', 'Features', 'Footer']
+      buttons: sections,
+      commandId: commandId + 1
     }]);
   };
 
@@ -116,7 +157,30 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
 
   const handleSectionSelection = (section) => {
     updateContext({ section });
-    const options = sectionHandlers[section].getOptions();
+    
+    // Use the new templateStructureReader to get section elements
+    const options = getSectionElements(websiteConfig, section);
+    
+    // Check if we have proper elements - if not, try to refresh structure
+    if (!options || options.length === 0) {
+      // Try to get the section from _structure
+      const sectionInStructure = websiteConfig._structure?.sections?.find(s => 
+        s.name.toLowerCase() === section.toLowerCase()
+      );
+      
+      if (sectionInStructure && sectionInStructure.elements) {
+        // If we have elements, use them
+        const elementNames = sectionInStructure.elements.map(e => e.name);
+        
+        setMessages(prev => [...prev, {
+          text: `What would you like to modify in the ${section} section?`,
+          buttons: elementNames,
+          commandId
+        }]);
+        return;
+      }
+    }
+    
     setMessages(prev => [...prev, {
       text: `What would you like to modify in the ${section} section?`,
       buttons: options,
@@ -125,15 +189,22 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   };
 
   const handleElementSelection = (element) => {
-    const normalizedElement = element.toLowerCase().replace(/\s+/g, '');
-    updateContext({ element: normalizedElement });
-    
-    // Special handling for Social Links in Footer
-    if (element === 'Social Links' && currentContext.section === 'Footer') {
-      updateContext({ element: 'social' }); // Update to match the command structure
+    // Special case: If the element name is the same as the current section name,
+    // it means we're just displaying the first-level options. Try to get the first element.
+    if (element === currentContext.section) {
+      const section = websiteConfig._structure?.sections.find(s => 
+        s.name.toLowerCase() === currentContext.section.toLowerCase()
+      );
+      if (section && section.elements && section.elements.length > 0) {
+        element = section.elements[0].name;
+      }
     }
     
-    const options = sectionHandlers[currentContext.section].getElementOptions(element);
+    updateContext({ element });
+    
+    // Use the new templateStructureReader to get element properties
+    const options = getElementProperties(websiteConfig, currentContext.section, element);
+    
     setMessages(prev => [...prev, {
       text: `What would you like to change about ${element}?`,
       buttons: options,
@@ -141,13 +212,87 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     }]);
   };
 
-  // Update handlePropertySelection to control input visibility
+  // Update handlePropertySelection to use the template structure
   const handlePropertySelection = (property) => {
+    updateContext({ property });
+    
+    // Map the UI display names to internal structure to get more details
+    const internalStructure = mapToInternalStructure(
+      websiteConfig,
+      currentContext.section,
+      currentContext.element,
+      property
+    );
+    
+    if (!internalStructure) {
+      // Fallback to the old approach if mapping fails
+      fallbackHandlePropertySelection(property);
+      return;
+    }
+    
+    // Handle different property types
+    switch (internalStructure.propertyType) {
+      case 'color':
+        setShowColorPicker(true);
+        setShowInput(false);
+        setCurrentColorContext({
+          section: currentContext.section,
+          item: currentContext.element,
+          property: internalStructure.propertyId
+        });
+        break;
+        
+      case 'icon':
+        setShowIconPicker(true);
+        setShowInput(false);
+        setCurrentIconContext({
+          section: currentContext.section,
+          item: currentContext.element,
+          property: internalStructure.propertyId
+        });
+        break;
+        
+      case 'image':
+        setShowImageUploader(true);
+        setShowInput(false);
+        setCurrentImageContext({
+          section: currentContext.section,
+          item: currentContext.element,
+          property: internalStructure.propertyId
+        });
+        break;
+        
+      case 'social':
+        // Social media links have special actions
+        if (internalStructure.actions && internalStructure.actions.length > 0) {
+          setMessages(prev => [...prev, {
+            text: `What would you like to do with ${property}?`,
+            buttons: internalStructure.actions.map(a => a.charAt(0).toUpperCase() + a.slice(1)),
+            commandId
+          }]);
+          setShowInput(false);
+        }
+        break;
+        
+      case 'text':
+      case 'url':
+      default:
+        setMessages(prev => [...prev, {
+          text: `Please enter the value for ${property}:`,
+          isValuePrompt: true,
+          commandId
+        }]);
+        setShowInput(true);
+        break;
+    }
+  };
+  
+  // Fallback to original handling for backward compatibility
+  const fallbackHandlePropertySelection = (property) => {
     const normalizedProperty = property.toLowerCase();
-    updateContext({ property: normalizedProperty });
     
     // Handle social media platforms in Footer
-    if (currentContext.section === 'Footer' && currentContext.element === 'social') {
+    if (currentContext.section === 'Footer' && currentContext.element === 'Social Links') {
       const options = sectionHandlers.Footer.getSocialOptions(property);
       setMessages(prev => [...prev, {
         text: `What would you like to do with ${property}?`,
@@ -168,16 +313,12 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       });
     }
     else if (normalizedProperty === 'icon') {
-      if ((currentContext.section === 'Benefits' || currentContext.section === 'Features') && 
-          currentContext.element.startsWith('item')) {
-        const options = sectionHandlers[currentContext.section].getIconOptions();
-        setMessages(prev => [...prev, {
-          text: `What would you like to change about the icon?`,
-          buttons: options,
-          commandId
-        }]);
-        setShowInput(false);
-      }
+      setShowIconPicker(true);
+      setShowInput(false);
+      setCurrentIconContext({
+        section: currentContext.section,
+        item: currentContext.element
+      });
     }
     else if (normalizedProperty === 'upload' || normalizedProperty === 'image') {
       setShowImageUploader(true);
@@ -197,35 +338,27 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   };
 
   const handleValueSelection = async (value) => {
-    // Handle icon-specific options
-    if (currentContext.property === 'icon') {
-      if (value === 'Select Icon') {
-        setShowIconPicker(true);
-        setCurrentIconContext({
-          section: currentContext.section,
-          item: currentContext.element
-        });
-        return;
-      } else if (value === 'Icon Color') {
-        setShowColorPicker(true);
-        setCurrentColorContext({
-          section: currentContext.section,
-          item: currentContext.element,
-          property: 'icon'
-        });
-        return;
-      }
-    }
-
     try {
       setIsProcessing(true);
-      const command = buildCommand(currentContext, value);
+      
+      // Add user input to messages
+      setMessages(prev => [...prev, { 
+        text: value, 
+        isUser: true,
+        commandId
+      }]);
+      
+      // Build and process the command
+      const command = buildCommand({
+        ...currentContext,
+        websiteConfig // Pass the website config to the command builder
+      }, value);
       
       // If command is null, it means this was just a selection (like choosing "Icon Color")
       if (command === null) {
-        if (value === 'URL') {
+        if (value.toLowerCase() === 'url') {
           setMessages(prev => [...prev, {
-            text: `Please enter the URL for ${currentContext.property}:`,
+            text: `Please enter the URL:`,
             isValuePrompt: true,
             commandId
           }]);
@@ -252,18 +385,25 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       setShowInput(false);
       setNavigationStack([]);
       
+      // Get sections from template structure for the next message
+      const sections = getTemplateSections(websiteConfig);
+      
       // Combine success message with next options
       setMessages([{
         text: `${response.message} What else would you like to modify?`,
-        buttons: ['Header', 'Hero', 'Benefits', 'Features', 'Footer'],
+        buttons: sections,
         commandId: newCommandId
       }]);
       
     } catch (error) {
-      console.error('Error processing message:', error);
+      console.error('Error processing message:', error.response?.data || error.message);
+      
+      // Get sections from template structure for error recovery
+      const sections = getTemplateSections(websiteConfig);
+      
       setMessages(prev => [...prev, {
         text: "Sorry, I had trouble processing that request. Let's try again.",
-        buttons: ['Header', 'Hero', 'Benefits', 'Features', 'Footer'],
+        buttons: sections,
         commandId
       }]);
       resetContext();
@@ -272,33 +412,12 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     }
   };
 
-  // Show options for the next command (used after command completion)
-  const showInitialOptions = () => {
-    // Start a fresh message thread for the new command
-    const newCommandId = commandId + 1;
-    setCommandId(newCommandId);
-    setShowInput(false);
-    setNavigationStack([]);
-    setMessages([{
-      text: "What else would you like to modify?",
-      buttons: ['Header', 'Hero', 'Features', 'Benefits', 'Footer'],
-      commandId: newCommandId
-    }]);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!input.trim() || isProcessing) return;
     
     if (currentContext.property && !currentContext.value) {
-      // Add user input to messages
-      setMessages(prev => [...prev, { 
-        text: input.trim(), 
-        isUser: true,
-        commandId
-      }]);
-      
       handleValueSelection(input.trim());
       setInput('');
     }
@@ -313,11 +432,11 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const isInitialScreen = !currentContext.section && navigationStack.length === 0;
 
   return (
-    <div className="chat-container">
-      <div className="chat-navigation">
+    <div style={styles.chatContainer}>
+      <div style={styles.chatNavigation}>
         {navigationStack.length > 0 && !commandCompleted && !isInitialScreen && (
           <button 
-            className="nav-button back-button" 
+            style={styles.navButton} 
             onClick={handleBack}
             title="Go back one step"
           >
@@ -325,14 +444,14 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
           </button>
         )}
         <button 
-          className="nav-button home-button" 
+          style={styles.navButton} 
           onClick={handleMainMenu}
           title="Return to main menu"
         >
           🏠 Main Menu
         </button>
         {currentContext.section && (
-          <div className="context-breadcrumb">
+          <div style={styles.contextBreadcrumb}>
             Current: {getContextDescription()}
           </div>
         )}
@@ -365,35 +484,14 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
         showInput={showInput}
         onSubmit={handleSubmit}
         onIconSelect={(iconClass) => {
-          // Add to messages
-          setMessages(prev => [...prev, { 
-            text: iconClass, 
-            isUser: true,
-            commandId
-          }]);
-          
           handleValueSelection(iconClass);
           setShowIconPicker(false);
         }}
         onColorSelect={(color) => {
-          // Add to messages
-          setMessages(prev => [...prev, { 
-            text: color, 
-            isUser: true,
-            commandId
-          }]);
-          
           handleValueSelection(color);
           setShowColorPicker(false);
         }}
         onImageSelect={(imageUrl) => {
-          // Add to messages
-          setMessages(prev => [...prev, { 
-            text: imageUrl, 
-            isUser: true,
-            commandId
-          }]);
-          
           handleValueSelection(imageUrl);
           setShowImageUploader(false);
         }}
@@ -410,42 +508,45 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
           handleBack();
         }}
       />
-
-      <style jsx>{`
-        .chat-navigation {
-          display: flex;
-          align-items: center;
-          padding: 10px;
-          border-bottom: 1px solid #eee;
-          background: #f8f9fa;
-        }
-
-        .nav-button {
-          padding: 8px 12px;
-          margin-right: 10px;
-          border: none;
-          border-radius: 4px;
-          background: #007bff;
-          color: white;
-          cursor: pointer;
-          font-size: 14px;
-          display: flex;
-          align-items: center;
-          gap: 5px;
-        }
-
-        .nav-button:hover {
-          background: #0056b3;
-        }
-
-        .context-breadcrumb {
-          font-size: 14px;
-          color: #6c757d;
-          margin-left: auto;
-        }
-      `}</style>
     </div>
   );
+};
+
+// Navigation and UI styles
+const styles = {
+  chatContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%'
+  },
+  chatNavigation: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '10px',
+    borderBottom: '1px solid #eee',
+    background: '#f8f9fa'
+  },
+  navButton: {
+    padding: '8px 12px',
+    marginRight: '10px',
+    border: 'none',
+    borderRadius: '4px',
+    background: '#007bff',
+    color: 'white',
+    cursor: 'pointer',
+    fontSize: '14px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5px'
+  },
+  navButtonHover: {
+    background: '#0056b3'
+  },
+  contextBreadcrumb: {
+    fontSize: '14px',
+    color: '#6c757d',
+    marginLeft: 'auto'
+  }
 };
 
 export default Chat;

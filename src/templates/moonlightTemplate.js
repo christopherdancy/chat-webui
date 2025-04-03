@@ -4,6 +4,92 @@ const moonlightTemplate = {
   _templateId: 'portfolio_moonlight',
   _templateVersion: '1.0.0',
   
+  // Template structure metadata - defines editable sections and properties
+  _structure: {
+    sections: [
+      {
+        name: 'Navigation',
+        elements: [
+          { name: 'logo', type: 'text', label: 'Logo Text' },
+          { name: 'items', type: 'array', label: 'Navigation Items', 
+            items: [
+              { name: 'label', type: 'text', label: 'Label' },
+              { name: 'url', type: 'text', label: 'URL' },
+              { name: 'icon', type: 'text', label: 'Icon' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'Home',
+        elements: [
+          { name: 'title', type: 'text', label: 'Title' },
+          { name: 'description', type: 'text', label: 'Description' },
+          { name: 'authorImage', type: 'image', label: 'Author Image' },
+          { name: 'buttons', type: 'array', label: 'Buttons',
+            items: [
+              { name: 'label', type: 'text', label: 'Label' },
+              { name: 'url', type: 'text', label: 'URL' },
+              { name: 'primary', type: 'boolean', label: 'Is Primary' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'Services',
+        elements: [
+          { name: 'title', type: 'text', label: 'Section Title' },
+          { name: 'items', type: 'array', label: 'Service Items',
+            items: [
+              { name: 'title', type: 'text', label: 'Title' },
+              { name: 'description', type: 'text', label: 'Description' },
+              { name: 'image', type: 'image', label: 'Image' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'About',
+        elements: [
+          { name: 'title', type: 'text', label: 'Title' },
+          { name: 'description', type: 'text', label: 'Description' },
+          { name: 'image', type: 'image', label: 'Image' },
+          { name: 'buttonText', type: 'text', label: 'Button Text' },
+          { name: 'buttonUrl', type: 'text', label: 'Button URL' }
+        ]
+      },
+      {
+        name: 'Portfolio',
+        elements: [
+          { name: 'title', type: 'text', label: 'Section Title' },
+          { name: 'items', type: 'array', label: 'Portfolio Items',
+            items: [
+              { name: 'title', type: 'text', label: 'Title' },
+              { name: 'category', type: 'text', label: 'Category' },
+              { name: 'image', type: 'image', label: 'Image' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'Contact',
+        elements: [
+          { name: 'title', type: 'text', label: 'Section Title' },
+          { name: 'address', type: 'text', label: 'Address' },
+          { name: 'phone', type: 'text', label: 'Phone' },
+          { name: 'email', type: 'text', label: 'Email' },
+          { name: 'mapUrl', type: 'text', label: 'Map URL' }
+        ]
+      },
+      {
+        name: 'Footer',
+        elements: [
+          { name: 'copyright', type: 'text', label: 'Copyright Text' }
+        ]
+      }
+    ]
+  },
+  
   // Global settings
   global: {
     primaryColor: "#f5a425",
