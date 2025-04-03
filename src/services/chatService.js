@@ -36,30 +36,30 @@ export async function processMessage(message, currentConfig) {
     // Header section
     case 'HeaderTitle':
       updatedConfig.header.title = intent.value;
-      responseMessage = `I've updated the header title to "${intent.value}"`;
+      responseMessage = `I've updated the header title to "${intent.value}."`;
       break;
     
     // TODO: System wide and prompt a  and not ask a question?
     case 'HeaderColor':
       updatedConfig.header.backgroundColor = intent.value;
-      responseMessage = `I've updated the header background color to ${intent.value}`;
+      responseMessage = `I've updated the header background color to ${intent.value}.`;
       break;
       
     case 'LogoText':
       updatedConfig.header.logoText = intent.value;
       updatedConfig.header.title = intent.value;
-      responseMessage = `I've updated the logo text to "${intent.value}"`;
+      responseMessage = `I've updated the logo text to "${intent.value}".`;
       break;
 
     case 'LogoImage':
       updatedConfig.header.logoImage = intent.value;
-      responseMessage = `I've updated the logo image to "${intent.value}"`;
+      responseMessage = `I've updated the logo image to "${intent.value}".`;
       break;
     
     // Hero section
     case 'HeroBackground':
       updatedConfig.hero.backgroundColor = intent.value;
-      responseMessage = `I've updated the hero background to ${intent.value}`;
+      responseMessage = `I've updated the hero background to ${intent.value}.`;
       break;
 
     case 'HeroTitle':

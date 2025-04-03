@@ -11,7 +11,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
   const [messages, setMessages] = useState([
     { 
       text: "Hi, I'm your website editor assistant. Below you can find a selection of topics I can help you with.",
-      buttons: ['Header', 'Hero', 'Features', 'Benefits', 'Footer']
+      buttons: ['Header', 'Hero', 'Benefits', 'Features', 'Footer']
     }
   ]);
   const [input, setInput] = useState('');
@@ -75,7 +75,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
     setCommandId(prev => prev + 1); // Increment command ID to start fresh
     setMessages([{
       text: "Hi, I'm your website editor assistant. Below you can find a selection of topics I can help you with.",
-      buttons: ['Header', 'Hero', 'Features', 'Benefits', 'Footer']
+      buttons: ['Header', 'Hero', 'Benefits', 'Features', 'Footer']
     }]);
   };
 
@@ -255,7 +255,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       // Combine success message with next options
       setMessages([{
         text: `${response.message} What else would you like to modify?`,
-        buttons: ['Header', 'Hero', 'Features', 'Benefits', 'Footer'],
+        buttons: ['Header', 'Hero', 'Benefits', 'Features', 'Footer'],
         commandId: newCommandId
       }]);
       
@@ -263,7 +263,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig }) => {
       console.error('Error processing message:', error);
       setMessages(prev => [...prev, {
         text: "Sorry, I had trouble processing that request. Let's try again.",
-        buttons: ['Header', 'Hero', 'Features', 'Benefits', 'Footer'],
+        buttons: ['Header', 'Hero', 'Benefits', 'Features', 'Footer'],
         commandId
       }]);
       resetContext();

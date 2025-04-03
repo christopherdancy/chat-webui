@@ -8,7 +8,7 @@ const ChatMessage = ({ message, isUser, onOptionClick, isLatestMessage = false }
 
   return (
     <div className={`chat-message ${isUser ? 'user-message' : 'bot-message'}`}>
-      {!isUser && <div className="bot-avatar">🧁</div>}
+      {!isUser && <div className="bot-avatar">🤖</div>}
       <div className="message-content">
         <p>{message.text}</p>
         {message.buttons && (
