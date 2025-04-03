@@ -1,14 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { generateHTML } from '../templates/basicLanding';
+import { generateHTML as generateBasicHTML } from '../templates/basicLanding';
+import { generateHTML as generateMoonlightHTML } from '../templates/moonlightTemplate';
 import basicTemplate from '../templates/basicLanding';
 
 const WebsitePreview = ({ config, setConfig }) => {
   const iframeRef = useRef(null);
   const [showGuides, setShowGuides] = useState(true);
   
+  // Helper function to determine which template's generateHTML to use
+  const getTemplateRenderer = (config) => {
+    // Check specific properties or structure to identify the template
+    if (config.navigation && config.navigation.items) {
+      return generateMoonlightHTML; // Moonlight template has navigation.items
+    }
+    return generateBasicHTML; // Default to basic template
+  };
+  
   useEffect(() => {
     // Save the current config to localStorage
     localStorage.setItem('websiteConfig', JSON.stringify(config));
+    
+    // Determine which template's generator to use
+    const generateHTML = getTemplateRenderer(config);
     
     // Generate HTML from the current config, passing the showGuides flag
     const html = generateHTML(config, showGuides);

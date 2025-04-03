@@ -3,10 +3,37 @@ import Chat from './components/Chat';
 import WebsitePreview from './components/WebsitePreview';
 import DeployButton from './components/DeployButton';
 import basicTemplate from './templates/basicLanding';
+import moonlightTemplate from './templates/moonlightTemplate';
 import './styles.css';
+
+// Simple Template Selector Component
+const TemplateSelector = ({ currentTemplate, onTemplateSelect }) => {
+  const templates = [
+    { id: 'basic', name: 'Basic Business', template: basicTemplate },
+    { id: 'moonlight', name: 'Moonlight', template: moonlightTemplate }
+  ];
+  
+  return (
+    <div className="template-selector">
+      <label>Choose Template: </label>
+      <select 
+        value={currentTemplate.id || 'basic'} 
+        onChange={(e) => {
+          const selected = templates.find(t => t.id === e.target.value);
+          if (selected) onTemplateSelect(selected.template, selected.id);
+        }}
+      >
+        {templates.map(t => (
+          <option key={t.id} value={t.id}>{t.name}</option>
+        ))}
+      </select>
+    </div>
+  );
+};
 
 function App() {
   const [error, setError] = useState(null);
+  const [templateId, setTemplateId] = useState('basic');
   const [config, setConfig] = useState(() => {
     const savedConfig = localStorage.getItem('websiteConfig');
     return savedConfig ? JSON.parse(savedConfig) : basicTemplate;
@@ -28,6 +55,14 @@ function App() {
     setConfig(updatedConfig);
   };
   
+  const handleTemplateSelect = (templateConfig, id) => {
+    if (window.confirm('Changing templates will reset all customizations. Are you sure?')) {
+      setConfig(templateConfig);
+      setTemplateId(id);
+      localStorage.setItem('websiteConfig', JSON.stringify(templateConfig));
+    }
+  };
+  
   if (error) {
     return (
       <div style={{ padding: '20px', color: 'red' }}>
@@ -43,6 +78,10 @@ function App() {
       <header className="app-header">
         <h1>VibeSite</h1>
         <p>Edit your website through chat and deploy it with one click</p>
+        <TemplateSelector 
+          currentTemplate={{ id: templateId }} 
+          onTemplateSelect={handleTemplateSelect} 
+        />
       </header>
       
       <main className="app-content">
