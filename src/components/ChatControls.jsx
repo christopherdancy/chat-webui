@@ -7,7 +7,7 @@ const ChatControls = ({
   input,
   setInput,
   isProcessing,
-  currentContext,
+  currentNode,
   showIconPicker,
   showColorPicker,
   showImageUploader,
@@ -23,12 +23,27 @@ const ChatControls = ({
   onCloseColorPicker,
   onCloseImageUploader
 }) => {
+  // Helper to get display name 
+  const getNodeDisplayName = () => {
+    if (currentIconContext?.path) {
+      return currentIconContext.path.split('.').pop();
+    }
+    if (currentColorContext?.path) {
+      return currentColorContext.path.split('.').pop();
+    }
+    if (currentImageContext?.path) {
+      return currentImageContext.path.split('.').pop();
+    }
+    
+    return currentNode?.name || '';
+  };
+  
   return (
     <>
       {showIconPicker && (
         <div className="icon-picker-container">
           <div className="icon-picker-header">
-            <h4>Select an icon for {currentIconContext?.section} {currentIconContext?.item}</h4>
+            <h4>Select an icon for {getNodeDisplayName()}</h4>
             <button 
               className="close-icon-picker"
               onClick={onCloseIconPicker}
@@ -43,7 +58,7 @@ const ChatControls = ({
       {showImageUploader && (
         <div className="image-uploader-container">
           <div className="image-uploader-header">
-            <h4>Upload Image for {currentImageContext?.section}</h4>
+            <h4>Upload Image for {getNodeDisplayName()}</h4>
             <button 
               className="close-image-uploader"
               onClick={onCloseImageUploader}
@@ -62,10 +77,7 @@ const ChatControls = ({
         <div className="color-picker-container">
           <div className="color-picker-header">
             <h4>
-              {currentColorContext?.item 
-                ? `Select a color for ${currentColorContext?.section} ${currentColorContext?.item} ${currentColorContext?.property}`
-                : `Select a color for ${currentColorContext?.section} ${currentColorContext?.property}`
-              }
+              Select a color for {getNodeDisplayName()}
             </h4>
             <button 
               className="close-color-picker"
@@ -85,7 +97,7 @@ const ChatControls = ({
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={currentContext.property ? "Enter your value here..." : "Type here if you need something specific..."}
+              placeholder={currentNode ? "Enter your value here..." : "Type here if you need something specific..."}
               className="chat-input"
               disabled={isProcessing}
               autoFocus

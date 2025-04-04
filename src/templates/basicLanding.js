@@ -6,24 +6,106 @@ const basicTemplate = {
   
   // Template structure metadata - defines editable sections and properties
   _structure: {
+    global: {
+      id: "global",
+      name: "Global Settings",
+      children: [
+        {
+          id: "primaryColor",
+          name: "Primary Color",
+          type: "color",
+          path: "global.primaryColor",
+          default: "#4a90e2"
+        },
+        {
+          id: "secondaryColor",
+          name: "Secondary Color",
+          type: "color",
+          path: "global.secondaryColor",
+          default: "#f8f9fa"
+        },
+        {
+          id: "textColor",
+          name: "Text Color",
+          type: "color",
+          path: "global.textColor",
+          default: "#333333"
+        },
+        {
+          id: "accentColor",
+          name: "Accent Color",
+          type: "color",
+          path: "global.accentColor",
+          default: "#5e72e4"
+        },
+        {
+          id: "fontFamily",
+          name: "Font Family",
+          type: "text",
+          path: "global.fontFamily",
+          default: "'Open Sans', sans-serif"
+        }
+      ]
+    },
     sections: [
       {
         id: 'header',
         name: 'Header',
-        elements: [
-          { 
-            id: 'logo', 
+        children: [
+          {
+            id: 'logo',
             name: 'Logo',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' },
-              { id: 'image', name: 'Image', type: 'image' }
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                path: 'header.logo.text',
+                default: 'YourBrand'
+              },
+              {
+                id: 'image',
+                name: 'Image',
+                type: 'image',
+                path: 'header.logo.image',
+                default: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80'
+              }
             ]
           },
-          { 
-            id: 'background', 
+          {
+            id: 'background',
             name: 'Background',
-            properties: [
-              { id: 'color', name: 'Color', type: 'color' }
+            children: [
+              {
+                id: 'color',
+                name: 'Color',
+                type: 'color',
+                path: 'header.background.color',
+                default: '#4a90e2',
+                note: 'Uses global.primaryColor by default'
+              }
+            ]
+          },
+          {
+            id: 'textColor',
+            name: 'Text Color',
+            type: 'color',
+            path: 'header.textColor',
+            default: '#ffffff'
+          },
+          {
+            id: 'menuItems',
+            name: 'Menu Items',
+            type: 'array',
+            path: 'header.menuItems',
+            itemTemplate: {
+              text: 'Menu Item',
+              url: '#'
+            },
+            default: [
+              { text: 'Benefits', url: '#benefits' },
+              { text: 'Features', url: '#features' },
+              { text: 'Contact', url: '#footer' }
             ]
           }
         ]
@@ -31,35 +113,88 @@ const basicTemplate = {
       {
         id: 'hero',
         name: 'Hero',
-        elements: [
-          { 
-            id: 'title', 
+        children: [
+          {
+            id: 'title',
             name: 'Title',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' }
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                path: 'hero.title.text',
+                default: 'Transform Your Business Today'
+              }
             ]
           },
-          { 
-            id: 'subtitle', 
+          {
+            id: 'subtitle',
             name: 'Subtitle',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' }
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                path: 'hero.subtitle.text',
+                default: 'We help companies achieve their goals with innovative solutions and strategic planning'
+              }
             ]
           },
-          { 
-            id: 'button', 
-            name: 'Button',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' },
-              { id: 'color', name: 'Color', type: 'color' },
-              { id: 'url', name: 'URL', type: 'url' }
-            ]
-          },
-          { 
-            id: 'background', 
+          {
+            id: 'background',
             name: 'Background',
-            properties: [
-              { id: 'color', name: 'Color', type: 'color' }
+            children: [
+              {
+                id: 'color',
+                name: 'Color',
+                type: 'color',
+                path: 'hero.background.color',
+                default: '#f8f9fa',
+                note: 'Uses global.secondaryColor by default'
+              }
+            ]
+          },
+          {
+            id: 'textColor',
+            name: 'Text Color',
+            type: 'color',
+            path: 'hero.textColor',
+            default: '#333333',
+            note: 'Uses global.textColor by default'
+          },
+          {
+            id: 'button',
+            name: 'Button',
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                path: 'hero.button.text',
+                default: 'Get Started'
+              },
+              {
+                id: 'color',
+                name: 'Color',
+                type: 'color',
+                path: 'hero.button.color',
+                default: '#4a90e2',
+                note: 'Uses global.primaryColor by default'
+              },
+              {
+                id: 'textColor',
+                name: 'Text Color',
+                type: 'color',
+                path: 'hero.button.textColor',
+                default: '#ffffff'
+              },
+              {
+                id: 'url',
+                name: 'URL',
+                type: 'url',
+                path: 'hero.button.url',
+                default: '#'
+              }
             ]
           }
         ]
@@ -67,58 +202,132 @@ const basicTemplate = {
       {
         id: 'benefits',
         name: 'Benefits',
-        elements: [
-          { 
-            id: 'title', 
+        children: [
+          {
+            id: 'title',
             name: 'Title',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' }
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                path: 'benefits.title.text',
+                default: 'Why Choose Us'
+              }
             ]
           },
-          { 
-            id: 'subtitle', 
+          {
+            id: 'subtitle',
             name: 'Subtitle',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' }
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                path: 'benefits.subtitle.text',
+                default: 'What makes us different'
+              }
             ]
           },
-          { 
-            id: 'background', 
+          {
+            id: 'background',
             name: 'Background',
-            properties: [
-              { id: 'color', name: 'Color', type: 'color' }
-            ]
-          }
-        ],
-        items: [
-          {
-            id: 'item1',
-            name: 'Item 1',
-            properties: [
-              { id: 'title', name: 'Title', type: 'text' },
-              { id: 'description', name: 'Description', type: 'text' },
-              { id: 'icon', name: 'Icon', type: 'icon' },
-              { id: 'background', name: 'Background', type: 'color' }
+            children: [
+              {
+                id: 'color',
+                name: 'Color',
+                type: 'color',
+                path: 'benefits.background.color',
+                default: '#ffffff'
+              }
             ]
           },
           {
-            id: 'item2',
-            name: 'Item 2',
-            properties: [
-              { id: 'title', name: 'Title', type: 'text' },
-              { id: 'description', name: 'Description', type: 'text' },
-              { id: 'icon', name: 'Icon', type: 'icon' },
-              { id: 'background', name: 'Background', type: 'color' }
-            ]
+            id: 'textColor',
+            name: 'Text Color',
+            type: 'color',
+            path: 'benefits.textColor',
+            default: '#333333',
+            note: 'Uses global.textColor by default'
           },
           {
-            id: 'item3',
-            name: 'Item 3',
-            properties: [
-              { id: 'title', name: 'Title', type: 'text' },
-              { id: 'description', name: 'Description', type: 'text' },
-              { id: 'icon', name: 'Icon', type: 'icon' },
-              { id: 'background', name: 'Background', type: 'color' }
+            id: 'cardBackgroundColor',
+            name: 'Items Background Color',
+            type: 'color',
+            path: 'benefits.cardBackgroundColor',
+            default: '#ffffff'
+          },
+          {
+            id: 'items',
+            name: 'Items',
+            type: 'array',
+            path: 'benefits.items',
+            itemStructure: {
+              children: [
+                {
+                  id: 'title',
+                  name: 'Title',
+                  type: 'text',
+                  pathTemplate: 'benefits.items[INDEX].title'
+                },
+                {
+                  id: 'description',
+                  name: 'Description',
+                  type: 'text',
+                  pathTemplate: 'benefits.items[INDEX].description'
+                },
+                {
+                  id: 'icon',
+                  name: 'Icon',
+                  type: 'icon',
+                  pathTemplate: 'benefits.items[INDEX].icon'
+                },
+                {
+                  id: 'iconColor',
+                  name: 'Icon Color',
+                  type: 'color',
+                  pathTemplate: 'benefits.items[INDEX].iconColor',
+                  default: '#4a90e2',
+                  note: 'Uses global.primaryColor by default'
+                },
+                {
+                  id: 'background',
+                  name: 'Background',
+                  children: [
+                    {
+                      id: 'color',
+                      name: 'Color',
+                      type: 'color',
+                      pathTemplate: 'benefits.items[INDEX].background.color',
+                      default: null,
+                      note: 'Individual card background color (null means use global)'
+                    }
+                  ]
+                }
+              ]
+            },
+            default: [
+              {
+                icon: 'fas fa-check',
+                title: 'Premium Quality',
+                description: 'Our solutions are built with the highest standards in mind.',
+                iconColor: '#4a90e2',
+                background: { color: null }
+              },
+              {
+                icon: 'fas fa-chart-line',
+                title: 'Innovative Approach',
+                description: 'We use cutting-edge technologies to solve complex problems.',
+                iconColor: '#4a90e2',
+                background: { color: null }
+              },
+              {
+                icon: 'fas fa-globe',
+                title: 'Global Reach',
+                description: 'Our services are available worldwide with local support.',
+                iconColor: '#4a90e2',
+                background: { color: null }
+              }
             ]
           }
         ]
@@ -222,83 +431,162 @@ const basicTemplate = {
       {
         id: 'footer',
         name: 'Footer',
-        elements: [
-          { 
-            id: 'description', 
+        children: [
+          {
+            id: 'description',
             name: 'Description',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' }
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                path: 'footer.description.text',
+                default: 'About Us'
+              }
             ]
           },
-          { 
-            id: 'address', 
-            name: 'Address',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' }
-            ]
-          },
-          { 
-            id: 'phone', 
-            name: 'Phone',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' }
-            ]
-          },
-          { 
-            id: 'email', 
-            name: 'Email',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' }
-            ]
-          },
-          { 
-            id: 'background', 
+          {
+            id: 'background',
             name: 'Background',
-            properties: [
-              { id: 'color', name: 'Color', type: 'color' }
+            children: [
+              {
+                id: 'color',
+                name: 'Color',
+                type: 'color',
+                path: 'footer.background.color',
+                default: '#2d3748'
+              }
             ]
-          }
-        ],
-        items: [
+          },
+          {
+            id: 'textColor',
+            name: 'Text Color',
+            type: 'color',
+            path: 'footer.textColor',
+            default: '#ffffff'
+          },
           {
             id: 'social',
             name: 'Social Links',
-            properties: [
-              { 
-                id: 'facebook', 
-                name: 'Facebook', 
-                type: 'social',
-                properties: [
-                  { id: 'url', name: 'URL', type: 'url' },
-                  { id: 'hidden', name: 'Hidden', type: 'boolean' }
+            children: [
+              {
+                id: 'facebook',
+                name: 'Facebook',
+                children: [
+                  {
+                    id: 'url',
+                    name: 'URL',
+                    type: 'url',
+                    path: 'footer.social.facebook.url',
+                    default: 'https://www.facebook.com'
+                  },
+                  {
+                    id: 'hidden',
+                    name: 'Hidden',
+                    type: 'boolean',
+                    path: 'footer.social.facebook.hidden',
+                    default: false
+                  }
                 ]
               },
-              { 
-                id: 'twitter', 
-                name: 'Twitter', 
-                type: 'social',
-                properties: [
-                  { id: 'url', name: 'URL', type: 'url' },
-                  { id: 'hidden', name: 'Hidden', type: 'boolean' }
+              {
+                id: 'twitter',
+                name: 'Twitter',
+                children: [
+                  {
+                    id: 'url',
+                    name: 'URL',
+                    type: 'url',
+                    path: 'footer.social.twitter.url',
+                    default: 'https://www.twitter.com'
+                  },
+                  {
+                    id: 'hidden',
+                    name: 'Hidden',
+                    type: 'boolean',
+                    path: 'footer.social.twitter.hidden',
+                    default: false
+                  }
                 ]
               },
-              { 
-                id: 'instagram', 
-                name: 'Instagram', 
-                type: 'social',
-                properties: [
-                  { id: 'url', name: 'URL', type: 'url' },
-                  { id: 'hidden', name: 'Hidden', type: 'boolean' }
+              {
+                id: 'instagram',
+                name: 'Instagram',
+                children: [
+                  {
+                    id: 'url',
+                    name: 'URL',
+                    type: 'url',
+                    path: 'footer.social.instagram.url',
+                    default: 'https://www.instagram.com'
+                  },
+                  {
+                    id: 'hidden',
+                    name: 'Hidden',
+                    type: 'boolean',
+                    path: 'footer.social.instagram.hidden',
+                    default: false
+                  }
                 ]
               },
-              { 
-                id: 'linkedin', 
-                name: 'LinkedIn', 
-                type: 'social',
-                properties: [
-                  { id: 'url', name: 'URL', type: 'url' },
-                  { id: 'hidden', name: 'Hidden', type: 'boolean' }
+              {
+                id: 'linkedin',
+                name: 'LinkedIn',
+                children: [
+                  {
+                    id: 'url',
+                    name: 'URL',
+                    type: 'url',
+                    path: 'footer.social.linkedin.url',
+                    default: 'https://www.linkedin.com'
+                  },
+                  {
+                    id: 'hidden',
+                    name: 'Hidden',
+                    type: 'boolean',
+                    path: 'footer.social.linkedin.hidden',
+                    default: false
+                  }
                 ]
+              }
+            ]
+          },
+          {
+            id: 'address',
+            name: 'Address',
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                path: 'footer.address.text',
+                default: '123 Business Street, New York, NY'
+              }
+            ]
+          },
+          {
+            id: 'email',
+            name: 'Email',
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                path: 'footer.email.text',
+                default: 'info@yourbrand.com'
+              }
+            ]
+          },
+          {
+            id: 'phone',
+            name: 'Phone',
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                path: 'footer.phone.text',
+                default: '(123) 456-7890'
               }
             ]
           }
