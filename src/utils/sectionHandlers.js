@@ -27,8 +27,7 @@ export const sectionHandlers = {
         default:
           return ['Text'];
       }
-    },
-    getSocialOptions: (platform) => ['URL', 'Hide', 'Show']
+    }
   },
   
   Benefits: {
@@ -79,7 +78,7 @@ export const sectionHandlers = {
  * The new version uses template structure metadata when available
  */
 export const buildCommand = (context, option) => {
-  const { section, element, property, websiteConfig } = context;
+  const { section, element, property, nestedProperty, websiteConfig } = context;
   
   // Try to map using the new template structure approach
   if (websiteConfig) {
@@ -93,26 +92,29 @@ export const buildCommand = (context, option) => {
     if (internalStructure) {
       const { sectionId, elementId, propertyId, propertyType } = internalStructure;
       
-      // Handle social media links
-      if (propertyType === 'social') {
-        if (option === 'URL' || option === 'Url') {
-          return null; // Return null to indicate we need more input
-        }
-        if (option === 'Hide' || option === 'Show') {
-          return `footer social ${propertyId} ${option.toLowerCase()}`;
-        }
-        // URL value
-        return `footer social ${propertyId} url ${option}`;
-      }
-      
       // Handle icon-specific values
       if (propertyType === 'icon') {
+        console.log('Icon option:', option);
         if (option.startsWith('fa')) {
           return `${sectionId} ${elementId} ${propertyId} image ${option}`;
         }
         if (option.startsWith('#')) {
           return `${sectionId} ${elementId} ${propertyId} color ${option}`;
         }
+      }
+      
+      // Handle social media properties
+      if (propertyType === 'social' && nestedProperty) {
+        // For social type, handle URL and hidden properties properly
+        if (nestedProperty === 'url') {
+          // Ensure URL has http/https prefix if missing
+          let urlValue = option;
+          if (urlValue && !urlValue.match(/^https?:\/\//i) && !urlValue.includes('://')) {
+            urlValue = `https://${urlValue}`;
+          }
+          return `${sectionId} social.${propertyId} ${nestedProperty} ${urlValue}`;
+        }
+        return `${sectionId} social.${propertyId} ${nestedProperty} ${option}`;
       }
       
       // Standard property
@@ -122,17 +124,17 @@ export const buildCommand = (context, option) => {
   
   // Fall back to the original implementation if template structure is not available
   
-  // Handle social media links in footer
-  if (section === 'Footer' && element === 'social') {
+  // Handle social media links in footer with nested properties
+  if (section === 'Footer' && element === 'Social Links' && property) {
     const platform = property.toLowerCase();
-    if (option === 'URL' || option === 'Url') {
-      return null; // Return null to indicate we need to prompt for URL value
+    
+    // Handle nested property (url or hidden)
+    if (nestedProperty) {
+      return `footer social.${platform} ${nestedProperty} ${option}`;
     }
-    if (option === 'Hide' || option === 'Show') {
-      return `footer social ${platform} ${option.toLowerCase()}`;
-    }
-    // If we get here, it means we're setting the URL value
-    return `footer social ${platform} url ${option}`;
+    
+    // Direct update (less common case, but keeping for backward compatibility)
+    return `footer social.${platform} url ${option}`;
   }
   
   // Handle icon color selection

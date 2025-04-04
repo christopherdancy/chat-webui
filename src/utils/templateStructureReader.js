@@ -504,61 +504,114 @@ export function findSectionByName(config, sectionName) {
 }
 
 /**
- * Helper to find an element by name in a specific section
- * This version handles direct elements, array items, and normalized names
+ * Finds an element in a section by its display name
+ * Handles array items, nested elements, and parent elements
+ * @param {Object} section - The section object from the template structure
+ * @param {String} elementName - The display name of the element to find
+ * @returns {Object} The element object or null if not found
  */
 export function findElementByName(section, elementName) {
-  if (!section) return null;
+  if (!section || !elementName) return null;
   
-  // Special case: if element name is same as section name, return first element
-  if (elementName.toLowerCase() === section.name.toLowerCase() && section.elements && section.elements.length > 0) {
-    return section.elements[0];
-  }
+  const elementNameLower = elementName.toLowerCase();
   
-  // Normalize element name for comparison
-  const normalizedElementName = elementName.toLowerCase().trim();
-  
-  // Look in elements array
+  // Check if this is a direct element match
   if (section.elements) {
-    // Direct match
-    const directMatch = section.elements.find(e => 
-      e.name.toLowerCase() === normalizedElementName
+    // Try to find by display name first
+    const directElement = section.elements.find(e => 
+      e.name.toLowerCase() === elementNameLower
     );
     
-    if (directMatch) return directMatch;
+    if (directElement) return directElement;
     
-    // Check if this is an array item within an element
-    for (const element of section.elements) {
-      if (element.type === 'array' && element.items) {
-        const arrayItem = element.items.find(item => 
-          item.name.toLowerCase() === normalizedElementName
+    // Try to find by ID
+    const idElement = section.elements.find(e => 
+      e.id && e.id.toLowerCase() === elementNameLower
+    );
+    
+    if (idElement) return idElement;
+    
+    // Check if this is a nested element (like "social.facebook")
+    if (elementName.includes('.')) {
+      const [parentName, childName] = elementName.split('.');
+      const parentElement = section.elements.find(e => 
+        e.name.toLowerCase() === parentName.toLowerCase() || 
+        (e.id && e.id.toLowerCase() === parentName.toLowerCase())
+      );
+      
+      // If parent is found and has properties that include child element
+      if (parentElement && parentElement.properties) {
+        const childProperty = parentElement.properties.find(p => 
+          p.name.toLowerCase() === childName.toLowerCase() ||
+          (p.id && p.id.toLowerCase() === childName.toLowerCase())
         );
         
-        if (arrayItem) {
+        if (childProperty) {
+          // Return the child property enhanced with parent reference
           return {
-            ...arrayItem,
-            _parentElement: element.name // Add reference to parent element
+            ...childProperty,
+            _parentElement: parentElement
           };
         }
       }
     }
   }
   
-  // Look in items array
+  // Check if this is an array item (like "Item 1", "Item 2", etc.)
   if (section.items) {
-    return section.items.find(i => 
-      i.name.toLowerCase() === normalizedElementName
+    // First try direct match with item name
+    const directItem = section.items.find(item => 
+      item.name.toLowerCase() === elementNameLower
     );
+    
+    if (directItem) return directItem;
+    
+    // Try to match "Item X" format
+    const itemMatch = elementName.match(/Item\s+(\d+)/i);
+    if (itemMatch) {
+      const itemIndex = parseInt(itemMatch[1]) - 1;
+      if (itemIndex >= 0 && itemIndex < section.items.length) {
+        return section.items[itemIndex];
+      }
+    }
   }
   
-  // Special case for numbered items like "Item 1"
-  const itemMatch = normalizedElementName.match(/item\s*(\d+)/i);
-  if (itemMatch && section.elements) {
-    // Find an array element that might contain this item
+  // Check elements again for array elements
+  if (section.elements) {
+    // Try to find arrays and check if element name is referring to an item
     for (const element of section.elements) {
       if (element.type === 'array' && element.items) {
-        // Consider this a match if we have an array with items
-        return element;
+        // Check if requested element is actually a property of an array item
+        const itemProperty = element.items.find(item => 
+          item.name.toLowerCase() === elementNameLower ||
+          (item.id && item.id.toLowerCase() === elementNameLower)
+        );
+        
+        if (itemProperty) {
+          // Return the property with a reference to its parent array
+          return {
+            ...itemProperty,
+            _parentElement: element
+          };
+        }
+        
+        // Check for nested properties in each item
+        for (const item of element.items) {
+          if (item.properties) {
+            const nestedProperty = item.properties.find(p =>
+              p.name.toLowerCase() === elementNameLower ||
+              (p.id && p.id.toLowerCase() === elementNameLower)
+            );
+            
+            if (nestedProperty) {
+              return {
+                ...nestedProperty,
+                _parentElement: item,
+                _grandParentElement: element
+              };
+            }
+          }
+        }
       }
     }
   }
@@ -582,27 +635,55 @@ export function findPropertyByName(element, propertyName) {
  * Used for generating commands
  */
 export function mapToInternalStructure(config, sectionName, elementName, propertyName) {
+  if (!config || !sectionName || !elementName) return null;
+  
+  // Try to find the section
   const section = findSectionByName(config, sectionName);
   if (!section) return null;
   
   const sectionId = section.id || section.name.toLowerCase();
   
-  // Handle the case where elementName is actually a property of an array item
-  for (const el of section.elements || []) {
-    if (el.type === 'array' && el.items) {
-      const item = el.items.find(i => i.name === propertyName);
-      if (item) {
-        const elementId = el.id || el.name.toLowerCase();
-        const propertyId = item.id || item.name.toLowerCase();
-        
+  // Special case for Social Links: check if the element is actually a social platform
+  // and the property is either 'URL' or 'Hidden'
+  if (elementName === 'Social Links' && propertyName) {
+    const platformProperty = section.items?.find(i => 
+      i.id === 'social' || i.name === 'Social Links'
+    );
+    
+    if (platformProperty && platformProperty.properties) {
+      // Find the platform in properties (Facebook, Twitter, etc.)
+      const platform = platformProperty.properties.find(p => 
+        p.name.toLowerCase() === propertyName.toLowerCase() || 
+        p.id?.toLowerCase() === propertyName.toLowerCase()
+      );
+      
+      if (platform) {
         return {
           sectionId,
-          elementId,
-          propertyId,
-          propertyType: item.type,
-          actions: item.actions || []
+          elementId: 'social',
+          propertyId: platform.id || platform.name.toLowerCase(),
+          propertyType: 'social',
+          actions: platform.actions || ['url', 'hidden'],
+          platform: platform.id || platform.name.toLowerCase()
         };
       }
+    }
+  }
+  
+  // Handle case where elementName includes platform name (social.facebook)
+  if (elementName.includes('.')) {
+    const [baseElement, subElement] = elementName.split('.');
+    
+    // Check if this is a social element
+    if (baseElement.toLowerCase() === 'social' && propertyName) {
+      // For social elements, propertyName should be 'url' or 'hidden'
+      return {
+        sectionId,
+        elementId: `${baseElement}.${subElement}`,
+        propertyId: propertyName.toLowerCase(),
+        propertyType: propertyName.toLowerCase() === 'hidden' ? 'boolean' : 'url',
+        platform: subElement
+      };
     }
   }
   

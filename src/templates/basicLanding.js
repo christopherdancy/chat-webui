@@ -163,7 +163,6 @@ const basicTemplate = {
             properties: [
               { id: 'title', name: 'Title', type: 'text' },
               { id: 'description', name: 'Description', type: 'text' },
-              { id: 'icon', name: 'Icon', type: 'icon' }
             ]
           },
           {
@@ -172,7 +171,6 @@ const basicTemplate = {
             properties: [
               { id: 'title', name: 'Title', type: 'text' },
               { id: 'description', name: 'Description', type: 'text' },
-              { id: 'icon', name: 'Icon', type: 'icon' }
             ]
           },
           {
@@ -181,7 +179,42 @@ const basicTemplate = {
             properties: [
               { id: 'title', name: 'Title', type: 'text' },
               { id: 'description', name: 'Description', type: 'text' },
-              { id: 'icon', name: 'Icon', type: 'icon' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'cta',
+        name: 'Call to Action',
+        elements: [
+          { 
+            id: 'title', 
+            name: 'Title',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' }
+            ]
+          },
+          { 
+            id: 'subtitle', 
+            name: 'Subtitle',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' }
+            ]
+          },
+          { 
+            id: 'button', 
+            name: 'Button',
+            properties: [
+              { id: 'text', name: 'Text', type: 'text' },
+              { id: 'color', name: 'Color', type: 'color' },
+              { id: 'url', name: 'URL', type: 'url' }
+            ]
+          },
+          { 
+            id: 'background', 
+            name: 'Background',
+            properties: [
+              { id: 'color', name: 'Color', type: 'color' }
             ]
           }
         ]
@@ -231,10 +264,42 @@ const basicTemplate = {
             id: 'social',
             name: 'Social Links',
             properties: [
-              { id: 'facebook', name: 'Facebook', type: 'social', actions: ['url', 'hide', 'show'] },
-              { id: 'twitter', name: 'Twitter', type: 'social', actions: ['url', 'hide', 'show'] },
-              { id: 'instagram', name: 'Instagram', type: 'social', actions: ['url', 'hide', 'show'] },
-              { id: 'linkedin', name: 'LinkedIn', type: 'social', actions: ['url', 'hide', 'show'] }
+              { 
+                id: 'facebook', 
+                name: 'Facebook', 
+                type: 'social',
+                properties: [
+                  { id: 'url', name: 'URL', type: 'url' },
+                  { id: 'hidden', name: 'Hidden', type: 'boolean' }
+                ]
+              },
+              { 
+                id: 'twitter', 
+                name: 'Twitter', 
+                type: 'social',
+                properties: [
+                  { id: 'url', name: 'URL', type: 'url' },
+                  { id: 'hidden', name: 'Hidden', type: 'boolean' }
+                ]
+              },
+              { 
+                id: 'instagram', 
+                name: 'Instagram', 
+                type: 'social',
+                properties: [
+                  { id: 'url', name: 'URL', type: 'url' },
+                  { id: 'hidden', name: 'Hidden', type: 'boolean' }
+                ]
+              },
+              { 
+                id: 'linkedin', 
+                name: 'LinkedIn', 
+                type: 'social',
+                properties: [
+                  { id: 'url', name: 'URL', type: 'url' },
+                  { id: 'hidden', name: 'Hidden', type: 'boolean' }
+                ]
+              }
             ]
           }
         ]
@@ -254,11 +319,14 @@ const basicTemplate = {
   // Header section
   header: {
     title: "Modern Business Website",
-    backgroundColor: "#4a90e2", // Uses global.primaryColor by default
+    background: {
+      color: "#4a90e2" // Uses global.primaryColor by default
+    },
     textColor: "#ffffff",
-    logo: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
-    logoText: "YourBrand",
-    logoImage: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+    logo: {
+      text: "YourBrand",
+      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    },
     menuItems: [
       { text: "Benefits", url: "#benefits" },
       { text: "Features", url: "#features" },
@@ -268,21 +336,35 @@ const basicTemplate = {
   
   // Hero section
   hero: {
-    title: "Transform Your Business Today",
-    subtitle: "We help companies achieve their goals with innovative solutions and strategic planning",
-    backgroundColor: "#f8f9fa", // Uses global.secondaryColor by default
+    title: {
+      text: "Transform Your Business Today"
+    },
+    subtitle: {
+      text: "We help companies achieve their goals with innovative solutions and strategic planning"
+    },
+    background: {
+      color: "#f8f9fa" // Uses global.secondaryColor by default
+    },
     textColor: "#333333", // Uses global.textColor by default
-    buttonText: "Get Started",
-    buttonColor: "#4a90e2", // Uses global.primaryColor by default
-    buttonTextColor: "#ffffff",
-    buttonUrl: "#",
+    button: {
+      text: "Get Started",
+      color: "#4a90e2", // Uses global.primaryColor by default
+      textColor: "#ffffff",
+      url: "#"
+    }
   },
   
   // Benefits section
   benefits: {
-    title: "Why Choose Us",
-    subtitle: "What makes us different",
-    backgroundColor: "#ffffff",
+    title: {
+      text: "Why Choose Us"
+    },
+    subtitle: {
+      text: "What makes us different"
+    },
+    background: {
+      color: "#ffffff"
+    },
     textColor: "#333333", // Uses global.textColor by default
     cardBackgroundColor: "#ffffff", // Global card background color
     items: [
@@ -291,32 +373,46 @@ const basicTemplate = {
         title: "Premium Quality",
         description: "Our solutions are built with the highest standards in mind.",
         iconColor: "#4a90e2", // Uses global.primaryColor by default
-        backgroundColor: null // Individual card background color (null means use global)
+        background: {
+          color: null // Individual card background color (null means use global)
+        }
       },
       {
         icon: "fas fa-chart-line",
         title: "Innovative Approach",
         description: "We use cutting-edge technologies to solve complex problems.",
         iconColor: "#4a90e2", // Uses global.primaryColor by default
-        backgroundColor: null // Individual card background color (null means use global)
+        background: {
+          color: null // Individual card background color (null means use global)
+        }
       },
       {
         icon: "fas fa-globe",
         title: "Global Reach",
         description: "Our services are available worldwide with local support.",
         iconColor: "#4a90e2", // Uses global.primaryColor by default
-        backgroundColor: null // Individual card background color (null means use global)
+        background: {
+          color: null // Individual card background color (null means use global)
+        }
       }
     ]
   },
   
   // Features section
   features: {
-    title: "Our Features",
-    subtitle: "What we offer",
-    backgroundColor: "#f8f9fa", // Uses global.secondaryColor by default
+    title: {
+      text: "Our Features"
+    },
+    subtitle: {
+      text: "What we offer"
+    },
+    background: {
+      color: "#f8f9fa" // Uses global.secondaryColor by default
+    },
     textColor: "#333333", // Uses global.textColor by default
-    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+    image: {
+      upload: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    },
     items: [
       {
         icon: "fas fa-cog",
@@ -341,22 +437,34 @@ const basicTemplate = {
   
   // Call to Action section
   cta: {
-    title: "Ready to get started?",
-    subtitle: "Contact us today to transform your business",
-    backgroundColor: "#4a90e2", // Uses global.primaryColor by default
+    title: {
+      text: "Ready to get started?"
+    },
+    subtitle: {
+      text: "Contact us today to transform your business"
+    },
+    background: {
+      color: "#4a90e2" // Uses global.primaryColor by default
+    },
     textColor: "#ffffff",
-    buttonText: "Contact Us",
-    buttonColor: "#808080",
-    buttonTextColor: "#ffffff", // Uses global.primaryColor by default
-    buttonUrl: "#"
+    button: {
+      text: "Contact Us",
+      color: "#808080",
+      textColor: "#ffffff", // Uses global.primaryColor by default
+      url: "#"
+    }
   },
   
   // Footer section
   footer: {
-    description: "About Us",
-    backgroundColor: "#2d3748",
+    description: {
+      text: "About Us"
+    },
+    background: {
+      color: "#2d3748"
+    },
     textColor: "#ffffff",
-    socialLinks: {
+    social: {
       facebook: { url: "https://www.facebook.com", icon: "fab fa-facebook-f", hidden: false },
       twitter: { url: "https://www.twitter.com", icon: "fab fa-twitter", hidden: false },
       instagram: { url: "https://www.instagram.com", icon: "fab fa-instagram", hidden: false },
@@ -367,114 +475,23 @@ const basicTemplate = {
       { text: "Features", url: "#Features" },
       { text: "Benefits", url: "#Benefits" },
     ],
-    address: "123 Business Street, New York, NY",
-    email: "info@yourbrand.com",
-    phone: "(123) 456-7890"
+    address: {
+      text: "123 Business Street, New York, NY"
+    },
+    email: {
+      text: "info@yourbrand.com"
+    },
+    phone: {
+      text: "(123) 456-7890"
+    }
   }
 };
 
 // Function to generate HTML from the template configuration
 export function generateHTML(config, showGuides = false) {
-  // Apply global defaults if specific values aren't provided
-  const processedConfig = {
-    ...config,
-    header: {
-      ...config.header,
-      backgroundColor: config.header.backgroundColor || config.global.primaryColor,
-      textColor: config.header.textColor || "#ffffff",
-      logo: config.header.logo || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
-      logoText: config.header.logoText || "YourBrand",
-      logoImage: config.header.logoImage || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
-    },
-    hero: {
-      ...config.hero,
-      backgroundColor: config.hero.backgroundColor || config.global.secondaryColor,
-      textColor: config.hero.textColor || config.global.textColor,
-      buttonColor: config.hero.buttonColor || config.global.primaryColor
-    },
-    benefits: {
-      ...config.benefits,
-      backgroundColor: config.benefits.backgroundColor || "#ffffff",
-      textColor: config.benefits.textColor || config.global.textColor,
-      cardBackgroundColor: config.benefits.cardBackgroundColor || "#ffffff",
-      items: [
-        {
-          ...config.benefits.items[0],
-          title: config.benefits.items[0].title || "Premium Quality",
-          icon: config.benefits.items[0].icon || "fas fa-check",
-          iconColor: config.benefits.items[0].iconColor || config.global.primaryColor,
-          backgroundColor: config.benefits.items[0].backgroundColor || null
-        },
-        {
-          ...config.benefits.items[1],
-          title: config.benefits.items[1].title || "Innovative Approach",
-          icon: config.benefits.items[1].icon || "fas fa-chart-line",
-          iconColor: config.benefits.items[1].iconColor || config.global.primaryColor,
-          backgroundColor: config.benefits.items[1].backgroundColor || null
-        },
-        {
-          ...config.benefits.items[2],
-          title: config.benefits.items[2].title || "Global Reach",
-          icon: config.benefits.items[2].icon || "fas fa-globe",
-          iconColor: config.benefits.items[2].iconColor || config.global.primaryColor,
-          backgroundColor: config.benefits.items[2].backgroundColor || null
-        }
-      ]
-    },
-    features: {
-      ...config.features,
-      backgroundColor: config.features.backgroundColor || config.global.secondaryColor,
-      textColor: config.features.textColor || config.global.textColor,
-      image: config.features.image || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
-      items: [
-        {
-         ...config.features.items[0],
-          title: config.features.items[0].title || "Customized Solutions",
-          icon: config.features.items[0].icon || "fas fa-cog",
-          iconColor: config.global.primaryColor
-        },
-        {
-          ...config.features.items[1],
-          title: config.features.items[1].title || "Modern Technology",
-          icon: config.features.items[1].icon || "fas fa-code",
-          iconColor: config.global.primaryColor
-        },
-        {
-          ...config.features.items[2],
-          title: config.features.items[2].title || "Dedicated Support",
-          icon: config.features.items[2].icon || "fas fa-smile",
-          iconColor: config.global.primaryColor
-        }
-      ]
-    },
-    cta: {
-      ...config.cta,
-      backgroundColor: config.cta.backgroundColor || config.global.primaryColor,
-      buttonTextColor: config.cta.buttonTextColor || config.global.primaryColor,
-      buttonUrl: config.cta.buttonUrl || "#",
-      buttonColor: config.cta.buttonColor || config.global.primaryColor
-    },
-    footer: {
-      ...config.footer,
-      backgroundColor: config.footer.backgroundColor || config.global.primaryColor,
-      textColor: config.footer.textColor || config.global.textColor,
-      description: config.footer.description || "We are a team of passionate professionals dedicated to helping businesses grow and succeed in the digital age.",
-      socialLinks: config.footer.socialLinks || {
-        facebook: { url: "https://www.facebook.com", icon: "fab fa-facebook-f", hidden: false },
-        twitter: { url: "https://www.twitter.com", icon: "fab fa-twitter", hidden: false },
-        instagram: { url: "https://www.instagram.com", icon: "fab fa-instagram", hidden: false },
-        linkedin: { url: "https://www.linkedin.com", icon: "fab fa-linkedin-in", hidden: false }
-      },
-      links: config.footer.links || [
-        { text: "Home", url: "#" },
-        { text: "Features", url: "#Features" },
-        { text: "Benefits", url: "#Benefits" },
-      ],
-      address: config.footer.address || "123 Business Street, New York, NY",
-      email: config.footer.email || "info@yourbrand.com",
-      phone: config.footer.phone || "(123) 456-7890"
-    }
-  };
+  // No need to apply defaults anymore, as the template already has all defaults
+  // Just use the provided config directly, or the default template if no config is provided
+  const processedConfig = config || basicTemplate;
 
   // Enhanced section guide styles with element-level guides
   const sectionGuideStyles = showGuides ? `
@@ -584,7 +601,7 @@ export function generateHTML(config, showGuides = false) {
     
     /* Header Styles */
     .navbar {
-      background-color: ${processedConfig.header.backgroundColor};
+      background-color: ${processedConfig.header.background?.color || processedConfig.global.primaryColor};
       padding: 1rem 2rem;
     }
     
@@ -626,7 +643,7 @@ export function generateHTML(config, showGuides = false) {
       padding: 5rem 0;
       position: relative;
       overflow: hidden;
-      background-color: ${processedConfig.hero.backgroundColor};
+      background-color: ${processedConfig.hero.background?.color || processedConfig.global.secondaryColor};
     }
     
     .hero-content {
@@ -661,8 +678,8 @@ export function generateHTML(config, showGuides = false) {
       font-size: 0.9rem;
       box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
       transition: all 0.3s;
-      background-color: ${processedConfig.hero.buttonColor};
-      color: ${processedConfig.hero.buttonTextColor || '#ffffff'};
+      background-color: ${processedConfig.hero.button?.color || processedConfig.global.primaryColor};
+      color: ${processedConfig.hero.button?.textColor || '#ffffff'};
       border: none;
     }
     
@@ -697,7 +714,7 @@ export function generateHTML(config, showGuides = false) {
     /* Benefits Section */
     .benefits {
       padding: 4rem 0;
-      background-color: ${processedConfig.benefits.backgroundColor};
+      background-color: ${processedConfig.benefits.background?.color || processedConfig.global.secondaryColor};
     }
     
     .benefits .section-title {
@@ -742,7 +759,7 @@ export function generateHTML(config, showGuides = false) {
     /* Features Section */
     .features {
       padding: 5rem 0;
-      background-color: ${processedConfig.features.backgroundColor};
+      background-color: ${processedConfig.features.background?.color || processedConfig.global.secondaryColor};
     }
 
     .features .section-title {
@@ -754,12 +771,12 @@ export function generateHTML(config, showGuides = false) {
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
-      color: ${processedConfig.features.textColor};
+      color: ${processedConfig.features.textColor || processedConfig.global.textColor};
     }
     
     .features .section-title p {
       font-size: 1.2rem;
-      color: ${processedConfig.features.textColor};
+      color: ${processedConfig.features.textColor || processedConfig.global.textColor};
       opacity: 0.8;
     }
     
@@ -795,19 +812,19 @@ export function generateHTML(config, showGuides = false) {
     .features .feature-content h4 {
       margin-bottom: 0.5rem;
       font-weight: 600;
-      color: ${processedConfig.features.textColor};
+      color: ${processedConfig.features.textColor || processedConfig.global.textColor};
     }
     
     .features .feature-content p {
-      color: ${processedConfig.features.textColor};
+      color: ${processedConfig.features.textColor || processedConfig.global.textColor};
       opacity: 0.8;
       margin-bottom: 0;
     }
     
     /* Call to Action */
     .cta {
-      background-color: ${processedConfig.cta.backgroundColor};
-      color: ${processedConfig.cta.textColor};
+      background-color: ${processedConfig.cta.background?.color || processedConfig.global.primaryColor};
+      color: ${processedConfig.cta.textColor || processedConfig.global.textColor};
       padding: 3rem 0;
       text-align: center;
     }
@@ -820,12 +837,12 @@ export function generateHTML(config, showGuides = false) {
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 1rem;
-      color: ${processedConfig.cta.textColor};
+      color: ${processedConfig.cta.textColor || processedConfig.global.textColor};
     }
     
     .cta .section-title p {
       font-size: 1.2rem;
-      color: ${processedConfig.cta.textColor};
+      color: ${processedConfig.cta.textColor || processedConfig.global.textColor};
       opacity: 0.9;
       margin-bottom: 2rem;
     }
@@ -837,8 +854,8 @@ export function generateHTML(config, showGuides = false) {
       text-transform: uppercase;
       letter-spacing: 0.5px;
       font-size: 0.9rem;
-      background-color: ${processedConfig.cta.buttonColor};
-      color: ${processedConfig.cta.buttonTextColor};
+      background-color: ${processedConfig.cta.button?.color || processedConfig.global.primaryColor};
+      color: ${processedConfig.cta.button?.textColor || processedConfig.global.primaryColor};
       border: none;
       box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
       transition: all 0.3s;
@@ -852,19 +869,19 @@ export function generateHTML(config, showGuides = false) {
     
     /* Footer */
     #footer {
-      background-color: ${processedConfig.footer.backgroundColor};
-      color: ${processedConfig.footer.textColor};
+      background-color: ${processedConfig.footer.background?.color || processedConfig.global.primaryColor};
+      color: ${processedConfig.footer.textColor || processedConfig.global.textColor};
       padding: 4rem 0 2rem;
     }
     
     #footer h5 {
       font-weight: 600;
       margin-bottom: 1.5rem;
-      color: ${processedConfig.footer.textColor};
+      color: ${processedConfig.footer.textColor || processedConfig.global.textColor};
     }
     
     #footer p {
-      color: ${processedConfig.footer.textColor};
+      color: ${processedConfig.footer.textColor || processedConfig.global.textColor};
       opacity: 0.8;
     }
     
@@ -879,7 +896,7 @@ export function generateHTML(config, showGuides = false) {
     }
     
     .footer-links a {
-      color: ${processedConfig.footer.textColor};
+      color: ${processedConfig.footer.textColor || processedConfig.global.textColor};
       opacity: 0.8;
       text-decoration: none;
       transition: opacity 0.3s;
@@ -902,7 +919,7 @@ export function generateHTML(config, showGuides = false) {
       height: 40px;
       border-radius: 50%;
       background-color: rgba(255, 255, 255, 0.1);
-      color: ${processedConfig.footer.textColor};
+      color: ${processedConfig.footer.textColor || processedConfig.global.textColor};
       margin-right: 0.75rem;
       transition: all 0.3s;
     }
@@ -949,9 +966,9 @@ export function generateHTML(config, showGuides = false) {
     <div class="container">
       ${wrapElementWithGuide('Logo', `
         <a class="navbar-brand" href="#">
-          ${processedConfig.header.logoImage ? 
-            `<img src="${processedConfig.header.logoImage}" alt="Logo" class="logo-image">` : ''}
-          <span class="logo-text">${processedConfig.header.logoText || processedConfig.header.logo}</span>
+          ${processedConfig.header.logo?.image ? 
+            `<img src="${processedConfig.header.logo?.image}" alt="Logo" class="logo-image">` : ''}
+          <span class="logo-text">${processedConfig.header.logo?.text || processedConfig.header.logo}</span>
         </a>
       `)}
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -980,13 +997,13 @@ export function generateHTML(config, showGuides = false) {
         <div class="col-lg-8">
           <div class="hero-content">
             ${wrapElementWithGuide('Title', `
-              <h1>${processedConfig.hero.title}</h1>
+              <h1>${processedConfig.hero.title?.text}</h1>
             `)}
             ${wrapElementWithGuide('Subtitle', `
-              <p>${processedConfig.hero.subtitle}</p>
+              <p>${processedConfig.hero.subtitle?.text}</p>
             `)}
             ${wrapElementWithGuide('Button', `
-              <a href="${processedConfig.hero.buttonUrl}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">${processedConfig.hero.buttonText}</a>
+              <a href="${processedConfig.hero.button?.url}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">${processedConfig.hero.button?.text}</a>
             `)}
           </div>
         </div>
@@ -1001,17 +1018,17 @@ export function generateHTML(config, showGuides = false) {
     <div class="container">
       <div class="section-title">
         ${wrapElementWithGuide('Title', `
-          <h2>${processedConfig.benefits.title}</h2>
+          <h2>${processedConfig.benefits.title?.text}</h2>
         `)}
         ${wrapElementWithGuide('Subtitle', `
-          <p>${processedConfig.benefits.subtitle}</p>
+          <p>${processedConfig.benefits.subtitle?.text}</p>
         `)}
       </div>
       <div class="row">
         ${processedConfig.benefits.items.map((item, index) => `
           <div class="col-md-4 mb-4">
             ${wrapElementWithGuide(`Item ${index + 1}`, `
-              <div class="feature-card shadow-sm" style="background-color: ${item.backgroundColor || processedConfig.benefits.cardBackgroundColor};">
+              <div class="feature-card shadow-sm" style="background-color: ${item.background?.color || processedConfig.benefits.cardBackgroundColor};">
                 ${wrapElementWithGuide(`Icon`, `
                   <div class="icon" style="background-color: ${item.iconColor}20; color: ${item.iconColor};">
                     <i class="${item.icon}"></i>
@@ -1038,17 +1055,17 @@ export function generateHTML(config, showGuides = false) {
     <div class="container">
       <div class="section-title">
         ${wrapElementWithGuide('Title', `
-          <h2>${processedConfig.features.title}</h2>
+          <h2>${processedConfig.features.title?.text}</h2>
         `)}
         ${wrapElementWithGuide('Subtitle', `
-          <p>${processedConfig.features.subtitle}</p>
+          <p>${processedConfig.features.subtitle?.text}</p>
         `)}
       </div>
       
       <div class="row">
         <div class="col-lg-6 mb-4 mb-lg-0">
           ${wrapElementWithGuide('Image', `
-            <img src="${processedConfig.features.image}" alt="Features" class="img-fluid feature-image">
+            <img src="${processedConfig.features.image?.upload}" alt="Features" class="img-fluid feature-image">
           `)}
         </div>
         <div class="col-lg-6">
@@ -1078,14 +1095,14 @@ export function generateHTML(config, showGuides = false) {
     <div class="container">
       <div class="section-title">
         ${wrapElementWithGuide('Title', `
-          <h2>${processedConfig.cta.title}</h2>
+          <h2>${processedConfig.cta.title?.text}</h2>
         `)}
         ${wrapElementWithGuide('Subtitle', `
-          <p>${processedConfig.cta.subtitle}</p>
+          <p>${processedConfig.cta.subtitle?.text}</p>
         `)}
       </div>
       ${wrapElementWithGuide('Button', `
-        <a href="${processedConfig.cta.buttonUrl}" class="btn" target="_blank" rel="noopener noreferrer">${processedConfig.cta.buttonText}</a>
+        <a href="${processedConfig.cta.button?.url}" class="btn" target="_blank" rel="noopener noreferrer">${processedConfig.cta.button?.text}</a>
       `)}
     </div>
   </section>
@@ -1099,18 +1116,18 @@ export function generateHTML(config, showGuides = false) {
         <div class="col-lg-4 mb-4 mb-lg-0">
           <h5>About Us</h5>
           ${wrapElementWithGuide('Description', `
-            <p>${processedConfig.footer.description}</p>
+            <p>${processedConfig.footer.description?.text}</p>
           `)}
           <div class="social-links">
             ${wrapElementWithGuide('Social Links', `
-              ${!processedConfig.footer.socialLinks.facebook.hidden ? 
-                `<a href="${processedConfig.footer.socialLinks.facebook.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.facebook.icon}"></i></a>` : ''}
-              ${!processedConfig.footer.socialLinks.twitter.hidden ? 
-                `<a href="${processedConfig.footer.socialLinks.twitter.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.twitter.icon}"></i></a>` : ''}
-              ${!processedConfig.footer.socialLinks.instagram.hidden ? 
-                `<a href="${processedConfig.footer.socialLinks.instagram.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.instagram.icon}"></i></a>` : ''}
-              ${!processedConfig.footer.socialLinks.linkedin.hidden ? 
-                `<a href="${processedConfig.footer.socialLinks.linkedin.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.socialLinks.linkedin.icon}"></i></a>` : ''}
+              ${!processedConfig.footer.social?.facebook.hidden ? 
+                `<a href="${processedConfig.footer.social?.facebook.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.social?.facebook.icon}"></i></a>` : ''}
+              ${!processedConfig.footer.social?.twitter.hidden ? 
+                `<a href="${processedConfig.footer.social?.twitter.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.social?.twitter.icon}"></i></a>` : ''}
+              ${!processedConfig.footer.social?.instagram.hidden ? 
+                `<a href="${processedConfig.footer.social?.instagram.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.social?.instagram.icon}"></i></a>` : ''}
+              ${!processedConfig.footer.social?.linkedin.hidden ? 
+                `<a href="${processedConfig.footer.social?.linkedin.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.social?.linkedin.icon}"></i></a>` : ''}
             `)}
           </div>
         </div>
@@ -1125,18 +1142,18 @@ export function generateHTML(config, showGuides = false) {
         <div class="col-lg-4">
           <h5>Contact Info</h5>
           ${wrapElementWithGuide('Address', `
-            <p><i class="fas fa-map-marker-alt mr-2"></i> ${processedConfig.footer.address}</p>
+            <p><i class="fas fa-map-marker-alt mr-2"></i> ${processedConfig.footer.address?.text}</p>
           `)}
           ${wrapElementWithGuide('Phone', `
-            <p><i class="fas fa-phone mr-2"></i> ${processedConfig.footer.phone}</p>
+            <p><i class="fas fa-phone mr-2"></i> ${processedConfig.footer.phone?.text}</p>
           `)}
           ${wrapElementWithGuide('Email', `
-            <p><i class="fas fa-envelope mr-2"></i> ${processedConfig.footer.email}</p>
+            <p><i class="fas fa-envelope mr-2"></i> ${processedConfig.footer.email?.text}</p>
           `)}
         </div>
       </div>
       <div class="copyright">
-        <p>© 2025 ${processedConfig.header.logoText}. All rights reserved.</p>
+        <p>© 2025 ${processedConfig.header.logo?.text}. All rights reserved.</p>
       </div>
     </div>
   </footer>
