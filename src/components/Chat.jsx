@@ -127,11 +127,11 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
       // Get the path to the selected node
       const nodePath = getNodePath(websiteConfig, currentPath, option);
       if (!nodePath) return;
-      
+      console.log('Node Path:', nodePath);
       // Find the selected node
       const selectedNode = findNodeByPath(websiteConfig._structure, nodePath);
-      console.log('Selected node:', selectedNode);
       if (!selectedNode) return;
+      console.log('Selected Node:', selectedNode);
       
       // Add this node to the navigation stack along with current state
       const newStack = [...navigationStack, { 
@@ -191,7 +191,6 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
       } else {
         // Get child options for this node
         const childOptions = getChildNodes(websiteConfig, nodePath);
-        
         // Display child options
         setMessages(prev => [...prev, {
           text: `What would you like to modify in ${option}?`,
@@ -218,7 +217,6 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
       
       // Get current node from navigation stack
       const currentNode = navigationStack[navigationStack.length - 1];
-      console.log('Current node:', currentNode);
       
       if (!currentNode) {
         setIsProcessing(false);

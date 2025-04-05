@@ -60,6 +60,7 @@ const basicTemplate = {
                 id: 'text',
                 name: 'Text',
                 type: 'text',
+                editable: true,
                 path: 'header.logo.text',
                 default: 'YourBrand'
               },
@@ -67,6 +68,7 @@ const basicTemplate = {
                 id: 'image',
                 name: 'Image',
                 type: 'image',
+                editable: true,
                 path: 'header.logo.image',
                 default: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80'
               }
@@ -80,6 +82,7 @@ const basicTemplate = {
                 id: 'color',
                 name: 'Color',
                 type: 'color',
+                editable: true,
                 path: 'header.background.color',
                 default: '#4a90e2',
                 note: 'Uses global.primaryColor by default'
@@ -90,6 +93,7 @@ const basicTemplate = {
             id: 'textColor',
             name: 'Text Color',
             type: 'color',
+            editable: true,
             path: 'header.textColor',
             default: '#ffffff'
           },
@@ -97,6 +101,7 @@ const basicTemplate = {
             id: 'menuItems',
             name: 'Menu Items',
             type: 'array',
+            editable: false,
             path: 'header.menuItems',
             itemTemplate: {
               text: 'Menu Item',
@@ -122,6 +127,7 @@ const basicTemplate = {
                 id: 'text',
                 name: 'Text',
                 type: 'text',
+                editable: true,
                 path: 'hero.title.text',
                 default: 'Transform Your Business Today'
               }
@@ -135,6 +141,7 @@ const basicTemplate = {
                 id: 'text',
                 name: 'Text',
                 type: 'text',
+                editable: true,
                 path: 'hero.subtitle.text',
                 default: 'We help companies achieve their goals with innovative solutions and strategic planning'
               }
@@ -148,6 +155,7 @@ const basicTemplate = {
                 id: 'color',
                 name: 'Color',
                 type: 'color',
+                editable: true,
                 path: 'hero.background.color',
                 default: '#f8f9fa',
                 note: 'Uses global.secondaryColor by default'
@@ -158,6 +166,7 @@ const basicTemplate = {
             id: 'textColor',
             name: 'Text Color',
             type: 'color',
+            editable: true,
             path: 'hero.textColor',
             default: '#333333',
             note: 'Uses global.textColor by default'
@@ -170,6 +179,7 @@ const basicTemplate = {
                 id: 'text',
                 name: 'Text',
                 type: 'text',
+                editable: true,
                 path: 'hero.button.text',
                 default: 'Get Started'
               },
@@ -177,6 +187,7 @@ const basicTemplate = {
                 id: 'color',
                 name: 'Color',
                 type: 'color',
+                editable: true,
                 path: 'hero.button.color',
                 default: '#4a90e2',
                 note: 'Uses global.primaryColor by default'
@@ -185,6 +196,7 @@ const basicTemplate = {
                 id: 'textColor',
                 name: 'Text Color',
                 type: 'color',
+                editable: true,
                 path: 'hero.button.textColor',
                 default: '#ffffff'
               },
@@ -192,6 +204,7 @@ const basicTemplate = {
                 id: 'url',
                 name: 'URL',
                 type: 'url',
+                editable: true,
                 path: 'hero.button.url',
                 default: '#'
               }
@@ -211,6 +224,7 @@ const basicTemplate = {
                 id: 'text',
                 name: 'Text',
                 type: 'text',
+                editable: true,
                 path: 'benefits.title.text',
                 default: 'Why Choose Us'
               }
@@ -224,6 +238,7 @@ const basicTemplate = {
                 id: 'text',
                 name: 'Text',
                 type: 'text',
+                editable: true,
                 path: 'benefits.subtitle.text',
                 default: 'What makes us different'
               }
@@ -237,6 +252,7 @@ const basicTemplate = {
                 id: 'color',
                 name: 'Color',
                 type: 'color',
+                editable: true,
                 path: 'benefits.background.color',
                 default: '#ffffff'
               }
@@ -246,6 +262,7 @@ const basicTemplate = {
             id: 'textColor',
             name: 'Text Color',
             type: 'color',
+            editable: true,
             path: 'benefits.textColor',
             default: '#333333',
             note: 'Uses global.textColor by default'
@@ -254,6 +271,7 @@ const basicTemplate = {
             id: 'cardBackgroundColor',
             name: 'Items Background Color',
             type: 'color',
+            editable: true,
             path: 'benefits.cardBackgroundColor',
             default: '#ffffff'
           },
@@ -261,6 +279,7 @@ const basicTemplate = {
             id: 'items',
             name: 'Items',
             type: 'array',
+            editable: true,
             path: 'benefits.items',
             itemStructure: {
               children: [
@@ -268,24 +287,28 @@ const basicTemplate = {
                   id: 'title',
                   name: 'Title',
                   type: 'text',
+                  editable: true,
                   pathTemplate: 'benefits.items[INDEX].title'
                 },
                 {
                   id: 'description',
                   name: 'Description',
                   type: 'text',
+                  editable: true,
                   pathTemplate: 'benefits.items[INDEX].description'
                 },
                 {
                   id: 'icon',
                   name: 'Icon',
                   type: 'icon',
+                  editable: true,
                   pathTemplate: 'benefits.items[INDEX].icon'
                 },
                 {
                   id: 'iconColor',
                   name: 'Icon Color',
                   type: 'color',
+                  editable: true,
                   pathTemplate: 'benefits.items[INDEX].iconColor',
                   default: '#4a90e2',
                   note: 'Uses global.primaryColor by default'
@@ -298,6 +321,7 @@ const basicTemplate = {
                       id: 'color',
                       name: 'Color',
                       type: 'color',
+                      editable: true,
                       pathTemplate: 'benefits.items[INDEX].background.color',
                       default: null,
                       note: 'Individual card background color (null means use global)'
@@ -335,59 +359,100 @@ const basicTemplate = {
       {
         id: 'features',
         name: 'Features',
-        elements: [
-          { 
-            id: 'title', 
+        children: [
+          {
+            id: 'title',
             name: 'Title',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' }
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                editable: true,
+                path: 'features.title.text',
+                default: 'Our Features'
+              }
             ]
           },
-          { 
-            id: 'subtitle', 
+          {
+            id: 'subtitle',
             name: 'Subtitle',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' }
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                editable: true,
+                path: 'features.subtitle.text',
+                default: 'What we offer'
+              }
             ]
           },
-          { 
-            id: 'background', 
+          {
+            id: 'background',
             name: 'Background',
-            properties: [
-              { id: 'color', name: 'Color', type: 'color' }
+            children: [
+              {
+                id: 'color',
+                name: 'Color',
+                type: 'color',
+                editable: true,
+                path: 'features.background.color',
+                default: '#f8f9fa'
+              }
             ]
           },
-          { 
-            id: 'image', 
+          {
+            id: 'image',
             name: 'Image',
-            properties: [
-              { id: 'upload', name: 'Upload', type: 'image' }
-            ]
-          }
-        ],
-        items: [
-          {
-            id: 'item1',
-            name: 'Item 1',
-            properties: [
-              { id: 'title', name: 'Title', type: 'text' },
-              { id: 'description', name: 'Description', type: 'text' },
+            children: [
+              {
+                id: 'upload',
+                name: 'Upload',
+                type: 'image',
+                editable: true,
+                path: 'features.image.upload',
+                default: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c'
+              }
             ]
           },
           {
-            id: 'item2',
-            name: 'Item 2',
-            properties: [
-              { id: 'title', name: 'Title', type: 'text' },
-              { id: 'description', name: 'Description', type: 'text' },
-            ]
-          },
-          {
-            id: 'item3',
-            name: 'Item 3',
-            properties: [
-              { id: 'title', name: 'Title', type: 'text' },
-              { id: 'description', name: 'Description', type: 'text' },
+            id: 'items',
+            name: 'Items',
+            type: 'array',
+            editable: true,
+            path: 'features.items',
+            itemStructure: {
+              children: [
+                {
+                  id: 'title',
+                  name: 'Title',
+                  type: 'text',
+                  editable: true,
+                  pathTemplate: 'features.items[INDEX].title'
+                },
+                {
+                  id: 'description',
+                  name: 'Description',
+                  type: 'text',
+                  editable: true,
+                  pathTemplate: 'features.items[INDEX].description'
+                },
+              ]
+            },
+            default: [
+              {
+                title: 'Customized Solutions',
+                description: 'Tailored specifically to your business needs.',
+              },
+              {
+                title: 'Modern Technology',
+                description: 'Using the latest tools and frameworks.',
+              },
+              {
+                title: 'Dedicated Support',
+                description: 'Our team is always ready to help you succeed.',
+              }
             ]
           }
         ]
@@ -395,35 +460,43 @@ const basicTemplate = {
       {
         id: 'cta',
         name: 'Call to Action',
-        elements: [
+        children: [
           { 
             id: 'title', 
             name: 'Title',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' }
+            children: [
+              { id: 'text', name: 'Text', type: 'text', editable: true }
             ]
           },
           { 
             id: 'subtitle', 
             name: 'Subtitle',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' }
+            children: [
+              { id: 'text', name: 'Text', type: 'text', editable: true }
             ]
           },
           { 
             id: 'button', 
             name: 'Button',
-            properties: [
-              { id: 'text', name: 'Text', type: 'text' },
-              { id: 'color', name: 'Color', type: 'color' },
-              { id: 'url', name: 'URL', type: 'url' }
+            children: [
+              { id: 'text', name: 'Text', type: 'text', editable: true },
+              { id: 'color', name: 'Color', type: 'color', editable: true },
+              { id: 'url', name: 'URL', type: 'url', editable: true },
+              {
+                id: 'textColor',
+                name: 'Text Color',
+                type: 'color',
+                editable: true,
+                path: 'cta.button.textColor',
+                default: '#ffffff'
+              },
             ]
           },
           { 
             id: 'background', 
             name: 'Background',
-            properties: [
-              { id: 'color', name: 'Color', type: 'color' }
+            children: [
+              { id: 'color', name: 'Color', type: 'color', editable: true }
             ]
           }
         ]
@@ -440,6 +513,7 @@ const basicTemplate = {
                 id: 'text',
                 name: 'Text',
                 type: 'text',
+                editable: true,
                 path: 'footer.description.text',
                 default: 'About Us'
               }
@@ -453,6 +527,7 @@ const basicTemplate = {
                 id: 'color',
                 name: 'Color',
                 type: 'color',
+                editable: true,
                 path: 'footer.background.color',
                 default: '#2d3748'
               }
@@ -462,6 +537,7 @@ const basicTemplate = {
             id: 'textColor',
             name: 'Text Color',
             type: 'color',
+            editable: true,
             path: 'footer.textColor',
             default: '#ffffff'
           },
@@ -477,6 +553,7 @@ const basicTemplate = {
                     id: 'url',
                     name: 'URL',
                     type: 'url',
+                    editable: true,
                     path: 'footer.social.facebook.url',
                     default: 'https://www.facebook.com'
                   },
@@ -484,6 +561,7 @@ const basicTemplate = {
                     id: 'hidden',
                     name: 'Hidden',
                     type: 'boolean',
+                    editable: true,
                     path: 'footer.social.facebook.hidden',
                     default: false
                   }
@@ -497,6 +575,7 @@ const basicTemplate = {
                     id: 'url',
                     name: 'URL',
                     type: 'url',
+                    editable: true,
                     path: 'footer.social.twitter.url',
                     default: 'https://www.twitter.com'
                   },
@@ -504,6 +583,7 @@ const basicTemplate = {
                     id: 'hidden',
                     name: 'Hidden',
                     type: 'boolean',
+                    editable: true,
                     path: 'footer.social.twitter.hidden',
                     default: false
                   }
@@ -517,6 +597,7 @@ const basicTemplate = {
                     id: 'url',
                     name: 'URL',
                     type: 'url',
+                    editable: true,
                     path: 'footer.social.instagram.url',
                     default: 'https://www.instagram.com'
                   },
@@ -524,6 +605,7 @@ const basicTemplate = {
                     id: 'hidden',
                     name: 'Hidden',
                     type: 'boolean',
+                    editable: true,
                     path: 'footer.social.instagram.hidden',
                     default: false
                   }
@@ -537,6 +619,7 @@ const basicTemplate = {
                     id: 'url',
                     name: 'URL',
                     type: 'url',
+                    editable: true,
                     path: 'footer.social.linkedin.url',
                     default: 'https://www.linkedin.com'
                   },
@@ -544,6 +627,7 @@ const basicTemplate = {
                     id: 'hidden',
                     name: 'Hidden',
                     type: 'boolean',
+                    editable: true,
                     path: 'footer.social.linkedin.hidden',
                     default: false
                   }
@@ -559,6 +643,7 @@ const basicTemplate = {
                 id: 'text',
                 name: 'Text',
                 type: 'text',
+                editable: true,
                 path: 'footer.address.text',
                 default: '123 Business Street, New York, NY'
               }
@@ -572,6 +657,7 @@ const basicTemplate = {
                 id: 'text',
                 name: 'Text',
                 type: 'text',
+                editable: true,
                 path: 'footer.email.text',
                 default: 'info@yourbrand.com'
               }
@@ -585,6 +671,7 @@ const basicTemplate = {
                 id: 'text',
                 name: 'Text',
                 type: 'text',
+                editable: true,
                 path: 'footer.phone.text',
                 default: '(123) 456-7890'
               }
@@ -1008,11 +1095,20 @@ export function generateHTML(config, showGuides = false) {
     .benefits .section-title {
       text-align: center;
       margin-bottom: 2rem;
+      color: ${processedConfig.benefits.textColor || processedConfig.global.textColor};
     }
+
+    .benefits .section-title h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: ${processedConfig.benefits.textColor || processedConfig.global.textColor};
+    } 
     
     .benefits .section-title p {
       margin-left: auto;
       margin-right: auto;
+      color: ${processedConfig.benefits.textColor || processedConfig.global.textColor};
     }
     
     .benefits .icon {

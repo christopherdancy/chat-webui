@@ -32,13 +32,17 @@ export function getChildNodes(config, path) {
   const node = findNodeByPath(config._structure, path);
   if (!node) return [];
   
-  // If node has children, return their names
+  // If node has children, return their names (filtering out non-editable ones)
   if (node.children) {
-    return node.children.map(child => child.name);
+    return node.children
+      .filter(child => child.editable !== false) // Filter out non-editable nodes
+      .map(child => child.name);
   }
   
   // If node is an array, return item names
   if (node.type === 'array' && node.default) {
+    // Check if the array itself is editable
+    if (node.editable === false) return [];
     return node.default.map((_, index) => `Item ${index + 1}`);
   }
   
@@ -199,95 +203,3 @@ export function getCurrentValue(config, path) {
   
   return current;
 }
-
-/**
- * Maps multi-step UI navigation to a property path
- * This maintains backward compatibility with the existing Chat component
- * @param {Object} config - The website configuration
- * @param {String} sectionName - The section name
- * @param {String} elementName - The element name
- * @param {String} propertyName - The property name
- * @returns {Object} Internal structure with path and type information
- */
-export function mapToInternalStructure(config, sectionName, elementName, propertyName) {
-  if (!config || !config._structure || !sectionName || !elementName) return null;
-  
-  // Find the section
-  const section = config._structure.sections.find(s => s.name === sectionName);
-  if (!section) return null;
-  
-  const sectionId = section.id;
-  
-  // Find the element
-  const element = section.children.find(e => e.name === elementName);
-  if (!element) return null;
-  
-  const elementId = element.id;
-  
-  // Special case for social links
-  if (elementName === 'Social Links' && propertyName) {
-    const socialElement = element.children.find(c => c.id === 'social');
-    if (socialElement) {
-      // Find the specific platform (Facebook, Twitter, etc.)
-      const platform = socialElement.children.find(c => c.name === propertyName);
-      if (platform) {
-        return {
-          sectionId,
-          elementId: 'social',
-          propertyId: platform.id,
-          propertyType: 'social',
-          path: `${sectionId}.social.${platform.id}`
-        };
-      }
-    }
-  }
-  
-  // Check if element is an array item (Item 1, Item 2, etc.)
-  const itemMatch = elementName.match(/Item\s+(\d+)/i);
-  if (itemMatch && element.type === 'array') {
-    const index = parseInt(itemMatch[1]) - 1;
-    // Find the property in the itemStructure
-    const property = element.itemStructure.children.find(c => c.name === propertyName);
-    if (property) {
-      return {
-        sectionId,
-        elementId: `${element.id}[${index}]`,
-        propertyId: property.id,
-        propertyType: property.type,
-        path: property.pathTemplate.replace('[INDEX]', index)
-      };
-    }
-  }
-  
-  // Regular element with children
-  if (element.children) {
-    const property = element.children.find(c => c.name === propertyName);
-    if (property) {
-      // If this is a terminal property (has no children)
-      if (property.type && !property.children) {
-        return {
-          sectionId,
-          elementId,
-          propertyId: property.id,
-          propertyType: property.type,
-          path: property.path
-        };
-      }
-      
-      // If this has children (like background.color)
-      if (property.children && property.children.length > 0) {
-        // Assume we want the first child for now (like color in background.color)
-        const childProperty = property.children[0];
-        return {
-          sectionId,
-          elementId,
-          propertyId: `${property.id}.${childProperty.id}`,
-          propertyType: childProperty.type,
-          path: childProperty.path
-        };
-      }
-    }
-  }
-  
-  return null;
-} 

@@ -6,8 +6,6 @@ export async function processMessage(message, currentConfig) {
   // Simulate API call delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
-  console.log('Processing message:', message);
-  
   // Make a copy of the current config
   const updatedConfig = JSON.parse(JSON.stringify(currentConfig));
   
@@ -23,8 +21,6 @@ export async function processMessage(message, currentConfig) {
     
     const path = message.substring(0, firstSpaceIndex);
     const value = message.substring(firstSpaceIndex + 1);
-    
-    console.log(`Updating path: ${path} with value: ${value}`);
     
     // Update the configuration using the direct path
     const success = setValueByPath(updatedConfig, path, value);
@@ -69,6 +65,19 @@ function setValueByPath(obj, path, value) {
   console.log(`Setting value by path: ${path} = ${value}`);
   
   const parts = path.split('.');
+  const lastPart = parts[parts.length - 1];
+  
+  // Check if this is a URL property
+  const isUrlProperty = lastPart === 'url' || path.includes('.url');
+  
+  // Format URL if needed (add https:// if no protocol is specified)
+  let formattedValue = value;
+  if (isUrlProperty && typeof value === 'string' && value.trim() !== '') {
+    if (!value.match(/^https?:\/\//i) && !value.startsWith('#')) {
+      formattedValue = `https://${value}`;
+      console.log(`Formatted URL: ${value} → ${formattedValue}`);
+    }
+  }
   
   // Handle the simple case with no arrays
   if (!path.includes('[')) {
@@ -85,14 +94,14 @@ function setValueByPath(obj, path, value) {
     }
     
     // Set the value on the last part
-    const lastPart = parts[parts.length - 1];
     
     // Boolean conversion for 'hidden' properties 
     if (lastPart === 'hidden' && typeof value === 'string') {
       current[lastPart] = value.toLowerCase() === 'true';
       console.log(`Updated boolean property: ${path} = ${current[lastPart]}`);
     } else {
-      current[lastPart] = value;
+      // Use the formatted value
+      current[lastPart] = formattedValue;
     }
     
     return true;
@@ -125,7 +134,8 @@ function setValueByPath(obj, path, value) {
         
         // If this is the last part, set the value
         if (i === parts.length - 1) {
-          current[arrayName][index] = value;
+          // Use the formatted value
+          current[arrayName][index] = formattedValue;
           return true;
         }
         
@@ -142,7 +152,8 @@ function setValueByPath(obj, path, value) {
         current[part] = value.toLowerCase() === 'true';
         console.log(`Updated boolean property: ${pathSoFar} = ${current[part]}`);
       } else {
-        current[part] = value;
+        // Use the formatted value
+        current[part] = formattedValue;
       }
       return true;
     }
