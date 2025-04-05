@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
 import ChatControls from './ChatControls';
 import { processMessage } from '../services/chatService';
-import { getTemplateSections, getChildNodes, findNodeByPath, getNodePath, isEditableNode } from '../utils/templateStructureReader';
+import { getTemplateSections, getChildNodes, findNodeByPath, getNodePath, isEditableNode, getCurrentValue } from '../utils/templateStructureReader';
 
 const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
   const [messages, setMessages] = useState([
@@ -26,6 +26,8 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
   const [navigationStack, setNavigationStack] = useState([]);
   const [commandCompleted, setCommandCompleted] = useState(false);
   const [commandId, setCommandId] = useState(0); // Track current command ID
+  const [showToggle, setShowToggle] = useState(false);
+  const [currentToggleContext, setCurrentToggleContext] = useState(null);
 
   // Track current navigation path directly
   const [currentPath, setCurrentPath] = useState('');
@@ -178,6 +180,15 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
               path: selectedNode.path
             });
             break;
+          case 'boolean':
+            // Show toggle UI
+            const currentValue = getCurrentValue(websiteConfig, selectedNode.path) || false;
+            setShowToggle(true);
+            setCurrentToggleContext({
+              path: selectedNode.path,
+              currentValue: currentValue
+            });
+            break;
           default:
             // Text or URL input
             setShowInput(true);
@@ -264,6 +275,61 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
     }
   };
 
+  const handleToggleSelect = async (value) => {
+    try {
+      setIsProcessing(true);
+      
+      // Get the path from context
+      const path = currentToggleContext?.path;
+      if (!path) {
+        setIsProcessing(false);
+        return;
+      }
+      
+      // Add user's selection as a message
+      setMessages(prev => [...prev, { 
+        text: value ? "Show" : "Hide", 
+        isUser: true,
+        commandId
+      }]);
+      
+      // Create command using the path and value
+      const command = `${path} ${value}`;
+      console.log('Toggle command:', command);
+      
+      // Process the command
+      const response = await processMessage(command, websiteConfig);
+      
+      if (response.updatedConfig) {
+        onPreviewUpdate(response.updatedConfig);
+      }
+      
+      // Reset navigation and show success
+      setNavigationStack([]);
+      setCurrentPath('');
+      setShowInput(false);
+      setShowColorPicker(false);
+      setShowIconPicker(false);
+      setShowImageUploader(false);
+      setShowToggle(false);
+      
+      // Get sections for next options
+      const sections = getTemplateSections(websiteConfig);
+      
+      // Show success message with options
+      setMessages([{
+        text: `${response.message} What else would you like to modify?`,
+        buttons: sections,
+        commandId: commandId + 1
+      }]);
+      
+    } catch (error) {
+      console.error('Error processing toggle selection:', error);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input.trim() || isProcessing) return;
@@ -339,9 +405,11 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
         showIconPicker={showIconPicker}
         showColorPicker={showColorPicker}
         showImageUploader={showImageUploader}
+        showToggle={showToggle}
         currentIconContext={currentIconContext}
         currentColorContext={currentColorContext}
         currentImageContext={currentImageContext}
+        currentToggleContext={currentToggleContext}
         showInput={showInput}
         onSubmit={handleSubmit}
         onIconSelect={(iconClass) => {
@@ -356,6 +424,10 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
           handleValueSelection(imageUrl);
           setShowImageUploader(false);
         }}
+        onToggleSelect={(value) => {
+          handleToggleSelect(value);
+          setShowToggle(false);
+        }}
         onCloseIconPicker={() => {
           setShowIconPicker(false);
           handleBack();
@@ -366,6 +438,10 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
         }}
         onCloseImageUploader={() => {
           setShowImageUploader(false);
+          handleBack();
+        }}
+        onCloseToggle={() => {
+          setShowToggle(false);
           handleBack();
         }}
       />

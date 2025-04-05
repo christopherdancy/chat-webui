@@ -465,23 +465,31 @@ const basicTemplate = {
             id: 'title', 
             name: 'Title',
             children: [
-              { id: 'text', name: 'Text', type: 'text', editable: true }
+              { id: 'text', name: 'Text', type: 'text', editable: true, default: 'Ready to get started?' }
             ]
           },
-          { 
-            id: 'subtitle', 
+          {
+            id: 'subtitle',
             name: 'Subtitle',
             children: [
-              { id: 'text', name: 'Text', type: 'text', editable: true }
+              { id: 'text', name: 'Text', type: 'text', editable: true, default: 'Contact us today to transform your business' }
             ]
+          },
+          {
+            id: 'textColor',
+            name: 'Text Color',
+            type: 'color',
+            editable: true,
+            path: 'cta.textColor',
+            default: '#ffffff'
           },
           { 
             id: 'button', 
             name: 'Button',
             children: [
-              { id: 'text', name: 'Text', type: 'text', editable: true },
-              { id: 'color', name: 'Color', type: 'color', editable: true },
-              { id: 'url', name: 'URL', type: 'url', editable: true },
+              { id: 'text', name: 'Text', type: 'text', editable: true, default: 'Call to Action' },
+              { id: 'color', name: 'Color', type: 'color', editable: true, default: '#007bff' },
+              { id: 'url', name: 'URL', type: 'url', editable: true, default: '#' },
               {
                 id: 'textColor',
                 name: 'Text Color',
@@ -558,12 +566,12 @@ const basicTemplate = {
                     default: 'https://www.facebook.com'
                   },
                   {
-                    id: 'hidden',
-                    name: 'Hidden',
+                    id: 'visible',
+                    name: 'Visible',
                     type: 'boolean',
                     editable: true,
-                    path: 'footer.social.facebook.hidden',
-                    default: false
+                    path: 'footer.social.facebook.visible',
+                    default: true
                   }
                 ]
               },
@@ -580,12 +588,12 @@ const basicTemplate = {
                     default: 'https://www.twitter.com'
                   },
                   {
-                    id: 'hidden',
-                    name: 'Hidden',
+                    id: 'visible',
+                    name: 'Visible',
                     type: 'boolean',
                     editable: true,
-                    path: 'footer.social.twitter.hidden',
-                    default: false
+                    path: 'footer.social.twitter.visible',
+                    default: true
                   }
                 ]
               },
@@ -602,12 +610,12 @@ const basicTemplate = {
                     default: 'https://www.instagram.com'
                   },
                   {
-                    id: 'hidden',
-                    name: 'Hidden',
+                    id: 'visible',
+                    name: 'Visible',
                     type: 'boolean',
                     editable: true,
-                    path: 'footer.social.instagram.hidden',
-                    default: false
+                    path: 'footer.social.instagram.visible',
+                    default: true
                   }
                 ]
               },
@@ -624,12 +632,12 @@ const basicTemplate = {
                     default: 'https://www.linkedin.com'
                   },
                   {
-                    id: 'hidden',
-                    name: 'Hidden',
+                    id: 'visible',
+                    name: 'Visible',
                     type: 'boolean',
                     editable: true,
-                    path: 'footer.social.linkedin.hidden',
-                    default: false
+                    path: 'footer.social.linkedin.visible',
+                    default: true
                   }
                 ]
               }
@@ -682,191 +690,109 @@ const basicTemplate = {
     ]
   },
   
-  // Global settings
-  global: {
-    primaryColor: "#4a90e2",
-    secondaryColor: "#f8f9fa",
-    textColor: "#333333",
-    accentColor: "#5e72e4",
-    fontFamily: "'Open Sans', sans-serif"
-  },
-  
-  // Header section
-  header: {
-    title: "Modern Business Website",
-    background: {
-      color: "#4a90e2" // Uses global.primaryColor by default
-    },
-    textColor: "#ffffff",
-    logo: {
-      text: "YourBrand",
-      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
-    },
-    menuItems: [
-      { text: "Benefits", url: "#benefits" },
-      { text: "Features", url: "#features" },
-      { text: "Contact", url: "#footer" }
-    ]
-  },
-  
-  // Hero section
-  hero: {
-    title: {
-      text: "Transform Your Business Today"
-    },
-    subtitle: {
-      text: "We help companies achieve their goals with innovative solutions and strategic planning"
-    },
-    background: {
-      color: "#f8f9fa" // Uses global.secondaryColor by default
-    },
-    textColor: "#333333", // Uses global.textColor by default
-    button: {
-      text: "Get Started",
-      color: "#4a90e2", // Uses global.primaryColor by default
-      textColor: "#ffffff",
-      url: "#"
-    }
-  },
-  
-  // Benefits section
-  benefits: {
-    title: {
-      text: "Why Choose Us"
-    },
-    subtitle: {
-      text: "What makes us different"
-    },
-    background: {
-      color: "#ffffff"
-    },
-    textColor: "#333333", // Uses global.textColor by default
-    cardBackgroundColor: "#ffffff", // Global card background color
-    items: [
-      {
-        icon: "fas fa-check",
-        title: "Premium Quality",
-        description: "Our solutions are built with the highest standards in mind.",
-        iconColor: "#4a90e2", // Uses global.primaryColor by default
-        background: {
-          color: null // Individual card background color (null means use global)
-        }
-      },
-      {
-        icon: "fas fa-chart-line",
-        title: "Innovative Approach",
-        description: "We use cutting-edge technologies to solve complex problems.",
-        iconColor: "#4a90e2", // Uses global.primaryColor by default
-        background: {
-          color: null // Individual card background color (null means use global)
-        }
-      },
-      {
-        icon: "fas fa-globe",
-        title: "Global Reach",
-        description: "Our services are available worldwide with local support.",
-        iconColor: "#4a90e2", // Uses global.primaryColor by default
-        background: {
-          color: null // Individual card background color (null means use global)
-        }
-      }
-    ]
-  },
-  
-  // Features section
-  features: {
-    title: {
-      text: "Our Features"
-    },
-    subtitle: {
-      text: "What we offer"
-    },
-    background: {
-      color: "#f8f9fa" // Uses global.secondaryColor by default
-    },
-    textColor: "#333333", // Uses global.textColor by default
-    image: {
-      upload: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
-    },
-    items: [
-      {
-        icon: "fas fa-cog",
-        title: "Customized Solutions",
-        description: "Tailored specifically to your business needs.",
-        iconColor: "#4a90e2" // Uses global.primaryColor by default
-      },
-      {
-        icon: "fas fa-code",
-        title: "Modern Technology",
-        description: "Using the latest tools and frameworks.",
-        iconColor: "#4a90e2" // Uses global.primaryColor by default
-      },
-      {
-        icon: "fas fa-smile",
-        title: "Dedicated Support",
-        description: "Our team is always ready to help you succeed.",
-        iconColor: "#4a90e2" // Uses global.primaryColor by default
-      }
-    ]
-  },
-  
-  // Call to Action section
-  cta: {
-    title: {
-      text: "Ready to get started?"
-    },
-    subtitle: {
-      text: "Contact us today to transform your business"
-    },
-    background: {
-      color: "#4a90e2" // Uses global.primaryColor by default
-    },
-    textColor: "#ffffff",
-    button: {
-      text: "Contact Us",
-      color: "#808080",
-      textColor: "#ffffff", // Uses global.primaryColor by default
-      url: "#"
-    }
-  },
-  
-  // Footer section
-  footer: {
-    description: {
-      text: "About Us"
-    },
-    background: {
-      color: "#2d3748"
-    },
-    textColor: "#ffffff",
-    social: {
-      facebook: { url: "https://www.facebook.com", icon: "fab fa-facebook-f", hidden: false },
-      twitter: { url: "https://www.twitter.com", icon: "fab fa-twitter", hidden: false },
-      instagram: { url: "https://www.instagram.com", icon: "fab fa-instagram", hidden: false },
-      linkedin: { url: "https://www.linkedin.com", icon: "fab fa-linkedin-in", hidden: false }
-    },
-    links: [
-      { text: "Home", url: "#" },
-      { text: "Features", url: "#Features" },
-      { text: "Benefits", url: "#Benefits" },
-    ],
-    address: {
-      text: "123 Business Street, New York, NY"
-    },
-    email: {
-      text: "info@yourbrand.com"
-    },
-    phone: {
-      text: "(123) 456-7890"
-    }
-  }
+
 };
+
+// Simple function to initialize defaults from structure
+function initializeDefaultsFromStructure() {
+  // Initialize global properties
+  basicTemplate.global = {};
+  basicTemplate._structure.global.children.forEach(prop => {
+    if (prop.default !== undefined) {
+      basicTemplate.global[prop.id] = prop.default;
+    }
+  });
+  
+  // Initialize all sections
+  basicTemplate._structure.sections.forEach(section => {
+    basicTemplate[section.id] = {}; // Create the section
+    
+    // Process direct children of the section
+    section.children.forEach(child => {
+      if (child.default !== undefined) {
+        // Direct property with default
+        basicTemplate[section.id][child.id] = child.default;
+      } 
+      else if (child.type === 'array' && child.default) {
+        // Array property
+        basicTemplate[section.id][child.id] = [...child.default];
+      }
+      else if (child.children) {
+        // Nested object
+        basicTemplate[section.id][child.id] = {};
+        
+        child.children.forEach(grandchild => {
+          if (grandchild.default !== undefined) {
+            basicTemplate[section.id][child.id][grandchild.id] = grandchild.default;
+          }
+          else if (grandchild.children) {
+            // Handle deeper nesting if needed
+            basicTemplate[section.id][child.id][grandchild.id] = {};
+            
+            grandchild.children.forEach(ggchild => {
+              if (ggchild.default !== undefined) {
+                basicTemplate[section.id][child.id][grandchild.id][ggchild.id] = ggchild.default;
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+}
+
+// Run initialization when module loads
+initializeDefaultsFromStructure();
+
+// Ensure we have array safety in the HTML template
+function safeMapItems(items, mapFn) {
+  return Array.isArray(items) ? items.map(mapFn).join('') : '';
+}
 
 // Function to generate HTML from the template configuration
 export function generateHTML(config, showGuides = false) {
-  // No need to apply defaults anymore, as the template already has all defaults
-  // Just use the provided config directly, or the default template if no config is provided
-  const processedConfig = config || basicTemplate;
+  // Simple deep merge of user config with defaults
+  const processedConfig = config ? deepMerge(basicTemplate, config) : {...basicTemplate};
+  console.log(processedConfig);
+  
+  // Add explicit safety check for common arrays
+  const headerMenuItems = Array.isArray(processedConfig.header?.menuItems) 
+    ? processedConfig.header.menuItems 
+    : [];
+    
+  const benefitsItems = Array.isArray(processedConfig.benefits?.items) 
+    ? processedConfig.benefits.items 
+    : [];
+    
+  const featuresItems = Array.isArray(processedConfig.features?.items) 
+    ? processedConfig.features.items 
+    : [];
+    
+  const footerLinks = Array.isArray(processedConfig.footer?.links) 
+    ? processedConfig.footer.links 
+    : [];
+
+  // Simple utility for deep merging
+  function deepMerge(target, source) {
+    const result = {...target};
+    
+    for (const key in source) {
+      if (source[key] !== null && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+        // For objects, merge recursively (but only if target has this property as an object)
+        if (target[key] !== null && typeof target[key] === 'object' && !Array.isArray(target[key])) {
+          result[key] = deepMerge(target[key], source[key]);
+        } else {
+          // Otherwise just copy
+          result[key] = source[key];
+        }
+      } else {
+        // For primitives and arrays, replace with user value
+        result[key] = source[key];
+      }
+    }
+    
+    return result;
+  }
 
   // Enhanced section guide styles with element-level guides
   const sectionGuideStyles = showGuides ? `
@@ -953,7 +879,7 @@ export function generateHTML(config, showGuides = false) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${processedConfig.header.title}</title>
+  <title>${processedConfig.header.title || 'Modern Business Website'}</title>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
   <link href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -1360,11 +1286,11 @@ export function generateHTML(config, showGuides = false) {
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          ${processedConfig.header.menuItems.map((item, index) => `
+          ${safeMapItems(headerMenuItems, (item, index) => `
               <li class="nav-item">
                 <a class="nav-link" href="${item.url}">${item.text}</a>
               </li>
-          `).join('')}
+          `)}
         </ul>
       </div>
     </div>
@@ -1409,7 +1335,7 @@ export function generateHTML(config, showGuides = false) {
         `)}
       </div>
       <div class="row">
-        ${processedConfig.benefits.items.map((item, index) => `
+        ${safeMapItems(benefitsItems, (item, index) => `
           <div class="col-md-4 mb-4">
             ${wrapElementWithGuide(`Item ${index + 1}`, `
               <div class="feature-card shadow-sm" style="background-color: ${item.background?.color || processedConfig.benefits.cardBackgroundColor};">
@@ -1427,7 +1353,7 @@ export function generateHTML(config, showGuides = false) {
               </div>
             `)}
           </div>
-        `).join('')}
+        `)}
       </div>
     </div>
   </section>
@@ -1453,7 +1379,7 @@ export function generateHTML(config, showGuides = false) {
           `)}
         </div>
         <div class="col-lg-6">
-          ${processedConfig.features.items.map((item, index) => `
+          ${safeMapItems(featuresItems, (item, index) => `
             ${wrapElementWithGuide(`Item ${index + 1}`, `
               <div class="feature-item">
                 <div class="feature-content">
@@ -1466,7 +1392,7 @@ export function generateHTML(config, showGuides = false) {
                 </div>
               </div>
             `)}
-          `).join('')}
+          `)}
         </div>
       </div>
     </div>
@@ -1504,23 +1430,35 @@ export function generateHTML(config, showGuides = false) {
           `)}
           <div class="social-links">
             ${wrapElementWithGuide('Social Links', `
-              ${!processedConfig.footer.social?.facebook.hidden ? 
-                `<a href="${processedConfig.footer.social?.facebook.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.social?.facebook.icon}"></i></a>` : ''}
-              ${!processedConfig.footer.social?.twitter.hidden ? 
-                `<a href="${processedConfig.footer.social?.twitter.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.social?.twitter.icon}"></i></a>` : ''}
-              ${!processedConfig.footer.social?.instagram.hidden ? 
-                `<a href="${processedConfig.footer.social?.instagram.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.social?.instagram.icon}"></i></a>` : ''}
-              ${!processedConfig.footer.social?.linkedin.hidden ? 
-                `<a href="${processedConfig.footer.social?.linkedin.url}" target="_blank" rel="noopener noreferrer"><i class="${processedConfig.footer.social?.linkedin.icon}"></i></a>` : ''}
+              ${processedConfig.footer.social?.facebook.visible === true || 
+                 processedConfig.footer.social?.facebook.visible === "true" ? 
+                `<a href="${processedConfig.footer.social?.facebook.url}" target="_blank" rel="noopener noreferrer">
+                   <i class="${processedConfig.footer.social?.facebook.icon || 'fab fa-facebook-f'}"></i>
+                 </a>` : ''}
+              ${processedConfig.footer.social?.twitter.visible === true || 
+                 processedConfig.footer.social?.twitter.visible === "true" ? 
+                `<a href="${processedConfig.footer.social?.twitter.url}" target="_blank" rel="noopener noreferrer">
+                   <i class="${processedConfig.footer.social?.twitter.icon || 'fab fa-twitter'}"></i>
+                 </a>` : ''}
+              ${processedConfig.footer.social?.instagram.visible === true || 
+                 processedConfig.footer.social?.instagram.visible === "true" ? 
+                `<a href="${processedConfig.footer.social?.instagram.url}" target="_blank" rel="noopener noreferrer">
+                   <i class="${processedConfig.footer.social?.instagram.icon || 'fab fa-instagram'}"></i>
+                 </a>` : ''}
+              ${(processedConfig.footer.social?.linkedin.visible === true || 
+                 processedConfig.footer.social?.linkedin.visible === "true") ? 
+                `<a href="${processedConfig.footer.social?.linkedin.url}" target="_blank" rel="noopener noreferrer">
+                   <i class="${processedConfig.footer.social?.linkedin.icon || 'fab fa-linkedin-in'}"></i>
+                 </a>` : ''}
             `)}
           </div>
         </div>
         <div class="col-lg-4 mb-4 mb-lg-0">
           <h5>Quick Links</h5>
           <ul class="footer-links">
-            ${processedConfig.footer.links.map((link, index) => `
+            ${safeMapItems(footerLinks, (link, index) => `
                 <li><a href="${link.url}">${link.text}</a></li>
-            `).join('')}
+            `)}
           </ul>
         </div>
         <div class="col-lg-4">

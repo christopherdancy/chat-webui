@@ -166,3 +166,36 @@ function setValueByPath(obj, path, value) {
   
   return true;
 }
+
+/**
+ * Get the current value from configuration
+ * @param {Object} config - The website configuration
+ * @param {String} path - Path to the property
+ * @returns {*} The current value
+ */
+export function getCurrentValue(config, path) {
+  if (!config || !path) return undefined;
+  
+  const parts = path.split('.');
+  let current = config;
+  
+  for (const part of parts) {
+    // Handle array notation [n]
+    const arrayMatch = part.match(/(\w+)\[(\d+)\]/);
+    if (arrayMatch) {
+      const name = arrayMatch[1];
+      const index = parseInt(arrayMatch[2]);
+      
+      if (!current[name] || !Array.isArray(current[name]) || index >= current[name].length) {
+        return undefined;
+      }
+      
+      current = current[name][index];
+    } else {
+      if (!current || current[part] === undefined) return undefined;
+      current = current[part];
+    }
+  }
+  
+  return current;
+}

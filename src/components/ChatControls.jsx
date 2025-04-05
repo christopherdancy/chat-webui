@@ -11,17 +11,21 @@ const ChatControls = ({
   showIconPicker,
   showColorPicker,
   showImageUploader,
+  showToggle,
   currentIconContext,
   currentColorContext,
   currentImageContext,
+  currentToggleContext,
   showInput,
   onSubmit,
   onIconSelect,
   onColorSelect,
   onImageSelect,
+  onToggleSelect,
   onCloseIconPicker,
   onCloseColorPicker,
-  onCloseImageUploader
+  onCloseImageUploader,
+  onCloseToggle
 }) => {
   // Helper to get display name 
   const getNodeDisplayName = () => {
@@ -33,6 +37,9 @@ const ChatControls = ({
     }
     if (currentImageContext?.path) {
       return currentImageContext.path.split('.').pop();
+    }
+    if (currentToggleContext?.path) {
+      return currentToggleContext.path.split('.').pop();
     }
     
     return currentNode?.name || '';
@@ -87,6 +94,34 @@ const ChatControls = ({
             </button>
           </div>
           <ColorPicker onSelectColor={onColorSelect} />
+        </div>
+      )}
+      
+      {showToggle && (
+        <div className="toggle-container">
+          <div className="toggle-header">
+            <h4>Toggle {getNodeDisplayName()}</h4>
+            <button 
+              className="close-toggle"
+              onClick={onCloseToggle}
+            >
+              &times;
+            </button>
+          </div>
+          <div className="toggle-buttons">
+            <button 
+              className={`toggle-button ${currentToggleContext?.currentValue ? 'active' : ''}`}
+              onClick={() => onToggleSelect(true)}
+            >
+              Show
+            </button>
+            <button 
+              className={`toggle-button ${!currentToggleContext?.currentValue ? 'active' : ''}`}
+              onClick={() => onToggleSelect(false)}
+            >
+              Hide
+            </button>
+          </div>
         </div>
       )}
       
