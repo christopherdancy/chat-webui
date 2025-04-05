@@ -1,3 +1,5 @@
+import { deepMerge, safeMapItems, initializeDefaultsFromStructure } from '../utils/templateHelpers';
+
 // Default configuration for the Basic Business Website template
 const basicTemplate = {
   // Template metadata
@@ -693,67 +695,15 @@ const basicTemplate = {
 
 };
 
-// Simple function to initialize defaults from structure
-function initializeDefaultsFromStructure() {
-  // Initialize global properties
-  basicTemplate.global = {};
-  basicTemplate._structure.global.children.forEach(prop => {
-    if (prop.default !== undefined) {
-      basicTemplate.global[prop.id] = prop.default;
-    }
-  });
-  
-  // Initialize all sections
-  basicTemplate._structure.sections.forEach(section => {
-    basicTemplate[section.id] = {}; // Create the section
-    
-    // Process direct children of the section
-    section.children.forEach(child => {
-      if (child.default !== undefined) {
-        // Direct property with default
-        basicTemplate[section.id][child.id] = child.default;
-      } 
-      else if (child.type === 'array' && child.default) {
-        // Array property
-        basicTemplate[section.id][child.id] = [...child.default];
-      }
-      else if (child.children) {
-        // Nested object
-        basicTemplate[section.id][child.id] = {};
-        
-        child.children.forEach(grandchild => {
-          if (grandchild.default !== undefined) {
-            basicTemplate[section.id][child.id][grandchild.id] = grandchild.default;
-          }
-          else if (grandchild.children) {
-            // Handle deeper nesting if needed
-            basicTemplate[section.id][child.id][grandchild.id] = {};
-            
-            grandchild.children.forEach(ggchild => {
-              if (ggchild.default !== undefined) {
-                basicTemplate[section.id][child.id][grandchild.id][ggchild.id] = ggchild.default;
-              }
-            });
-          }
-        });
-      }
-    });
-  });
-}
-
-// Run initialization when module loads
-initializeDefaultsFromStructure();
-
-// Ensure we have array safety in the HTML template
-function safeMapItems(items, mapFn) {
-  return Array.isArray(items) ? items.map(mapFn).join('') : '';
-}
+// Initialize defaults (without circular dependency)
+const initializedTemplate = initializeDefaultsFromStructure({...basicTemplate});
+// Copy all properties back to basicTemplate
+Object.assign(basicTemplate, initializedTemplate);
 
 // Function to generate HTML from the template configuration
 export function generateHTML(config, showGuides = false) {
   // Simple deep merge of user config with defaults
   const processedConfig = config ? deepMerge(basicTemplate, config) : {...basicTemplate};
-  console.log(processedConfig);
   
   // Add explicit safety check for common arrays
   const headerMenuItems = Array.isArray(processedConfig.header?.menuItems) 
@@ -771,28 +721,6 @@ export function generateHTML(config, showGuides = false) {
   const footerLinks = Array.isArray(processedConfig.footer?.links) 
     ? processedConfig.footer.links 
     : [];
-
-  // Simple utility for deep merging
-  function deepMerge(target, source) {
-    const result = {...target};
-    
-    for (const key in source) {
-      if (source[key] !== null && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-        // For objects, merge recursively (but only if target has this property as an object)
-        if (target[key] !== null && typeof target[key] === 'object' && !Array.isArray(target[key])) {
-          result[key] = deepMerge(target[key], source[key]);
-        } else {
-          // Otherwise just copy
-          result[key] = source[key];
-        }
-      } else {
-        // For primitives and arrays, replace with user value
-        result[key] = source[key];
-      }
-    }
-    
-    return result;
-  }
 
   // Enhanced section guide styles with element-level guides
   const sectionGuideStyles = showGuides ? `
