@@ -52,31 +52,60 @@ const moonlightTemplate = {
     },
     sections: [
       {
-        id: 'navigation',
-        name: 'Navigation',
+        id: 'header',
+        name: 'Header',
         children: [
           {
             id: 'logo',
             name: 'Logo',
-            type: 'image',
-            editable: true,
-            path: 'navigation.logo',
-            default: "img/logo.png"
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                editable: true,
+                path: 'header.logo.text',
+                default: 'Moonlight'
+              },
+              {
+                id: 'image',
+                name: 'Image',
+                type: 'image',
+                editable: true,
+                path: 'header.logo.image',
+                default: 'https://images.unsplash.com/photo-1581276879432-15e50529f34b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80'
+              }
+            ]
           },
           {
-            id: 'miniLogo',
-            name: 'Mini Logo',
-            type: 'image',
+            id: 'background',
+            name: 'Background',
+            children: [
+              {
+                id: 'color',
+                name: 'Color',
+                type: 'color',
+                editable: true,
+                path: 'header.background.color',
+                default: '#1f2638',
+                note: 'Uses global.secondaryColor by default'
+              }
+            ]
+          },
+          {
+            id: 'textColor',
+            name: 'Text Color',
+            type: 'color',
             editable: true,
-            path: 'navigation.miniLogo',
-            default: "img/mini_logo.png"
+            path: 'header.textColor',
+            default: '#ffffff'
           },
           {
             id: 'items',
             name: 'Menu Items',
             type: 'array',
-            editable: true,
-            path: 'navigation.items',
+            editable: false,
+            path: 'header.items',
             itemStructure: {
               children: [
                 {
@@ -84,27 +113,26 @@ const moonlightTemplate = {
                   name: 'Text',
                   type: 'text',
                   editable: true,
-                  pathTemplate: 'navigation.items[INDEX].text'
+                  pathTemplate: 'header.items[INDEX].text'
                 },
                 {
                   id: 'url',
                   name: 'URL',
                   type: 'url',
                   editable: true,
-                  pathTemplate: 'navigation.items[INDEX].url'
+                  pathTemplate: 'header.items[INDEX].url'
                 },
                 {
                   id: 'icon',
                   name: 'Icon',
                   type: 'icon',
                   editable: true,
-                  pathTemplate: 'navigation.items[INDEX].icon'
+                  pathTemplate: 'header.items[INDEX].icon'
                 }
               ]
             },
             default: [
-              { text: "Home", url: "#1", icon: "fa fa-home" },
-              { text: "Services", url: "#2", icon: "fa fa-support" },
+              { text: "Services", url: "#2", icon: "fa fa-cogs" },
               { text: "About", url: "#3", icon: "fa fa-user" },
               { text: "Portfolio", url: "#5", icon: "fa fa-image" },
               { text: "Contact", url: "#6", icon: "fa fa-envelope" }
@@ -122,7 +150,7 @@ const moonlightTemplate = {
             type: 'image',
             editable: true,
             path: 'home.authorImage',
-            default: "img/author_image.png"
+            default: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80"
           },
           {
             id: 'title',
@@ -130,7 +158,7 @@ const moonlightTemplate = {
             type: 'text',
             editable: true,
             path: 'home.title',
-            default: "Mingalar par"
+            default: "Creative Portfolio"
           },
           {
             id: 'description',
@@ -138,7 +166,7 @@ const moonlightTemplate = {
             type: 'text',
             editable: true,
             path: 'home.description',
-            default: "Lorem ipsum <em>dolor sit amet</em>, consectetur adipiscing elit. <em>Sed vehicula blandit augue,</em> eu maximus odio tempus vitae."
+            default: "Welcome to Moonlight, a <em>creative portfolio</em> template. This modern design showcases your work with style and elegance. <em>Perfect for creatives</em> who want to make a lasting impression."
           },
           {
             id: 'mainButtonText',
@@ -146,7 +174,7 @@ const moonlightTemplate = {
             type: 'text',
             editable: true,
             path: 'home.mainButtonText',
-            default: "Read More"
+            default: "Discover More"
           },
           {
             id: 'mainButtonUrl',
@@ -162,7 +190,7 @@ const moonlightTemplate = {
             type: 'text',
             editable: true,
             path: 'home.secondaryButtonText',
-            default: "Our FB Page"
+            default: "Contact Us"
           },
           {
             id: 'secondaryButtonUrl',
@@ -170,7 +198,7 @@ const moonlightTemplate = {
             type: 'url',
             editable: true,
             path: 'home.secondaryButtonUrl',
-            default: "https://fb.com/templatemo"
+            default: "#6"
           }
         ]
       },
@@ -192,7 +220,7 @@ const moonlightTemplate = {
             type: 'text',
             editable: true,
             path: 'about.description',
-            default: "Please tell your friends about templatemo website. A variety of free CSS templates are available for immediate downloads.\n\nPhasellus vitae faucibus orci. Etiam eleifend orci sed faucibus semper. Cras varius dolor et augue fringilla, eu commodo sapien iaculis. Donec eget dictum tellus. <a href=\"#\">Curabitur</a> a interdum diam. Nulla vestibulum porttitor porta.\n\nNulla vitae interdum libero, vel posuere ipsum. Phasellus interdum est et dapibus tempus. Vestibulum malesuada lorem condimentum mauris ornare dapibus. Curabitur tempor ligula et <a href=\"#\">placerat</a> molestie.\n\nAliquam efficitur eu purus in interdum. <a href=\"#\">Etiam tincidunt</a> magna ex, sit amet lobortis felis bibendum id. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            default: "We are a creative studio focused on bringing your ideas to life with passion and precision.\n\nOur team of experts specializes in creating beautiful, functional designs that elevate your brand and engage your audience. With years of experience across multiple industries, we understand what it takes to stand out in today's competitive landscape.\n\nWe believe that great design combines <a href=\"#\">innovation</a> with usability, making a lasting impact while serving its core purpose.\n\nWhether you're looking to build a new brand identity, revamp your website, or create engaging marketing materials, we're here to help you achieve your goals with stunning, effective design solutions."
           },
           {
             id: 'image',
@@ -200,7 +228,7 @@ const moonlightTemplate = {
             type: 'image',
             editable: true,
             path: 'about.image',
-            default: "img/about_image.jpg"
+            default: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
           },
           {
             id: 'buttonText',
@@ -208,7 +236,7 @@ const moonlightTemplate = {
             type: 'text',
             editable: true,
             path: 'about.buttonText',
-            default: "Read More"
+            default: "Our Services"
           },
           {
             id: 'buttonUrl',
@@ -216,7 +244,7 @@ const moonlightTemplate = {
             type: 'url',
             editable: true,
             path: 'about.buttonUrl',
-            default: "#3"
+            default: "#2"
           }
         ]
       },
@@ -234,7 +262,7 @@ const moonlightTemplate = {
                 type: 'text',
                 editable: true,
                 path: 'services.firstService.title',
-                default: "Quisque commodo quam"
+                default: "UI/UX Design"
               },
               {
                 id: 'description',
@@ -242,7 +270,7 @@ const moonlightTemplate = {
                 type: 'text',
                 editable: true,
                 path: 'services.firstService.description',
-                default: "Vestibulum augue ex, finibus sit amet nisi id, maximus ultrices ipsum. Maecenas rhoncus nibh in mauris lobortis, a maximus diam faucibus. In et eros urna. Suspendisse potenti. Pellentesque commodo, neque nec molestie tempus, purus ante feugiat augue."
+                default: "We create intuitive, beautiful interfaces that delight users and enhance usability. Our design process focuses on real users' needs, ensuring your digital products are not just visually stunning but also functional and easy to navigate."
               },
               {
                 id: 'image',
@@ -250,7 +278,7 @@ const moonlightTemplate = {
                 type: 'image',
                 editable: true,
                 path: 'services.firstService.image',
-                default: "img/first_service.jpg"
+                default: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
               },
               {
                 id: 'buttonText',
@@ -258,7 +286,7 @@ const moonlightTemplate = {
                 type: 'text',
                 editable: true,
                 path: 'services.firstService.buttonText',
-                default: "Continue Reading"
+                default: "Learn More"
               },
               {
                 id: 'buttonUrl',
@@ -266,7 +294,7 @@ const moonlightTemplate = {
                 type: 'url',
                 editable: true,
                 path: 'services.firstService.buttonUrl',
-                default: "#4"
+                default: "#5"
               }
             ]
           },
@@ -280,7 +308,7 @@ const moonlightTemplate = {
                 type: 'text',
                 editable: true,
                 path: 'services.secondService.title',
-                default: "Maecenas eu purus eu sapien"
+                default: "Digital Marketing"
               },
               {
                 id: 'description',
@@ -288,7 +316,7 @@ const moonlightTemplate = {
                 type: 'text',
                 editable: true,
                 path: 'services.secondService.description',
-                default: "Sed vitae felis in lorem mollis mollis eget in leo. Donec commodo, ex nec rutrum venenatis, nisi nisl malesuada magna, sed semper ipsum enim a ipsum. Aenean in ante vel mi molestie bibendum. Quisque sit amet lacus in diam pretium faucibus. Cras vel justo lorem."
+                default: "Reach your target audience with our strategic digital marketing services. From social media campaigns to SEO optimization, we help you build a strong online presence that converts visitors into loyal customers and drives sustainable business growth."
               },
               {
                 id: 'image',
@@ -296,7 +324,7 @@ const moonlightTemplate = {
                 type: 'image',
                 editable: true,
                 path: 'services.secondService.image',
-                default: "img/second_service.jpg"
+                default: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
               },
               {
                 id: 'buttonText',
@@ -304,7 +332,7 @@ const moonlightTemplate = {
                 type: 'text',
                 editable: true,
                 path: 'services.secondService.buttonText',
-                default: "Continue Reading"
+                default: "Learn More"
               },
               {
                 id: 'buttonUrl',
@@ -312,7 +340,7 @@ const moonlightTemplate = {
                 type: 'url',
                 editable: true,
                 path: 'services.secondService.buttonUrl',
-                default: "#4"
+                default: "#5"
               }
             ]
           }
@@ -362,40 +390,40 @@ const moonlightTemplate = {
             },
             default: [
               {
-                title: "Number One",
-                description: "Quisque sit amet lacus in diam pretium faucibus. Cras vel justo lorem.",
-                thumbnail: "img/first_item.jpg",
-                fullImage: "img/first_big_item.jpg"
+                title: "Brand Identity",
+                description: "Complete brand identity redesign for a tech startup in the fintech space.",
+                thumbnail: "https://images.unsplash.com/photo-1542744094-3a31f272c490?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                fullImage: "https://images.unsplash.com/photo-1542744094-3a31f272c490?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
               },
               {
-                title: "Number Two",
-                description: "Donec eget dictum tellus. Curabitur a interdum diam. Nulla vestibulum porttitor porta.",
-                thumbnail: "img/second_item.jpg",
-                fullImage: "img/second_big_item.jpg"
+                title: "Mobile App",
+                description: "User experience and interface design for a health and wellness mobile application.",
+                thumbnail: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                fullImage: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
               },
               {
-                title: "Number Three",
-                description: "Cras varius dolor et augue fringilla, eu commodo sapien iaculis.",
-                thumbnail: "img/third_item.jpg",
-                fullImage: "img/third_big_item.jpg"
+                title: "Web Design",
+                description: "Modern e-commerce website with an intuitive shopping experience and streamlined checkout.",
+                thumbnail: "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                fullImage: "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
               },
               {
-                title: "Number Four",
-                description: "Vestibulum augue ex, finibus sit amet nisi id, maximus ultrices ipsum.",
-                thumbnail: "img/fourth_item.jpg",
-                fullImage: "img/fourth_big_item.jpg"
+                title: "Marketing Campaign",
+                description: "Integrated digital marketing campaign that increased client conversion rates by 40%.",
+                thumbnail: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                fullImage: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
               },
               {
-                title: "Fifth Item",
-                description: "Donec commodo, ex nec rutrum venenatis, nisi nisl malesuada magna.",
-                thumbnail: "img/fifth_item.jpg",
-                fullImage: "img/fifth_big_item.jpg"
+                title: "Product Design",
+                description: "Physical product design and packaging for a premium cosmetics brand.",
+                thumbnail: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                fullImage: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
               },
               {
-                title: "Sixth Item",
-                description: "Maecenas dapibus neque sed nisl consectetur, id semper nisi egestas.",
-                thumbnail: "img/sixth_item.jpg",
-                fullImage: "img/sixth_big_item.jpg"
+                title: "Social Media",
+                description: "Creative content strategy and visual identity for a fashion brand's social media presence.",
+                thumbnail: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                fullImage: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
               }
             ]
           }
@@ -487,8 +515,8 @@ export function generateHTML(config, showGuides = false) {
   const processedConfig = config ? deepMerge(moonlightTemplate, config) : {...moonlightTemplate};
   
   // Add explicit safety check for common arrays
-  const navigationItems = Array.isArray(processedConfig.navigation?.items) 
-    ? processedConfig.navigation.items 
+  const headerItems = Array.isArray(processedConfig.header?.items) 
+    ? processedConfig.header.items 
     : [];
     
   const portfolioItems = Array.isArray(processedConfig.portfolio?.items) 
@@ -538,6 +566,22 @@ export function generateHTML(config, showGuides = false) {
       margin-top: 20px;
       padding-top: 2px;
     }
+    
+    /* Adjust first element in a container to avoid extra spacing */
+    .section-container > .element-container:first-child,
+    .row > .col-md-4 > .element-container:first-child,
+    .feature-card > .element-container:first-child {
+      margin-top: 25px;
+    }
+    
+    /* Special handling for inline elements */
+    .inline-element-container {
+      position: relative;
+      display: inline-block;
+      border: ${showGuides ? '1px dotted rgba(0, 100, 255, 0.3)' : 'none'};
+      margin-top: 20px;
+      padding: 2px;
+    }
   ` : '';
 
   // Function to wrap sections with guide labels
@@ -585,11 +629,11 @@ export function generateHTML(config, showGuides = false) {
       margin: 0;
       padding: 0;
       color: ${processedConfig.global.textColor};
-      background-color: #121212;
+      background-color: ${processedConfig.global.secondaryColor};
       overflow-x: hidden;
     }
     
-    /* Navigation Styles */
+    /* Header Styles */
     nav {
       position: fixed;
       top: 0;
@@ -598,84 +642,460 @@ export function generateHTML(config, showGuides = false) {
       z-index: 999;
       background-color: rgba(22, 34, 57, 0.95);
       box-shadow: 0px 5px 15px rgba(0,0,0,0.5);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      transition: all 0.3s ease;
+      height: 80px; /* Fixed height for header */
+    }
+    
+    .navbar {
       padding: 0 30px;
-    }
-    
-    nav .logo {
+      height: 100%;
       display: flex;
       align-items: center;
     }
     
-    nav .logo img {
-      max-width: 50px;
-      margin-right: 15px;
-    }
-    
-    nav .mini-logo {
-      display: none;
-    }
-    
-    nav ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
+    .navbar-brand {
+      color: ${processedConfig.header.textColor};
+      font-weight: 600;
+      font-size: 1.5rem;
       display: flex;
+      align-items: center;
     }
     
-    nav ul li {
+    .logo-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+    
+    .navbar-toggler {
+      color: ${processedConfig.header.textColor};
+      border-color: rgba(255,255,255,0.1);
+    }
+    
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+    
+    .navbar-nav {
+      margin-left: auto;
+    }
+    
+    .navbar-nav .nav-item {
       display: inline-block;
     }
     
-    nav ul li a {
-      color: ${processedConfig.global.textColor};
-      display: block;
-      padding: 20px 15px;
+    .navbar-nav .nav-link {
+      color: ${processedConfig.header.textColor};
+      padding: 28px 15px;
       text-decoration: none;
       transition: all 0.3s;
       border-bottom: 3px solid transparent;
     }
     
-    nav ul li a:hover {
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
       background-color: rgba(250, 250, 250, 0.1);
       border-bottom: 3px solid ${processedConfig.global.primaryColor};
     }
     
-    nav ul li a.active {
-      background-color: rgba(250, 250, 250, 0.1);
-      border-bottom: 3px solid ${processedConfig.global.primaryColor};
-    }
-    
-    nav ul li a i {
+    .navbar-nav .nav-link i {
       margin-right: 8px;
       font-size: 16px;
     }
     
-    /* Other CSS styles from the original template... */
+    /* Responsive Header */
+    @media (max-width: 991px) {
+      .navbar {
+        padding: 0 15px;
+      }
+      
+      .navbar-nav .nav-link {
+        padding: 15px 20px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .navbar-collapse {
+        background-color: rgba(22, 34, 57, 0.98);
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        padding: 0;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        max-height: calc(100vh - 80px);
+        overflow-y: auto;
+      }
+      
+      .navbar-collapse.show, 
+      .navbar-collapse.collapsing {
+        transition: height 0.3s ease;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      /* Prevent content shift when menu opens */
+      body {
+        overflow-x: hidden;
+      }
+    }
+    
+    /* Home Section */
+    .home-section {
+      background-color: #1f2638;
+      background-image: linear-gradient(rgba(31, 38, 56, 0.95), rgba(31, 38, 56, 0.95)), url(img/bg-pattern.png);
+      background-repeat: repeat;
+      background-position: center center;
+      height: 100vh;
+      min-height: 700px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding: 100px 0;
+      margin-top: 0;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .home-section::before {
+      content: '';
+      display: block;
+      height: 80px; /* Same as header height */
+      margin-top: -80px;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    
+    .home-section .author-image {
+      position: relative;
+      z-index: 2;
+      margin-bottom: 30px;
+    }
+    
+    .home-section .author-image img {
+      max-width: 220px;
+      border-radius: 50%;
+      border: 5px solid ${processedConfig.global.primaryColor};
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .home-section h1 {
+      font-size: 46px;
+      font-weight: 700;
+      color: ${processedConfig.global.textColor};
+      margin-bottom: 20px;
+    }
+    
+    .home-section p {
+      font-size: 18px;
+      color: ${processedConfig.global.textColor};
+      line-height: 1.6;
+      opacity: 0.9;
+      margin-bottom: 40px;
+    }
+    
+    .home-section .main-btn {
+      display: inline-block;
+      margin-right: 15px;
+    }
+    
+    .home-section .main-btn a,
+    .home-section .fb-btn a {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: ${processedConfig.global.primaryColor};
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 3px;
+      transition: all 0.3s;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+    
+    .home-section .fb-btn a {
+      background-color: ${processedConfig.global.accentColor};
+    }
+    
+    .home-section .main-btn a:hover,
+    .home-section .fb-btn a:hover {
+      transform: translateY(-3px);
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* About Section Styles */
+    .about-section {
+      background-color: #fff;
+    }
+    
+    .about-section .about-content {
+      padding-right: 30px;
+    }
+    
+    .about-section p {
+      color: #5a6a7c;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+    
+    .about-section .about-content a {
+      color: ${processedConfig.global.primaryColor};
+      text-decoration: none;
+    }
+    
+    .about-section .main-btn a {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: ${processedConfig.global.primaryColor};
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 3px;
+      transition: all 0.3s;
+      font-size: 14px;
+      text-transform: uppercase;
+      margin-top: 20px;
+    }
+    
+    .about-section .main-btn a:hover {
+      transform: translateY(-3px);
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .about-section .about-image img {
+      width: 100%;
+      border-radius: 5px;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Services Section Styles */
+    .services-section {
+      background-color: #f5f5f5;
+    }
+    
+    .services-section .service-content {
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .services-section h3 {
+      font-size: 24px;
+      color: #1f2638;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+    
+    .services-section p {
+      color: #5a6a7c;
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+    
+    .services-section .main-btn a {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: ${processedConfig.global.primaryColor};
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 3px;
+      transition: all 0.3s;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+    
+    .services-section .main-btn a:hover {
+      transform: translateY(-3px);
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .services-section .service-image img {
+      width: 100%;
+      border-radius: 5px;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Portfolio Section Styles */
+    .portfolio-section {
+      background-color: #fff;
+    }
+    
+    .portfolio-section .item {
+      margin-bottom: 30px;
+    }
+    
+    .portfolio-section .thumb {
+      position: relative;
+      overflow: hidden;
+      border-radius: 5px;
+    }
+    
+    .portfolio-section .thumb img {
+      width: 100%;
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+    
+    .portfolio-section .hover-effect {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(31, 38, 56, 0.95);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.5s;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    
+    .portfolio-section .hover-content {
+      padding: 20px;
+    }
+    
+    .portfolio-section .hover-content h2 {
+      font-size: 22px;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    
+    .portfolio-section .hover-content p {
+      color: #fff;
+      opacity: 0.8;
+    }
+    
+    .portfolio-section .thumb:hover .hover-effect {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .portfolio-section .thumb:hover img {
+      transform: scale(1.1);
+    }
+    
+    /* Contact Section Styles */
+    .contact-section {
+      background-color: #f5f5f5;
+    }
+    
+    .contact-section #map {
+      margin-bottom: 30px;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .contact-section form {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .contact-section .form-control {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #e9ecef;
+      border-radius: 3px;
+      font-size: 14px;
+    }
+    
+    .contact-section .btn {
+      padding: 12px 25px;
+      background-color: ${processedConfig.global.primaryColor};
+      color: #fff;
+      border: none;
+      font-weight: 600;
+      border-radius: 3px;
+      transition: all 0.3s;
+      font-size: 14px;
+      text-transform: uppercase;
+      width: 100%;
+    }
+    
+    .contact-section .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Footer Styles */
+    .footer {
+      background-color: #1f2638;
+      padding: 30px 0;
+      text-align: center;
+    }
+    
+    .footer p {
+      color: #fff;
+      margin: 0;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    
+    .footer a {
+      color: ${processedConfig.global.primaryColor};
+      text-decoration: none;
+    }
+    
+    /* Section Styles */
+    section.section {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    section.section::before {
+      content: '';
+      display: block;
+      height: 80px; /* Same as header height */
+      margin-top: -80px;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    section.section h2.section-title {
+      font-size: 36px;
+      color: #1f2638;
+      text-align: center;
+      margin-bottom: 50px;
+      font-weight: 700;
+    }
+    
     ${sectionGuideStyles}
   </style>
 </head>
 <body>
-  <!-- Navigation -->
-  ${wrapWithGuide('Navigation', `
-  <nav>
-    ${wrapElementWithGuide('Logo', `
-      <div class="logo">
-        <img src="${processedConfig.navigation.logo}" alt="Logo">
-        <span class="logo-text">${processedConfig.home.title}</span>
-      </div>
-    `)}
-    <ul>
-      ${safeMapItems(navigationItems, (item, index) => `
-        <li>
-          <a href="${item.url}" ${index === 0 ? 'class="active"' : ''}>
-            <i class="${item.icon}"></i> <em>${item.text}</em>
-          </a>
-        </li>
+  <!-- Header -->
+  ${wrapWithGuide('header', `
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      ${wrapElementWithGuide('Logo', `
+        <a class="navbar-brand" href="#">
+          <img src="${processedConfig.header.logo.image}" alt="Logo" class="logo-image">
+          <span>${processedConfig.header.logo.text}</span>
+        </a>
       `)}
-    </ul>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          ${safeMapItems(headerItems, (item, index) => `
+            <li class="nav-item">
+              <a href="${item.url}" class="nav-link ${index === 0 ? 'active' : ''}">
+                <i class="${item.icon}"></i> <em>${item.text}</em>
+              </a>
+            </li>
+          `)}
+        </ul>
+      </div>
+    </div>
   </nav>
   `)}
 
@@ -698,16 +1118,18 @@ export function generateHTML(config, showGuides = false) {
           ${wrapElementWithGuide('Description', `
             <p>${processedConfig.home.description}</p>
           `)}
-          ${wrapElementWithGuide('Main Button', `
-            <div class="main-btn">
-              <a href="${processedConfig.home.mainButtonUrl}">${processedConfig.home.mainButtonText}</a>
-            </div>
-          `)}
-          ${wrapElementWithGuide('Secondary Button', `
-            <div class="fb-btn">
-              <a href="${processedConfig.home.secondaryButtonUrl}" rel="nofollow">${processedConfig.home.secondaryButtonText}</a>
-            </div>
-          `)}
+          <div class="d-flex flex-wrap">
+            ${wrapElementWithGuide('Main Button', `
+              <div class="main-btn">
+                <a href="${processedConfig.home.mainButtonUrl}">${processedConfig.home.mainButtonText}</a>
+              </div>
+            `)}
+            ${wrapElementWithGuide('Secondary Button', `
+              <div class="fb-btn">
+                <a href="${processedConfig.home.secondaryButtonUrl}" rel="nofollow">${processedConfig.home.secondaryButtonText}</a>
+              </div>
+            `)}
+          </div>
         </div>
       </div>
     </div>
@@ -776,7 +1198,7 @@ export function generateHTML(config, showGuides = false) {
           <h2 class="section-title">${processedConfig.about.title}</h2>
         </div>
       </div>
-            <div class="row">
+      <div class="row">
         <div class="col-md-6">
           ${wrapElementWithGuide('Description', `
             <div class="about-content">
@@ -900,26 +1322,41 @@ export function generateHTML(config, showGuides = false) {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     $(document).ready(function() {
-      // Smooth scrolling for navigation links
-      $('nav ul li a').on('click', function(event) {
+      // Define navbar height
+      const navHeight = 80;
+      
+      // Smooth scrolling for header links
+      $('.navbar-nav .nav-link').on('click', function(event) {
         if (this.hash !== "") {
           event.preventDefault();
           var hash = this.hash;
           
           // Add active class to clicked link and remove from others
-          $('nav ul li a').removeClass('active');
+          $('.navbar-nav .nav-link').removeClass('active');
           $(this).addClass('active');
           
-          // Smooth scroll to the target section
+          // Close mobile menu
+          $('.navbar-collapse').collapse('hide');
+          
+          // Smooth scroll to the target section with offset for navbar height
           $('html, body').animate({
-            scrollTop: $(hash).offset().top - $('nav').outerHeight()
+            scrollTop: $(hash).offset().top - navHeight
           }, 800);
         }
       });
       
+      // Handle navbar collapse without pushing content
+      $('.navbar-toggler').on('click', function() {
+        setTimeout(function() {
+          if ($('.navbar-collapse').hasClass('show')) {
+            $('body').css('padding-right', '0');
+          }
+        }, 10);
+      });
+      
       // Add active class based on scroll position
       $(window).scroll(function() {
-        var scrollPosition = $(this).scrollTop() + $('nav').outerHeight();
+        var scrollPosition = $(this).scrollTop() + navHeight + 20; // Add offset
         
         // Check each section
         $('section').each(function() {
@@ -927,13 +1364,16 @@ export function generateHTML(config, showGuides = false) {
           
           if (topDistance - 10 < scrollPosition && topDistance + $(this).outerHeight() > scrollPosition) {
             // Remove active from all links
-            $('nav ul li a').removeClass('active');
+            $('.navbar-nav .nav-link').removeClass('active');
             
             // Add active class to corresponding link
-            $('nav ul li a[href="#' + $(this).attr('id') + '"]').addClass('active');
+            $('.navbar-nav .nav-link[href="#' + $(this).attr('id') + '"]').addClass('active');
           }
         });
       });
+      
+      // Trigger scroll once on page load to set active nav item
+      $(window).trigger('scroll');
     });
   </script>
 </body>
