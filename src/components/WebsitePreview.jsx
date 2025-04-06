@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { getTemplateRegistryById, getTemplateRegistry } from '../templates/templateRegistry';
-import basicTemplate from '../templates/basicLanding';
+import { getTemplateRegistryById, getTemplateRegistry, createNewTemplate } from '../templates/templateRegistry';
 
 const WebsitePreview = ({ config, setConfig }) => {
   const iframeRef = useRef(null);
@@ -54,7 +53,12 @@ const WebsitePreview = ({ config, setConfig }) => {
   
   const handleReset = () => {
     if (window.confirm('Are you sure you want to reset to the default template? All your changes will be lost.')) {
-      setConfig(basicTemplate);
+      // Get current template type
+      const currentTemplateId = config._templateId || 'basic';
+      // Create a fresh template based on current template type
+      const freshTemplate = createNewTemplate(currentTemplateId);
+      
+      setConfig(freshTemplate);
       localStorage.removeItem('websiteConfig');
       localStorage.removeItem('websiteHTML');
     }
