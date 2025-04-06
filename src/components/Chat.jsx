@@ -1,1088 +1,546 @@
 // src/components/Chat.jsx
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
+import ChatControls from './ChatControls';
 import { processMessage } from '../services/chatService';
-import { generateCommandStructure } from '../utils/commandStructureGenerator';
-import IconPicker from './IconPicker';
-import ColorPicker from './ColorPicker';
-import ImageUploader from './ImageUploader';
+import { getTemplateSections, getChildNodes, findNodeByPath, getNodePath, isEditableNode, getCurrentValue } from '../utils/templateStructureReader';
 
-const Chat = ({ onPreviewUpdate, websiteConfig }) => {
+const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
   const [messages, setMessages] = useState([
-    { text: "Hi, I'm your website editor assistant. Customize your website by typing a command like 'header background color green'.", isUser: false }
+    { 
+      text: "Hi, I'm your website editor assistant. Below you can find a selection of topics I can help you with.",
+      buttons: [] // Will be populated in useEffect
+    }
   ]);
-
   const [input, setInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [currentOptions, setCurrentOptions] = useState([]);
-  const [currentLevel, setCurrentLevel] = useState('section');
-  const [validationError, setValidationError] = useState('');
-  const [isValidCommand, setIsValidCommand] = useState(false);
+  
   const messagesEndRef = useRef(null);
-  const inputRef = useRef(null);
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showImageUploader, setShowImageUploader] = useState(false);
   const [currentIconContext, setCurrentIconContext] = useState(null);
   const [currentColorContext, setCurrentColorContext] = useState(null);
-  const [showIconHint, setShowIconHint] = useState(false);
-  const [showColorHint, setShowColorHint] = useState(false);
-  const [showImageUploadHint, setShowImageUploadHint] = useState(false);
-  const [currentImageContext, setCurrentImageContext] = useState(false);
+  const [currentImageContext, setCurrentImageContext] = useState(null);
+  const [showInput, setShowInput] = useState(false);
+  const [navigationStack, setNavigationStack] = useState([]);
+  const [commandCompleted, setCommandCompleted] = useState(false);
+  const [commandId, setCommandId] = useState(0); // Track current command ID
+  const [showToggle, setShowToggle] = useState(false);
+  const [currentToggleContext, setCurrentToggleContext] = useState(null);
 
-  // Generate command structure from website config - memoize this to prevent recreation on every render
-  const commandStructure = React.useMemo(() => generateCommandStructure(websiteConfig), [websiteConfig]);
+  // Track current navigation path directly
+  const [currentPath, setCurrentPath] = useState('');
+
+  // Track previous template ID for comparison
+  const prevTemplateIdRef = useRef(null);
+
+  // Initialize with top-level sections
+  useEffect(() => {
+    if (websiteConfig) {
+      try {
+        const currentTemplateId = websiteConfig._templateId;
+        const templateChanged = prevTemplateIdRef.current !== currentTemplateId;
+        
+        // Update ref for next comparison
+        prevTemplateIdRef.current = currentTemplateId;
+        
+        // If the template has changed, reset the messages
+        if (templateChanged) {
+          // Get available sections for this template
+          const sections = getTemplateSections(websiteConfig);
+          
+          // Reset messages for new template
+          setMessages([{
+            text: "Hi, I'm your website editor assistant. Below you can find what you can modify.",
+            buttons: sections,
+            commandId: commandId + 1
+          }]);
+          
+          // Increment command ID for fresh state
+          setCommandId(prev => prev + 1);
+        } else {
+          // Check if the latest message is a success message that we should preserve
+          const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
+          const isSuccessMessage = lastMessage && (lastMessage.isSuccess || (lastMessage.text && lastMessage.text.includes("✅")));
+          
+          // If we need to initialize messages and don't have a success message
+          if (messages.length === 0 || !isSuccessMessage) {
+            // Get available sections for this template
+            const sections = getTemplateSections(websiteConfig);
+            
+            // Update initial message buttons with available sections
+            setMessages([{
+              text: "Hi, I'm your website editor assistant. Below you can find what you can modify.",
+              buttons: sections,
+              commandId: 0
+            }]);
+          }
+          // If we have a success message, just update its buttons
+          else if (isSuccessMessage) {
+            // Get available sections for this template
+            const sections = getTemplateSections(websiteConfig);
+            console.log('sections', sections);
+            
+            // Update the last message's buttons without changing the message text
+            const updatedMessage = {
+              ...lastMessage,
+              buttons: sections
+            };
+            
+            setMessages([updatedMessage]);
+          }
+        }
+      } catch (error) {
+        console.error('Error initializing sections:', error);
+      }
+    }
+  // Fix the dependencies array properly
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [websiteConfig?._templateId]);
 
   // Auto-scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Focus input field when component mounts
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []); // Empty dependency array - only runs once on mount
-
-  // Focus input after processing is complete
-  useEffect(() => {
-    if (!isProcessing) {
-      inputRef.current?.focus();
-    }
-  }, [isProcessing]); // Only depends on isProcessing
-
-  // Memoize the validateInput function
-  const validateInput = useCallback((inputText) => {
-    // Move state updates outside this function to prevent infinite loops
-    let error = '';
-    let isValid = false;
-
-    if (!inputText.trim()) {
-      error = '';
-      isValid = false;
-    } else {
-      const tokens = inputText.toLowerCase().trim().split(/\s+/);
-      
-      // Check if first token is a valid section
-      if (tokens.length >= 1) {
-        const section = tokens[0];
-        if (!commandStructure.sections.includes(section)) {
-          error = `"${section}" is not a valid section. Please choose from the available options.`;
-          isValid = false;
-          return { error, isValid };
-        }
-      }
-      
-      // Check if second token is a valid element or subsection for the selected section
-      if (tokens.length >= 2) {
-        const section = tokens[0];
-        const elementOrSubsection = tokens[1];
-        
-        // Check if it's a subsection
-        if (commandStructure.subsections[section] && 
-            commandStructure.subsections[section].includes(elementOrSubsection)) {
-          // It's a valid subsection, continue validation
-        } 
-        // Check if it's an element
-        else if (commandStructure.elements[section] && 
-                 commandStructure.elements[section].includes(elementOrSubsection)) {
-          // It's a valid element, continue validation
-        }
-        else {
-          error = `"${elementOrSubsection}" is not a valid element or subsection for the ${section} section. Please choose from the available options.`;
-          isValid = false;
-          return { error, isValid };
-        }
-      }
-      
-      // Check if third token is valid based on whether the second token is a subsection or element
-      if (tokens.length >= 3) {
-        const section = tokens[0];
-        const elementOrSubsection = tokens[1];
-        const thirdToken = tokens[2];
-        
-        // If second token is a subsection
-        if (commandStructure.subsections[section] && 
-            commandStructure.subsections[section].includes(elementOrSubsection)) {
-          
-          // Check if third token is a valid element for this subsection
-          const subsectionKey = `${section}.${elementOrSubsection}`;
-          if (!commandStructure.subsectionElements[subsectionKey] || 
-              !commandStructure.subsectionElements[subsectionKey].includes(thirdToken)) {
-            error = `"${thirdToken}" is not a valid element for the ${elementOrSubsection} subsection. Please choose from the available options.`;
-            isValid = false;
-            return { error, isValid };
-          }
-        } 
-        // If second token is an element
-        else if (commandStructure.elements[section] && 
-                 commandStructure.elements[section].includes(elementOrSubsection)) {
-          
-          // Check if third token is a valid property for this element
-          const elementKey = `${section}.${elementOrSubsection}`;
-          if (!commandStructure.properties[elementKey] || 
-              !commandStructure.properties[elementKey].includes(thirdToken)) {
-            error = `"${thirdToken}" is not a valid property for the ${elementOrSubsection} element. Please choose from the available options.`;
-            isValid = false;
-            return { error, isValid };
-          }
-        }
-      }
-      
-      // Check if fourth token is valid for subsection element properties
-      if (tokens.length >= 4) {
-        const section = tokens[0];
-        const subsection = tokens[1];
-        const element = tokens[2];
-        const property = tokens[3];
-        
-        // Only validate if we're dealing with a subsection element property
-        if (commandStructure.subsections[section] && 
-            commandStructure.subsections[section].includes(subsection)) {
-          
-          const subsectionElementKey = `${section}.${subsection}.${element}`;
-          if (!commandStructure.properties[subsectionElementKey] || 
-              !commandStructure.properties[subsectionElementKey].includes(property)) {
-            error = `"${property}" is not a valid property for the ${element} element in the ${subsection} subsection. Please choose from the available options.`;
-            isValid = false;
-            return { error, isValid };
-          }
-        }
-      }
-      
-      // If we've made it this far, the command is valid enough to submit
-      error = '';
-      isValid = true;
-    }
-    
-    return { error, isValid };
-  }, [commandStructure]);
-
-  // Handle icon selection
-  const handleIconSelect = (iconClass) => {
-    if (!currentIconContext) return;
-    
-    const { section, item } = currentIconContext;
-    // Format the command correctly: "benefits item1 icon image fas fa-home"
-    const command = `${section} ${item} icon image ${iconClass}`;
-    
-    // Set the command in the input field
-    setInput(command);
-    
-    // Close the icon picker
-    setShowIconPicker(false);
-    
-    // Focus the input field and position cursor at the end
-    setTimeout(() => {
-      if (inputRef.current) {
-        inputRef.current.focus();
-        const length = command.length;
-        inputRef.current.setSelectionRange(length, length);
-      }
-    }, 0);
+  // Function to get current context description
+  const getContextDescription = () => {
+    return navigationStack.map(node => node.name).join(' → ');
   };
 
-  // Show color picker for a specific context
-  const showColorPickerFor = (section, item, property) => {
-    // Store the full context including the current input
-    setCurrentColorContext({ 
-      section, 
-      item, 
-      property,
-      currentInput: input // Store the current input to preserve structure
-    });
-    setShowColorPicker(true);
+  // Function to go back one step
+  const handleBack = () => {
+    if (commandCompleted) return; // Prevent going back after command completion
+    
+    if (navigationStack.length > 0) {
+      // Get the state from the node we're removing
+      const nodeToRemove = navigationStack[navigationStack.length - 1];
+      const { previousState } = nodeToRemove;
+      
+      // Restore the previous state
+      if (previousState) {
+        setMessages(previousState.messages);
+        setShowInput(previousState.showInput);
+        setShowColorPicker(previousState.showColorPicker || false);
+        setShowIconPicker(previousState.showIconPicker || false);
+        setShowImageUploader(previousState.showImageUploader || false);
+      }
+      
+      // Update the navigation stack
+      setNavigationStack(prev => prev.slice(0, -1));
+      
+      // Update current path
+      const newStack = navigationStack.slice(0, -1);
+      setCurrentPath(newStack.length > 0 
+        ? newStack.map(n => n.id).join('.') 
+        : '');
+    }
   };
 
-  // Handle color selection
-  const handleColorSelect = (colorValue) => {
-    if (!currentColorContext) return;
-    
-    const { section, item, property, currentInput } = currentColorContext;
-    
-    // Format the command based on context
-    let command = '';
-    
-    if (item) {
-      // For item properties like "benefits item1 iconColor"
-      // Check if we're dealing with a nested property like "icon color"
-      const tokens = currentInput.trim().split(/\s+/);
-      
-      if (tokens.length >= 4 && tokens[2] === 'icon' && tokens[3] === 'color') {
-        // For "benefits item1 icon color"
-        command = `${section} ${item} icon color ${colorValue}`;
-      } else {
-        // For other item properties
-        command = `${section} ${item} ${property} ${colorValue}`;
-      }
-    } else {
-      // For section properties like "hero background color"
-      const tokens = currentInput.trim().split(/\s+/);
-      
-      // Check if we're dealing with a compound property like "background color"
-      if (tokens.length >= 2 && tokens[1].toLowerCase() === 'background') {
-        command = `${section} background color ${colorValue}`;
-      } else if (tokens.length >= 2 && tokens[1].toLowerCase() === 'text') {
-        command = `${section} text color ${colorValue}`;
-      } else if (tokens.length >= 2 && tokens[1].toLowerCase() === 'button') {
-        command = `${section} button color ${colorValue}`;
-      } else if (tokens.length >= 3 && tokens[2].toLowerCase() === 'background') {
-        command = `${section} ${tokens[1]} background color ${colorValue}`;
-      } else if (tokens.length >= 2 && tokens[1].toLowerCase() === 'primary') {
-        command = `${section} primary color ${colorValue}`;
-      } else if (tokens.length >= 2 && tokens[1].toLowerCase() === 'secondary') {
-        command = `${section} secondary color ${colorValue}`;
-      } else {
-        // For simple properties like "color"
-        command = `${section} ${property} ${colorValue}`;
-      }
-    }
-    
-    // Set the command in the input field
-    setInput(command);
-    
-    // Close the color picker
+  // Function to return to main menu
+  const handleMainMenu = () => {
+    // Reset navigation state
+    setNavigationStack([]);
+    setShowInput(false);
     setShowColorPicker(false);
+    setShowIconPicker(false);
+    setShowImageUploader(false);
+    setCommandCompleted(false);
+    setCommandId(prev => prev + 1); // Increment command ID to start fresh
+    setCurrentPath('');
     
-    // Focus the input field and position cursor at the end
-    setTimeout(() => {
-      if (inputRef.current) {
-        inputRef.current.focus();
-        const length = command.length;
-        inputRef.current.setSelectionRange(length, length);
-      }
-    }, 0);
+    // Get sections from template structure
+    const sections = getTemplateSections(websiteConfig);
+      // Otherwise just show the standard greeting
+      setMessages([{
+        text: "Hi, I'm your website editor assistant. Below you can find what you can modify.",
+        buttons: sections,
+        commandId: commandId + 1
+      }]);
   };
 
-  // Show icon picker for a specific context
-  const showIconPickerFor = (section, item) => {
-    setCurrentIconContext({ section, item });
-    setShowIconPicker(true);
+  // Handle option selection
+  const handleOptionClick = async (option) => {
+    // Save current state for back navigation
+    const currentState = {
+      messages: [...messages],
+      showInput,
+      showColorPicker,
+      showIconPicker,
+      showImageUploader
+    };
+    
+    // Add user's selection as a message
+    setMessages(prev => [...prev, { text: option, isUser: true, commandId }]);
+    
+    try {
+      // Get the path to the selected node
+      const nodePath = getNodePath(websiteConfig, currentPath, option);
+      if (!nodePath) return;
+      // Find the selected node
+      const selectedNode = findNodeByPath(websiteConfig._structure, nodePath);
+      if (!selectedNode) return;
+      
+      // Add this node to the navigation stack along with current state
+      const newStack = [...navigationStack, { 
+        ...selectedNode,
+        previousState: currentState
+      }];
+      setNavigationStack(newStack);
+      setCurrentPath(nodePath);
+      
+      // Check if this is an array type
+      if (selectedNode.type === 'array') {
+        // Get default items from the array or fallback to empty array
+        const items = selectedNode.default || [];
+        
+        // Create buttons for each item in the array
+        const itemButtons = items.map((_, index) => `Item ${index + 1}`);
+        
+        // Display item options
+        setMessages(prev => [...prev, {
+          text: `Please select which ${selectedNode.name} item you want to modify:`,
+          buttons: itemButtons,
+          commandId
+        }]);
+      }
+      // Check if this is an editable node (has type and no children)
+      else if (isEditableNode(selectedNode)) {
+        // Show appropriate editor based on node type
+        switch (selectedNode.type) {
+          case 'color':
+            setShowColorPicker(true);
+            setCurrentColorContext({
+              path: selectedNode.path
+            });
+            break;
+          case 'icon':
+            setShowIconPicker(true);
+            setCurrentIconContext({
+              path: selectedNode.path
+            });
+            break;
+          case 'image':
+            setShowImageUploader(true);
+            setCurrentImageContext({
+              path: selectedNode.path
+            });
+            break;
+          case 'boolean':
+            // Show toggle UI
+            const currentValue = getCurrentValue(websiteConfig, selectedNode.path) || false;
+            setShowToggle(true);
+            setCurrentToggleContext({
+              path: selectedNode.path,
+              currentValue: currentValue
+            });
+            break;
+          default:
+            // Text or URL input
+            setShowInput(true);
+            setMessages(prev => [...prev, {
+              text: `Please enter the value for ${selectedNode.name}:`,
+              isValuePrompt: true,
+              commandId
+            }]);
+            break;
+        }
+      } else {
+        // Get child options for this node
+        const childOptions = getChildNodes(websiteConfig, nodePath);
+        // Display child options
+        setMessages(prev => [...prev, {
+          text: `What would you like to modify in ${option}?`,
+          buttons: childOptions,
+          commandId
+        }]);
+      }
+    } catch (error) {
+      console.error('Error updating navigation:', error);
+    }
   };
 
-  // Show image uploader for a specific context
-  const showImageUploaderFor = (section) => {
-    setCurrentImageContext({ section });
-    setShowImageUploader(true);
+  // Handle value selection (when user provides a value)
+  const handleValueSelection = async (value) => {
+    try {
+      setIsProcessing(true);
+      
+      // Add user input to messages
+      setMessages(prev => [...prev, { 
+        text: value, 
+        isUser: true,
+        commandId
+      }]);
+      
+      // Get current node from navigation stack
+      const currentNode = navigationStack[navigationStack.length - 1];
+      
+      if (!currentNode) {
+        setIsProcessing(false);
+        return;
+      }
+      
+      // Use the current path directly since it already has the correct brackets
+      if (currentNode.pathTemplate) {
+        console.log('PathTemplate:', currentNode.pathTemplate);
+      }
+      
+      // Create command using the current path which already has the correct syntax
+      const command = `${currentPath} ${value}`;
+      
+      // Process the command
+      const response = await processMessage(command, websiteConfig);
+      
+      if (response.updatedConfig) {
+        onPreviewUpdate(response.updatedConfig);
+      }
+      
+      // Reset navigation
+      setNavigationStack([]);
+      setCurrentPath('');
+      setShowInput(false);
+      setShowColorPicker(false);
+      setShowIconPicker(false);
+      setShowImageUploader(false);
+      
+      // Get sections for next options
+      const sections = getTemplateSections(websiteConfig);
+      
+      // Format success message to be more visible
+      const successMessage = `✅ ${response.message} What would you like to modify next?`;
+      
+      // Clear previous messages and show only success message with options
+      setMessages([{
+        text: successMessage,
+        buttons: sections,
+        commandId: commandId + 1,
+        isSuccess: true // Mark as success message
+      }]);
+      
+      // Increment command ID for next interaction
+      setCommandId(prev => prev + 1);
+      
+    } catch (error) {
+      console.error('Error processing message:', error);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
-  // Update validation state and available options based on current input
-  useEffect(() => {
-    // Get validation results without setting state directly in the validation function
-    const { error, isValid } = validateInput(input);
-    setValidationError(error);
-    setIsValidCommand(isValid);
-    
-    // Initialize with sections if input is empty
-    if (!input.trim()) {
-      setCurrentOptions(commandStructure.sections);
-      setCurrentLevel('section');
-      setShowIconHint(false);
-      setShowColorHint(false);
-      setShowImageUploadHint(false);
-      return;
-    }
-
-    const tokens = input.toLowerCase().trim().split(/\s+/);
-    
-    // Check if we're in the "features image upload" context or if we already have a URL
-    if ((tokens.length >= 3 && 
-         (tokens[0] === 'features' || tokens[0] === 'header') && 
-         (tokens[1] === 'image' || tokens[1] === 'logo') && 
-         (tokens[2] === 'upload' || tokens[2] === 'image')) ||
-        (input.includes('features image url ') && input.includes('.jpg'))) {
+  const handleToggleSelect = async (value) => {
+    try {
+      setIsProcessing(true);
       
-      // Show the upload option regardless of whether we already have a URL
-      setCurrentOptions(["[Click to upload an image]"]);
-      setCurrentLevel('value');
-      setShowImageUploadHint(true);
-      return;
-    }
-    
-    // For "features image" context, make sure "upload" is in the options
-    if (tokens.length === 2 && 
-        tokens[0] === 'features' && 
-        tokens[1] === 'image') {
-      
-      // Make sure "upload" is one of the options
-      const options = ['upload'];
-      setCurrentOptions(options);
-      setCurrentLevel('property');
-      return;
-    }
-    
-    // Check if we should show the image upload hint
-    if (tokens.length === 3) {
-      const section = tokens[0];
-      const property = tokens[1];
-      const action = tokens[2];
-      
-      if (section === 'features' && 
-          property === 'image' && 
-          action === 'upload') {
-        setShowImageUploadHint(true);
-        setShowIconHint(false);
-        setShowColorHint(false);
-        return;
-      }
-    }
-    
-    // Check if we should show the icon hint
-    if (tokens.length === 4) {
-      const section = tokens[0];
-      const item = tokens[1];
-      const property = tokens[2];
-      const subproperty = tokens[3];
-      
-      if ((section === 'benefits' || section === 'features') && 
-          item.match(/^item[1-3]$/) && 
-          property === 'icon' &&
-          subproperty === 'image') {
-        setShowIconHint(true);
-        setShowColorHint(false);
-        setShowImageUploadHint(false);
-      } else if ((section === 'benefits' || section === 'features') && 
-                item.match(/^item[1-3]$/) && 
-                property === 'icon' &&
-                subproperty === 'color') {
-        setShowColorHint(true);
-        setShowIconHint(false);
-        setShowImageUploadHint(false);
-      } else {
-        setShowIconHint(false);
-        setShowColorHint(false);
-        setShowImageUploadHint(false);
-      }
-    } else if (tokens.length >= 3) {
-      // Check for color properties
-      const lastToken = tokens[tokens.length - 1].toLowerCase();
-      
-      if (lastToken === 'color') {
-        // For section color properties like "hero background color"
-        setShowColorHint(true);
-        setShowIconHint(false);
-        setShowImageUploadHint(false);
-      } else if (tokens.length === 3 && 
-                 tokens[0] === 'features' && 
-                 tokens[1] === 'image' && 
-                 tokens[2] === 'upload') {
-        // For "features image upload"
-        setShowImageUploadHint(true);
-        setShowColorHint(false);
-        setShowIconHint(false);
-      } else {
-        setShowColorHint(false);
-        setShowIconHint(false);
-        setShowImageUploadHint(false);
-      }
-    } else {
-      setShowIconHint(false);
-      setShowColorHint(false);
-      setShowImageUploadHint(false);
-    }
-    
-    // Determine current level and set appropriate options
-    if (tokens.length === 1) {
-      // User has typed a section or partial section
-      const matchingSections = commandStructure.sections.filter(
-        section => section.startsWith(tokens[0])
-      );
-      
-      if (matchingSections.length > 0) {
-        // If we have exact match for a section, show elements and subsections for that section
-        if (commandStructure.sections.includes(tokens[0])) {
-          const section = tokens[0];
-          // Combine elements and subsections
-          const options = [
-            ...(commandStructure.elements[section] || []),
-            ...(commandStructure.subsections[section] || [])
-          ];
-          setCurrentOptions(options);
-          setCurrentLevel('elementOrSubsection');
-        } else {
-          // Otherwise show matching sections
-          setCurrentOptions(matchingSections);
-          setCurrentLevel('section');
-        }
-      } else {
-        // No matching sections, reset to all sections
-        setCurrentOptions(commandStructure.sections);
-        setCurrentLevel('section');
-      }
-    } 
-    else if (tokens.length === 2) {
-      const section = tokens[0];
-      const secondToken = tokens[1];
-      
-      // Check if section exists
-      if (commandStructure.sections.includes(section)) {
-        // Check if second token might be a subsection
-        if (commandStructure.subsections[section]) {
-          const matchingSubsections = commandStructure.subsections[section].filter(
-            subsection => subsection.startsWith(secondToken)
-          );
-          
-          // If we have an exact match for a subsection
-          if (matchingSubsections.includes(secondToken)) {
-            // Show elements for this subsection
-            const subsectionKey = `${section}.${secondToken}`;
-            setCurrentOptions(commandStructure.subsectionElements[subsectionKey] || []);
-            setCurrentLevel('subsectionElement');
-            return;
-          }
-          
-          // If we have partial matches for subsections
-          if (matchingSubsections.length > 0) {
-            setCurrentOptions(matchingSubsections);
-            setCurrentLevel('subsection');
-            return;
-          }
-        }
-        
-        // Check if second token might be an element
-        const matchingElements = (commandStructure.elements[section] || []).filter(
-          element => element.startsWith(secondToken)
-        );
-        
-        // If we have an exact match for an element
-        if (matchingElements.includes(secondToken)) {
-          // Show properties for this element
-          const key = `${section}.${secondToken}`;
-          setCurrentOptions(commandStructure.properties[key] || []);
-          setCurrentLevel('property');
-          return;
-        }
-        
-        // If we have partial matches for elements
-        if (matchingElements.length > 0) {
-          setCurrentOptions(matchingElements);
-          setCurrentLevel('element');
-          return;
-        }
-        
-        // If no matches for elements or subsections, show all options
-        const options = [
-          ...(commandStructure.elements[section] || []),
-          ...(commandStructure.subsections[section] || [])
-        ];
-        setCurrentOptions(options);
-        setCurrentLevel('elementOrSubsection');
-      }
-    }
-    else if (tokens.length === 3) {
-      const section = tokens[0];
-      const secondToken = tokens[1];
-      const thirdToken = tokens[2];
-      
-      // Check if second token is a subsection
-      if (commandStructure.subsections[section] && 
-          commandStructure.subsections[section].includes(secondToken)) {
-        
-        const subsectionKey = `${section}.${secondToken}`;
-        const matchingElements = (commandStructure.subsectionElements[subsectionKey] || []).filter(
-          element => element.startsWith(thirdToken)
-        );
-        
-        // If we have an exact match for a subsection element
-        if (matchingElements.includes(thirdToken)) {
-          // Show properties for this subsection element
-          const key = `${section}.${secondToken}.${thirdToken}`;
-          setCurrentOptions(commandStructure.properties[key] || []);
-          setCurrentLevel('subsectionProperty');
-          return;
-        }
-        
-        // If we have partial matches for subsection elements
-        if (matchingElements.length > 0) {
-          setCurrentOptions(matchingElements);
-          setCurrentLevel('subsectionElement');
-          return;
-        }
-        
-        // If no matches, show all subsection elements
-        setCurrentOptions(commandStructure.subsectionElements[subsectionKey] || []);
-        setCurrentLevel('subsectionElement');
-      }
-      // Check if second token is an element
-      else if (commandStructure.elements[section] && 
-               commandStructure.elements[section].includes(secondToken)) {
-        
-        const key = `${section}.${secondToken}`;
-        const matchingProperties = (commandStructure.properties[key] || []).filter(
-          property => property.startsWith(thirdToken)
-        );
-        
-        // If we have an exact match for a property
-        if (matchingProperties.includes(thirdToken)) {
-          // Show value placeholder
-          setCurrentOptions(["[Enter your value]"]);
-          setCurrentLevel('value');
-          return;
-        }
-        
-        // If we have partial matches for properties
-        if (matchingProperties.length > 0) {
-          setCurrentOptions(matchingProperties);
-          setCurrentLevel('property');
-          return;
-        }
-        
-        // If no matches, show all properties
-        setCurrentOptions(commandStructure.properties[key] || []);
-        setCurrentLevel('property');
-      }
-    }
-    else if (tokens.length === 4) {
-      const section = tokens[0];
-      const secondToken = tokens[1];
-      
-      // Check if second token is a subsection
-      if (commandStructure.subsections[section] && 
-          commandStructure.subsections[section].includes(secondToken)) {
-        
-        const subsectionElement = tokens[2];
-        const property = tokens[3];
-        
-        const key = `${section}.${secondToken}.${subsectionElement}`;
-        const matchingProperties = (commandStructure.properties[key] || []).filter(
-          prop => prop.startsWith(property)
-        );
-        
-        // If we have an exact match for a property
-        if (matchingProperties.includes(property)) {
-          // Show value placeholder
-          setCurrentOptions(["[Enter your value]"]);
-          setCurrentLevel('subsectionValue');
-          return;
-        }
-        
-        // If we have partial matches for properties
-        if (matchingProperties.length > 0) {
-          setCurrentOptions(matchingProperties);
-          setCurrentLevel('subsectionProperty');
-          return;
-        }
-        
-        // If no matches, show all properties
-        setCurrentOptions(commandStructure.properties[key] || []);
-        setCurrentLevel('subsectionProperty');
-      }
-      else {
-        // For regular elements, show value placeholder
-        setCurrentOptions(["[Enter your value]"]);
-        setCurrentLevel('value');
-      }
-    }
-    else if (tokens.length >= 5) {
-      // For subsection commands or completed commands, show value placeholder
-      setCurrentOptions(["[Enter your value]"]);
-      setCurrentLevel('value');
-    }
-
-    // Check if we should automatically show the icon picker
-    if (tokens.length >= 3) {
-      const section = tokens[0];
-      const item = tokens[1];
-      const property = tokens[2];
-      
-      // If user has typed something like "benefits item1 icon" or "features item1 icon"
-      if ((section === 'benefits' || section === 'features') && 
-          item.match(/^item[1-3]$/) && 
-          property === 'icon image') {
-        
-        // If the next token is not "image", show the icon picker
-        if (true) {
-          showIconPickerFor(section, item);
-        }
-      }
-    }
-
-    // Check if we should automatically show the image uploader
-    if (tokens.length >= 3) {
-      const section = tokens[0];
-      const property = tokens[1];
-      const action = tokens[2];
-      
-      // If user has typed something like "features image upload"
-      if (section === 'features' && 
-          property === 'image' && 
-          action === 'upload') {
-        showImageUploaderFor(section);
-      }
-      // If user has typed something like "header logo image"
-      if (section === 'header' && 
-          property === 'logo' && 
-          action === 'image') {
-        showImageUploaderFor(section);
-      }
-    }
-  }, [input, commandStructure, validateInput]);
-
-  // Handle option click
-  const handleOptionClick = (option) => {
-    // Special handling for the upload image option
-    if (option === "[Click to upload an image]") {
-      // Check if we're in the features image upload context, regardless of what's in the input field
-      const tokens = input.toLowerCase().trim().split(/\s+/);
-      
-      // Handle logo upload
-      if (tokens.length >= 3 && 
-          tokens[0] === 'header' && 
-          tokens[1] === 'logo' && 
-          tokens[2] === 'image') {
-        
-        showImageUploaderFor('header');
+      // Get the path from context
+      const path = currentToggleContext?.path;
+      if (!path) {
+        setIsProcessing(false);
         return;
       }
       
-      // Handle features image upload (existing code)
-      if ((tokens.length >= 3 && 
-        tokens[0] === 'features' && 
-        tokens[1] === 'image' && 
-        tokens[2] === 'upload') ||
-       (input.includes('features image url') || input.includes('features image upload'))) {
-     
-     // Show the image uploader
-     showImageUploaderFor('features');
-     return;
-   }
- }
-    
-    // Get current tokens
-    const tokens = input.trim().split(/\s+/);
-    
-    // Special handling for icon properties
-    if (option === 'image' && tokens.length >= 3) {
-      const section = tokens[0];
-      const item = tokens[1];
-      const property = tokens[2];
+      // Add user's selection as a message
+      setMessages(prev => [...prev, { 
+        text: value ? "Show" : "Hide", 
+        isUser: true,
+        commandId
+      }]);
       
-      // Check if we're in an icon property context
-      if ((section === 'benefits' || section === 'features') && 
-          item.match(/^item[1-3]$/) && 
-          property === 'icon') {
-        showIconPickerFor(section, item);
-        return;
+      // Create command using the path and value
+      const command = `${path} ${value}`;
+      
+      // Process the command
+      const response = await processMessage(command, websiteConfig);
+      
+      if (response.updatedConfig) {
+        onPreviewUpdate(response.updatedConfig);
       }
-
-      // For image properties
-      if (section === 'features' && 
-          item === 'image' && 
-          property === 'upload') {
-        showImageUploaderFor(section);
-        return;
-      }
+      
+      // Reset navigation
+      setNavigationStack([]);
+      setCurrentPath('');
+      setShowInput(false);
+      setShowColorPicker(false);
+      setShowIconPicker(false);
+      setShowImageUploader(false);
+      setShowToggle(false);
+      
+      // Get sections for next options
+      const sections = getTemplateSections(websiteConfig);
+      
+      // Format success message to be more visible
+      const successMessage = `✅ ${response.message} What would you like to modify next?`;
+      
+      // Clear previous messages and show only success message with options
+      setMessages([{
+        text: successMessage,
+        buttons: sections,
+        commandId: commandId + 1,
+        isSuccess: true // Mark as success message
+      }]);
+      
+      // Increment command ID for next interaction
+      setCommandId(prev => prev + 1);
+      
+    } catch (error) {
+      console.error('Error processing toggle selection:', error);
+    } finally {
+      setIsProcessing(false);
     }
-    
-    // Special handling for color properties
-    if (option === 'color') {
-      const section = tokens[0];
-      
-      // For nested properties like "icon color"
-      if (tokens.length >= 3 && tokens[2] === 'icon') {
-        const item = tokens[1];
-        
-        // Store the current input to preserve the structure
-        setCurrentColorContext({ 
-          section, 
-          item, 
-          property: 'icon color',
-          currentInput: `${section} ${item} icon color` // Explicitly set the structure
-        });
-        setShowColorPicker(true);
-        return;
-      }
-      
-      // For compound properties like "background color"
-      if (tokens.length >= 2) {
-        const previousToken = tokens[1].toLowerCase();
-        
-        if (previousToken === 'background' || 
-            previousToken === 'text' || 
-            previousToken === 'button') {
-          // For "hero background color", "hero text color", etc.
-          showColorPickerFor(section, null, option);
-          return;
-        }
-      }
-      
-      // For simple color properties
-      showColorPickerFor(section, null, option);
-      return;
-    }
-    
-    // Special handling for [Enter your value] when in color context
-    if (option === '[Enter your value]') {
-      const section = tokens[0];
-      
-      // Check for icon color context
-      if (tokens.length >= 4 && 
-          tokens[1].match(/^item[1-3]$/) && 
-          tokens[2] === 'icon' && 
-          tokens[3] === 'color') {
-        
-        setCurrentColorContext({ 
-          section, 
-          item: tokens[1], 
-          property: 'icon color',
-          currentInput: input
-        });
-        setShowColorPicker(true);
-        return;
-      }
-      
-      // Check for compound properties like "background color"
-      if (tokens.length >= 3 && 
-          (tokens[1] === 'background' || tokens[1] === 'text' || tokens[1] === 'button') && 
-          tokens[2] === 'color') {
-        showColorPickerFor(section, null, 'color');
-        return;
-      }
-      
-      // Check for simple color property
-      if (tokens.length >= 2 && tokens[1] === 'color') {
-        showColorPickerFor(section, null, 'color');
-        return;
-      }
-      
-      // Check for item color properties
-      if (tokens.length >= 3 && 
-          tokens[1].match(/^item[1-3]$/) && 
-          (tokens[2] === 'iconColor' || tokens[2] === 'color')) {
-        showColorPickerFor(section, tokens[1], tokens[2]);
-        return;
-      }
-      
-      // For icon image properties
-      if (tokens.length >= 4 && 
-          tokens[1].match(/^item[1-3]$/) && 
-          tokens[2] === 'icon' && 
-          tokens[3] === 'image') {
-        showIconPickerFor(section, tokens[1]);
-        return;
-      }
-      
-      // If not a special case, just focus the input
-      inputRef.current?.focus();
-      return;
-    }
-    
-    // Special handling for image uploads
-    if (option === 'upload' && tokens.length >= 2) {
-      const section = tokens[0];
-      const property = tokens[1];
-      
-      if (section === 'features' && property === 'image') {
-        showImageUploaderFor(section);
-        return;
-      }
-    }
-    
-    // Determine how to add the option based on the current level
-    let newInput = '';
-    
-    if (currentLevel === 'section') {
-      // Starting a new command with a section
-      newInput = option + ' ';  // Add space after section
-    } else if (currentLevel === 'elementOrSubsection' || 
-               currentLevel === 'element' || 
-               currentLevel === 'subsection') {
-      // Adding an element or subsection to a section
-      newInput = `${tokens[0]} ${option} `;  // Add space after element/subsection
-    } else if (currentLevel === 'property' || currentLevel === 'subsectionElement') {
-      // Adding a property to an element or an element to a subsection
-      newInput = `${tokens[0]} ${tokens[1]} ${option} `;  // Add space after property/element
-    } else if (currentLevel === 'subsectionProperty') {
-      // Adding a property to a subsection element
-      newInput = `${tokens[0]} ${tokens[1]} ${tokens[2]} ${option} `;  // Add space after property
-    } else if (currentLevel === 'value' || currentLevel === 'subsectionValue') {
-      // For values, we'll just focus the input field
-      inputRef.current?.focus();
-      return;
-    }
-    
-    // Update the input field
-    setInput(newInput);
-    
-    // Focus the input field and position cursor at the end
-    setTimeout(() => {
-      if (inputRef.current) {
-        inputRef.current.focus();
-        const length = newInput.length;
-        inputRef.current.setSelectionRange(length, length);
-      }
-    }, 0);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!input.trim() || isProcessing) return;
     
-    if (!input.trim() || isProcessing) {
-      return;
-    }
-    
-    // Check if command is valid before submitting
-    if (!isValidCommand) {
-      // Show error message if command is invalid
-      if (validationError) {
-        setMessages(prev => [...prev, { 
-          text: validationError, 
-          isUser: false,
-          isError: true
-        }]);
-      } else {
-        setMessages(prev => [...prev, { 
-          text: "Your command is incomplete. Please finish constructing a valid command.", 
-          isUser: false,
-          isError: true
-        }]);
-      }
-      return;
-    }
-    
-    // Add user message
-    const userMessage = input;
-    setMessages(prev => [...prev, { text: userMessage, isUser: true }]);
-    setInput('');
-    setIsProcessing(true);
-    setValidationError('');
-    
-    try {
-      // Process the message and get a response
-      const response = await processMessage(userMessage, websiteConfig);
+    // Check if we're at an editable node
+    if (navigationStack.length > 0) {
+      // Get the current node from the navigation stack
+      const currentNode = navigationStack[navigationStack.length - 1];
       
-      // Add bot response
-      setMessages(prev => [...prev, { text: response.message, isUser: false }]);
-      
-      // If there are updates to the website, notify parent component
-      if (response.updatedConfig) {
-        onPreviewUpdate(response.updatedConfig);
+      // If it's an editable node, handle the value input
+      if (isEditableNode(currentNode)) {
+        handleValueSelection(input.trim());
+        setInput('');
       }
-    } catch (error) {
-      console.error('Error processing message:', error);
-      setMessages(prev => [...prev, { 
-        text: "Sorry, I had trouble processing that request. Could you try again?", 
-        isUser: false 
-      }]);
-    } finally {
-      setIsProcessing(false);
-      // Focus will be handled by the useEffect that watches isProcessing
     }
   };
 
-  // Get the label for the current level
-  const getLevelLabel = () => {
-    switch (currentLevel) {
-      case 'section': return 'Available sections:';
-      case 'elementOrSubsection': return 'Available elements and subsections:';
-      case 'element': return 'Available elements:';
-      case 'subsection': return 'Available subsections:';
-      case 'property': return 'Available properties:';
-      case 'subsectionElement': return 'Available elements for this subsection:';
-      case 'subsectionProperty': return 'Available properties for this element:';
-      case 'value': 
-      case 'subsectionValue': 
-        return 'Enter your desired value:';
-      default: return 'Options:';
-    }
-  };
+  // Filter messages to only show the current command
+  const currentMessages = messages; // Display all messages without filtering
 
-  // Function to get more explicit option text
-  const getOptionText = (option, currentLevel) => {
-    // For value placeholders, make them more explicit
-    if (option === '[Enter your value]') {
-      // Check current input to determine context
-      const tokens = input.trim().split(/\s+/);
-      
-      // For icon image context
-      if (tokens.length >= 4 && 
-          tokens[1].match(/^item[1-3]$/) && 
-          tokens[2] === 'icon' && 
-          tokens[3] === 'image') {
-        return '[Click to select an icon]';
-      }
-      
-      // For color contexts
-      if (tokens.length >= 3 && tokens[tokens.length - 1] === 'color') {
-        return '[Click to select a color]';
-      }
-      
-      // For icon color context
-      if (tokens.length >= 4 && 
-          tokens[1].match(/^item[1-3]$/) && 
-          tokens[2] === 'icon' && 
-          tokens[3] === 'color') {
-        return '[Click to select a color]';
-      }
+  // Check if we're at the initial options screen
+  const isInitialScreen = navigationStack.length === 0;
 
-      // For image upload context
-      if (tokens.length >= 3 && 
-          tokens[1] === 'image' && 
-          tokens[2] === 'upload') {
-        return '[Click to upload an image]';
-      }
-    }
-
-    
-    return option;
-  };
+  // Get current node for passing to ChatControls
+  const currentNode = navigationStack.length > 0 ? navigationStack[navigationStack.length - 1] : null;
 
   return (
-    <div className="chat-container">
+    <div style={styles.chatContainer}>
+      <div style={styles.chatNavigation}>
+        {navigationStack.length > 0 && !commandCompleted && !isInitialScreen && (
+          <button 
+            style={styles.navButton} 
+            onClick={handleBack}
+            title="Go back one step"
+          >
+            ← Back
+          </button>
+        )}
+        <button 
+          style={styles.navButton} 
+          onClick={handleMainMenu}
+          title="Return to main menu"
+        >
+          🏠 Main Menu
+        </button>
+        {navigationStack.length > 0 && (
+          <div style={styles.contextBreadcrumb}>
+            Current: {getContextDescription()}
+          </div>
+        )}
+      </div>
+
       <div className="chat-messages">
-        <div className="system-message">
-          Welcome to VibeSite! Type commands or click on options below to make changes to your website.
-        </div>
-        {messages.map((msg, index) => (
+        {currentMessages.map((msg, index) => (
           <ChatMessage 
-            key={index} 
-            message={msg.text} 
-            isUser={msg.isUser}
-            isError={msg.isError} 
+            key={`${commandId}-${index}`}
+            message={msg} 
+            isUser={msg.isUser || false}
+            onOptionClick={handleOptionClick}
+            isLatestMessage={index === currentMessages.length - 1}
           />
         ))}
         <div ref={messagesEndRef} />
       </div>
       
-      <div className="command-guide">
-        <div className="guide-label">{getLevelLabel()}</div>
-        <div className="guide-options">
-          {currentOptions.map((option, index) => (
-            <div 
-              key={index} 
-              className="guide-option clickable"
-              onClick={() => handleOptionClick(option)}
-            >
-              {getOptionText(option, currentLevel)}
-            </div>
-          ))}
-        </div>
-        {showIconHint && (
-          <div className="guide-hint icon-hint">
-            <i className="fas fa-info-circle"></i> Click on "[Click to select an icon]" to open the icon picker
-          </div>
-        )}
-        {showColorHint && (
-          <div className="guide-hint color-hint">
-            <i className="fas fa-info-circle"></i> Click on "[Click to select a color]" to open the color picker
-          </div>
-        )}
-        {showImageUploadHint && (
-          <div className="guide-hint image-upload-hint">
-            <i className="fas fa-info-circle"></i> Click on "[Click to upload an image]" to open the image uploader
-          </div>
-        )}
-        {(currentLevel === 'property' || currentLevel === 'subsectionProperty') && 
-         !showIconHint && !showColorHint && !showImageUploadHint && (
-          <div className="guide-hint">
-            After selecting a property, enter the value you want to set
-          </div>
-        )}
-        {validationError && (
-          <div className="validation-error">
-            {validationError}
-          </div>
-        )}
-      </div>
-      
-      {showIconPicker && (
-        <div className="icon-picker-container">
-          <div className="icon-picker-header">
-            <h4>Select an icon for {currentIconContext?.section} {currentIconContext?.item}</h4>
-            <button 
-              className="close-icon-picker"
-              onClick={() => setShowIconPicker(false)}
-            >
-              &times;
-            </button>
-          </div>
-          <IconPicker onSelectIcon={handleIconSelect} />
-        </div>
-      )}
-      
-      {showImageUploader && (
-        <div className="image-uploader-container">
-          <div className="image-uploader-header">
-            <h4>Upload Image for {currentImageContext?.section}</h4>
-            <button 
-              className="close-image-uploader"
-              onClick={() => setShowImageUploader(false)}
-            >
-              &times;
-            </button>
-          </div>
-          <ImageUploader 
-            onImageSelect={(imageUrl) => {
-              // Format the command with the image URL
-              const command = currentImageContext?.section === "header" ? `${currentImageContext?.section} logo image ${imageUrl}` : `${currentImageContext?.section} image upload ${imageUrl}`;
-              
-              setInput(command);
-              
-              // Close the uploader after the state updates
-              setTimeout(() => {
-                setShowImageUploader(false);
-                
-                // Focus the input field and position cursor at the end
-                if (inputRef.current) {
-                  inputRef.current.focus();
-                  const length = command.length;
-                  inputRef.current.setSelectionRange(length, length);
-                }
-              }, 100);
-            }}
-            onClose={() => {
-              setShowImageUploader(false);
-            }}
-          />
-        </div>
-      )}
-      
-      {showColorPicker && (
-        <div className="color-picker-container">
-          <div className="color-picker-header">
-            <h4>
-              {currentColorContext?.item 
-                ? `Select a color for ${currentColorContext?.section} ${currentColorContext?.item} ${currentColorContext?.property}`
-                : `Select a color for ${currentColorContext?.section} ${currentColorContext?.property}`
-              }
-            </h4>
-            <button 
-              className="close-color-picker"
-              onClick={() => setShowColorPicker(false)}
-            >
-              &times;
-            </button>
-          </div>
-          <ColorPicker onSelectColor={handleColorSelect} />
-        </div>
-      )}
-      
-      <form className="chat-input-form" onSubmit={handleSubmit}>
-        <div className="input-container">
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your changes here or click on options above..."
-            className="chat-input"
-            disabled={isProcessing}
-            // Add this to ensure cursor is at the end when input gets focus
-            onFocus={(e) => {
-              const length = e.target.value.length;
-              e.target.setSelectionRange(length, length);
-            }}
-          />
-          </div>
-        <button 
-          type="submit" 
-          className={`chat-submit-button ${!isValidCommand && input.trim() ? 'invalid' : ''}`} 
-          disabled={isProcessing}
-        >
-          {isProcessing ? "..." : "Send"}
-        </button>
-      </form>
+      <ChatControls
+        input={input}
+        setInput={setInput}
+        isProcessing={isProcessing}
+        currentNode={currentNode}
+        showIconPicker={showIconPicker}
+        showColorPicker={showColorPicker}
+        showImageUploader={showImageUploader}
+        showToggle={showToggle}
+        currentIconContext={currentIconContext}
+        currentColorContext={currentColorContext}
+        currentImageContext={currentImageContext}
+        currentToggleContext={currentToggleContext}
+        showInput={showInput}
+        onSubmit={handleSubmit}
+        onIconSelect={(iconClass) => {
+          handleValueSelection(iconClass);
+          setShowIconPicker(false);
+        }}
+        onColorSelect={(color) => {
+          handleValueSelection(color);
+          setShowColorPicker(false);
+        }}
+        onImageSelect={(imageUrl) => {
+          handleValueSelection(imageUrl);
+          setShowImageUploader(false);
+        }}
+        onToggleSelect={(value) => {
+          handleToggleSelect(value);
+          setShowToggle(false);
+        }}
+        onCloseIconPicker={() => {
+          setShowIconPicker(false);
+          handleBack();
+        }}
+        onCloseColorPicker={() => {
+          setShowColorPicker(false);
+          handleBack();
+        }}
+        onCloseImageUploader={() => {
+          setShowImageUploader(false);
+          handleBack();
+        }}
+        onCloseToggle={() => {
+          setShowToggle(false);
+          handleBack();
+        }}
+      />
     </div>
   );
+};
+
+// Navigation and UI styles
+const styles = {
+  chatContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%'
+  },
+  chatNavigation: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '10px',
+    borderBottom: '1px solid #eee',
+    background: '#f8f9fa'
+  },
+  navButton: {
+    padding: '8px 12px',
+    marginRight: '10px',
+    border: 'none',
+    borderRadius: '4px',
+    background: '#007bff',
+    color: 'white',
+    cursor: 'pointer',
+    fontSize: '14px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5px'
+  },
+  navButtonHover: {
+    background: '#0056b3'
+  },
+  contextBreadcrumb: {
+    fontSize: '14px',
+    color: '#6c757d',
+    marginLeft: 'auto'
+  }
 };
 
 export default Chat;
