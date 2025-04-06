@@ -99,7 +99,6 @@ export function createNewTemplate(templateId) {
   
   // Make sure we keep the _structure field
   if (template.template._structure) {
-    console.log('Copying structure field from template:', templateId);
     newTemplate._structure = JSON.parse(JSON.stringify(template.template._structure));
   } else {
     console.log('Template has no structure, creating a fallback structure');

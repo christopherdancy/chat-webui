@@ -32,24 +32,72 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
   // Track current navigation path directly
   const [currentPath, setCurrentPath] = useState('');
 
+  // Track previous template ID for comparison
+  const prevTemplateIdRef = useRef(null);
+
   // Initialize with top-level sections
   useEffect(() => {
     if (websiteConfig) {
       try {
-        // Get available sections for this template
-        const sections = getTemplateSections(websiteConfig);
+        const currentTemplateId = websiteConfig._templateId;
+        const templateChanged = prevTemplateIdRef.current !== currentTemplateId;
         
-        // Update initial message buttons with available sections
-        setMessages([{
-          text: "Hi, I'm your website editor assistant. Below you can find what you can modify.",
-          buttons: sections,
-          commandId: 0
-        }]);
+        // Update ref for next comparison
+        prevTemplateIdRef.current = currentTemplateId;
+        
+        // If the template has changed, reset the messages
+        if (templateChanged) {
+          // Get available sections for this template
+          const sections = getTemplateSections(websiteConfig);
+          
+          // Reset messages for new template
+          setMessages([{
+            text: "Hi, I'm your website editor assistant. Below you can find what you can modify.",
+            buttons: sections,
+            commandId: commandId + 1
+          }]);
+          
+          // Increment command ID for fresh state
+          setCommandId(prev => prev + 1);
+        } else {
+          // Check if the latest message is a success message that we should preserve
+          const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
+          const isSuccessMessage = lastMessage && (lastMessage.isSuccess || (lastMessage.text && lastMessage.text.includes("✅")));
+          
+          // If we need to initialize messages and don't have a success message
+          if (messages.length === 0 || !isSuccessMessage) {
+            // Get available sections for this template
+            const sections = getTemplateSections(websiteConfig);
+            
+            // Update initial message buttons with available sections
+            setMessages([{
+              text: "Hi, I'm your website editor assistant. Below you can find what you can modify.",
+              buttons: sections,
+              commandId: 0
+            }]);
+          }
+          // If we have a success message, just update its buttons
+          else if (isSuccessMessage) {
+            // Get available sections for this template
+            const sections = getTemplateSections(websiteConfig);
+            console.log('sections', sections);
+            
+            // Update the last message's buttons without changing the message text
+            const updatedMessage = {
+              ...lastMessage,
+              buttons: sections
+            };
+            
+            setMessages([updatedMessage]);
+          }
+        }
       } catch (error) {
         console.error('Error initializing sections:', error);
       }
     }
-  }, [websiteConfig]);
+  // Fix the dependencies array properly
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [websiteConfig?._templateId]);
 
   // Auto-scroll to bottom of messages
   useEffect(() => {
@@ -92,6 +140,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
 
   // Function to return to main menu
   const handleMainMenu = () => {
+    // Reset navigation state
     setNavigationStack([]);
     setShowInput(false);
     setShowColorPicker(false);
@@ -103,12 +152,12 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
     
     // Get sections from template structure
     const sections = getTemplateSections(websiteConfig);
-    
-    setMessages([{
-      text: "Hi, I'm your website editor assistant. Below you can find a what you can modify.",
-      buttons: sections,
-      commandId: commandId + 1
-    }]);
+      // Otherwise just show the standard greeting
+      setMessages([{
+        text: "Hi, I'm your website editor assistant. Below you can find what you can modify.",
+        buttons: sections,
+        commandId: commandId + 1
+      }]);
   };
 
   // Handle option selection
@@ -239,7 +288,6 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
       
       // Create command using the current path which already has the correct syntax
       const command = `${currentPath} ${value}`;
-      console.log('Command:', command);
       
       // Process the command
       const response = await processMessage(command, websiteConfig);
@@ -248,7 +296,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
         onPreviewUpdate(response.updatedConfig);
       }
       
-      // Reset navigation and show success
+      // Reset navigation
       setNavigationStack([]);
       setCurrentPath('');
       setShowInput(false);
@@ -259,12 +307,19 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
       // Get sections for next options
       const sections = getTemplateSections(websiteConfig);
       
-      // Show success message with options
+      // Format success message to be more visible
+      const successMessage = `✅ ${response.message} What would you like to modify next?`;
+      
+      // Clear previous messages and show only success message with options
       setMessages([{
-        text: `${response.message} What else would you like to modify?`,
+        text: successMessage,
         buttons: sections,
-        commandId: commandId + 1
+        commandId: commandId + 1,
+        isSuccess: true // Mark as success message
       }]);
+      
+      // Increment command ID for next interaction
+      setCommandId(prev => prev + 1);
       
     } catch (error) {
       console.error('Error processing message:', error);
@@ -301,7 +356,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
         onPreviewUpdate(response.updatedConfig);
       }
       
-      // Reset navigation and show success
+      // Reset navigation
       setNavigationStack([]);
       setCurrentPath('');
       setShowInput(false);
@@ -313,12 +368,19 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
       // Get sections for next options
       const sections = getTemplateSections(websiteConfig);
       
-      // Show success message with options
+      // Format success message to be more visible
+      const successMessage = `✅ ${response.message} What would you like to modify next?`;
+      
+      // Clear previous messages and show only success message with options
       setMessages([{
-        text: `${response.message} What else would you like to modify?`,
+        text: successMessage,
         buttons: sections,
-        commandId: commandId + 1
+        commandId: commandId + 1,
+        isSuccess: true // Mark as success message
       }]);
+      
+      // Increment command ID for next interaction
+      setCommandId(prev => prev + 1);
       
     } catch (error) {
       console.error('Error processing toggle selection:', error);
@@ -345,9 +407,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
   };
 
   // Filter messages to only show the current command
-  const currentMessages = commandCompleted 
-    ? messages.filter(msg => msg.completed) // Only show completion message if command is done
-    : messages;
+  const currentMessages = messages; // Display all messages without filtering
 
   // Check if we're at the initial options screen
   const isInitialScreen = navigationStack.length === 0;
