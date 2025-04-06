@@ -8,6 +8,8 @@ const moonlightTemplate = {
   _templateVersion: '1.0.0',
   
   // Template structure metadata - defines editable sections and properties
+  // TODO: User will have to add to portfolio items to get the full functionality
+  // TODO What functionality will the portfolio section have?
   _structure: {
     global: {
       id: "global",
@@ -418,55 +420,31 @@ const moonlightTemplate = {
         ]
       },
       {
-        id: 'about',
-        name: 'About',
-        children: [
-          {
-            id: 'title',
-            name: 'Title',
-            type: 'text',
-            editable: true,
-            path: 'about.title',
-            default: "About Us"
-          },
-          {
-            id: 'description',
-            name: 'Description',
-            type: 'text',
-            editable: true,
-            path: 'about.description',
-            default: "We are a creative studio focused on bringing your ideas to life with passion and precision.\n\nOur team of experts specializes in creating beautiful, functional designs that elevate your brand and engage your audience. With years of experience across multiple industries, we understand what it takes to stand out in today's competitive landscape.\n\nWe believe that great design combines <a href=\"#\">innovation</a> with usability, making a lasting impact while serving its core purpose.\n\nWhether you're looking to build a new brand identity, revamp your website, or create engaging marketing materials, we're here to help you achieve your goals with stunning, effective design solutions."
-          },
-          {
-            id: 'image',
-            name: 'Image',
-            type: 'image',
-            editable: true,
-            path: 'about.image',
-            default: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-          },
-          {
-            id: 'buttonText',
-            name: 'Button Text',
-            type: 'text',
-            editable: true,
-            path: 'about.buttonText',
-            default: "Our Services"
-          },
-          {
-            id: 'buttonUrl',
-            name: 'Button URL',
-            type: 'url',
-            editable: true,
-            path: 'about.buttonUrl',
-            default: "#2"
-          }
-        ]
-      },
-      {
         id: 'portfolio',
         name: 'Portfolio',
         children: [
+          {
+            id: 'background',
+            name: 'Background',
+            children: [
+              {
+                id: 'color',
+                name: 'Color',
+                type: 'color',
+                editable: true,
+                path: 'portfolio.background.color',
+                default: "#ffffff"
+              }
+            ]
+          },
+          {
+            id: 'textColor',
+            name: 'Text Color',
+            type: 'color',
+            editable: true,
+            path: 'portfolio.textColor',
+            default: "#000000"
+          },
           {
             id: 'items',
             name: 'Portfolio Items',
@@ -551,70 +529,131 @@ const moonlightTemplate = {
         name: 'Contact',
         children: [
           {
-            id: 'mapEmbed',
-            name: 'Map Embed URL',
-            type: 'url',
-            editable: true,
-            path: 'contact.mapEmbed',
-            default: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3647.3030413476204!2d100.5641230193719!3d13.757206847615207!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xf51ce6427b7918fc!2sG+Tower!5e0!3m2!1sen!2sth!4v1510722015945"
-          },
-          {
-            id: 'formFields',
-            name: 'Form Fields',
-            type: 'array',
-            editable: false,
-            path: 'contact.formFields',
-            default: [
-              { name: "name", type: "text", placeholder: "Your name...", required: true },
-              { name: "email", type: "email", placeholder: "Your email...", required: true },
-              { name: "subject", type: "text", placeholder: "Subject...", required: true },
-              { name: "message", type: "textarea", placeholder: "Your message...", required: true, rows: 6 }
-            ]
-          },
-          {
-            id: 'buttonText',
-            name: 'Button Text',
+            id: 'address',
+            name: 'Address',
             type: 'text',
             editable: true,
-            path: 'contact.buttonText',
-            default: "Send Now"
-          }
-        ]
-      },
-      {
-        id: 'footer',
-        name: 'Footer',
-        children: [
+            path: 'contact.address',
+            default: "123 Street, City, Country"
+          },
+          {
+            id: 'phone',
+            name: 'Phone',
+            type: 'text',
+            editable: true,
+            path: 'contact.phone',
+            default: "+1 (555) 123-4567"
+          },
+          {
+            id: 'email',
+            name: 'Email',
+            type: 'text',
+            editable: true,
+            path: 'contact.email',
+            default: "info@yourcompany.com"
+          },
+          {
+            id: 'social',
+            name: 'Socials',
+            children: [
+              {
+                id: 'facebook',
+                name: 'Facebook',
+                children: [
+                  {
+                    id: 'url',
+                    name: 'URL',
+                    type: 'url',
+                    editable: true,
+                    path: 'contact.social.facebook.url',
+                    default: 'https://www.facebook.com'
+                  },
+                  {
+                    id: 'visible',
+                    name: 'Visible',
+                    type: 'boolean',
+                    editable: true,
+                    path: 'contact.social.facebook.visible',
+                    default: true
+                  }
+                ]
+              },
+              {
+                id: 'twitter',
+                name: 'Twitter',
+                children: [
+                  {
+                    id: 'url',
+                    name: 'URL',
+                    type: 'url',
+                    editable: true,
+                    path: 'contact.social.twitter.url',
+                    default: 'https://www.twitter.com'
+                  },
+                  {
+                    id: 'visible',
+                    name: 'Visible',
+                    type: 'boolean',
+                    editable: true,
+                    path: 'contact.social.twitter.visible',
+                    default: true
+                  }
+                ]
+              },
+              {
+                id: 'instagram',
+                name: 'Instagram',
+                children: [
+                  {
+                    id: 'url',
+                    name: 'URL',
+                    type: 'url',
+                    editable: true,
+                    path: 'contact.social.instagram.url',
+                    default: 'https://www.instagram.com'
+                  },
+                  {
+                    id: 'visible',
+                    name: 'Visible',
+                    type: 'boolean',
+                    editable: true,
+                    path: 'contact.social.instagram.visible',
+                    default: true
+                  }
+                ]
+              },
+              {
+                id: 'linkedin',
+                name: 'LinkedIn',
+                children: [
+                  {
+                    id: 'url',
+                    name: 'URL',
+                    type: 'url',
+                    editable: true,
+                    path: 'contact.social.linkedin.url',
+                    default: 'https://www.linkedin.com'
+                  },
+                  {
+                    id: 'visible',
+                    name: 'Visible',
+                    type: 'boolean',
+                    editable: true,
+                    path: 'contact.social.linkedin.visible',
+                    default: true
+                  }
+                ]
+              }
+            ]
+          },
           {
             id: 'copyright',
             name: 'Copyright Text',
             type: 'text',
             editable: true,
-            path: 'footer.copyright',
-            default: "Copyright © 2023 Company Name"
+            path: 'contact.copyright',
+            default: "VibeSite"
           },
-          {
-            id: 'templateAttribution',
-            name: 'Template Attribution',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'footer.templateAttribution.text',
-                default: "Template: Moonlight"
-              },
-              {
-                id: 'url',
-                name: 'URL',
-                type: 'url',
-                editable: true,
-                path: 'footer.templateAttribution.url',
-                default: "https://templatemo.com/tm-512-moonlight"
-              }
-            ]
-          }
         ]
       }
     ]
@@ -638,10 +677,6 @@ export function generateHTML(config, showGuides = false) {
     
   const portfolioItems = Array.isArray(processedConfig.portfolio?.items) 
     ? processedConfig.portfolio.items 
-    : [];
-    
-  const formFields = Array.isArray(processedConfig.contact?.formFields) 
-    ? processedConfig.contact.formFields 
     : [];
 
   // Enhanced section guide styles with element-level guides
@@ -771,7 +806,7 @@ export function generateHTML(config, showGuides = false) {
     }
     
     .navbar-brand {
-      color: ${processedConfig.header.textColor};
+      color: ${processedConfig.header.textColor} !important;
       font-weight: 600;
       font-size: 1.5rem;
       display: flex;
@@ -861,7 +896,7 @@ export function generateHTML(config, showGuides = false) {
     
     /* Home Section */
     .home-section {
-      background-color: ${processedConfig.home.background ? processedConfig.home.background.color : processedConfig.global.secondaryColor};
+      background-color: ${processedConfig.home.background.color};
       background-image: linear-gradient(rgba(31, 38, 56, 0.95), rgba(31, 38, 56, 0.95)), url(img/bg-pattern.png);
       background-repeat: repeat;
       background-position: center center;
@@ -1094,68 +1129,283 @@ export function generateHTML(config, showGuides = false) {
     /* Contact Section Styles */
     .contact-section {
       background-color: ${processedConfig.contact && processedConfig.contact.background && processedConfig.contact.background.color ? 
-        processedConfig.contact.background.color : "#f5f5f5"};
+        processedConfig.contact.background.color : "#f8f9fa"};
+      padding: 100px 0;
+    }
+
+    .contact-section .section-title {
+      font-size: 42px;
+      margin-bottom: 15px;
+      font-weight: 700;
       color: ${processedConfig.contact && processedConfig.contact.textColor ? 
-        processedConfig.contact.textColor : processedConfig.global.textColor};
+        processedConfig.contact.textColor : "#212529"};
     }
-    
-    .contact-section #map {
-      margin-bottom: 30px;
-      border-radius: 5px;
-      overflow: hidden;
-      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .contact-section form {
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 5px;
-      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .contact-section .form-control {
-      margin-bottom: 20px;
-      padding: 15px;
-      border: 1px solid #e9ecef;
-      border-radius: 3px;
-      font-size: 14px;
-    }
-    
-    .contact-section .btn {
-      padding: 12px 25px;
+
+    .contact-section .title-underline {
+      width: 80px;
+      height: 4px;
       background-color: ${processedConfig.global.primaryColor};
-      color: #fff;
-      border: none;
+      margin: 0 auto 20px;
+      border-radius: 2px;
+    }
+
+    .contact-section .section-subtitle {
+      font-size: 18px;
+      color: #6c757d;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+
+    .contact-card {
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      padding: 40px;
+      transition: transform 0.3s ease;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .icon-wrapper {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: ${processedConfig.global.primaryColor}10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .icon-wrapper i {
+      color: ${processedConfig.global.primaryColor};
+      font-size: 20px;
+    }
+
+    .contact-details h4 {
+      margin: 0 0 5px;
+      font-size: 16px;
       font-weight: 600;
-      border-radius: 3px;
-      transition: all 0.3s;
-      font-size: 14px;
-      text-transform: uppercase;
-      width: 100%;
+      color: #212529;
     }
-    
-    .contact-section .btn:hover {
+
+    .contact-link, .contact-text {
+      color: #6c757d;
+      text-decoration: none;
+      transition: color 0.3s;
+      font-size: 15px;
+      margin: 0;
+    }
+
+    .contact-link:hover {
+      color: ${processedConfig.global.primaryColor};
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      padding-top: 20px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .social-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid #eaeaea;
+      color: #6c757d;
+      text-decoration: none;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .social-icon:hover {
+      background: ${processedConfig.global.primaryColor};
+      color: #fff;
+      border-color: ${processedConfig.global.primaryColor};
       transform: translateY(-3px);
-      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (min-width: 768px) {
+      .contact-info {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      
+      .contact-item {
+        flex: 0 0 calc(33.333% - 20px);
+        max-width: calc(33.333% - 20px);
+      }
+    }
+
+    @media (max-width: 767px) {
+      .contact-card {
+        padding: 30px 20px;
+      }
+      
+      .contact-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+      
+      .icon-wrapper {
+        margin: 0 auto;
+      }
     }
     
-    /* Footer Styles */
-    .footer {
-      background-color: #1f2638;
-      padding: 30px 0;
+    /* contact Styles */
+    .contact {
+      background-color: ${processedConfig.contact && processedConfig.contact.background && processedConfig.contact.background.color ? 
+        processedConfig.contact.background.color : "#1f2638"};
+      color: #fff;
+      padding: 0;
+    }
+
+    .contact-brand {
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .contact-description {
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .contact-heading {
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 20px;
+      font-size: 18px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .contact-heading:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 40px;
+      height: 2px;
+      background-color: ${processedConfig.global.primaryColor};
+    }
+
+    .contact-social {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .contact-social a {
+      color: rgba(255, 255, 255, 0.7);
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    .contact-social a:hover {
+      color: ${processedConfig.global.primaryColor};
+      transform: translateY(-3px);
+    }
+
+    .contact-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .contact-links li {
+      margin-bottom: 12px;
+    }
+
+    .contact-links a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: all 0.3s;
+      font-size: 15px;
+    }
+
+    .contact-links a:hover {
+      color: ${processedConfig.global.primaryColor};
+      padding-left: 5px;
+    }
+
+    .contact-contact p {
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    .contact-contact a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .contact-contact a:hover {
+      color: ${processedConfig.global.primaryColor};
+    }
+
+    .contact-contact i {
+      color: ${processedConfig.global.primaryColor};
+      width: 20px;
       text-align: center;
     }
-    
-    .footer p {
-      color: #fff;
+
+    .contact-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    .contact-bottom p {
+      color: rgba(255, 255, 255, 0.6);
       margin: 0;
       font-size: 14px;
-      opacity: 0.8;
     }
-    
-    .footer a {
+
+    .contact-bottom a {
       color: ${processedConfig.global.primaryColor};
       text-decoration: none;
+    }
+
+    @media (max-width: 767px) {
+      .contact {
+        text-align: center;
+      }
+      
+      .contact-heading:after {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      
+      .contact-social {
+        justify-content: center;
+      }
     }
     
     /* Section Styles */
@@ -1322,38 +1572,6 @@ export function generateHTML(config, showGuides = false) {
   </section>
   `)}
 
-  <!-- About Section -->
-  ${wrapWithGuide('About Section', `
-  <section id="3" class="section about-section">
-    <div class="container">
-      <div class="row mb-5">
-        <div class="col-md-12 text-center">
-          <h2 class="section-title">${processedConfig.about.title}</h2>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          ${wrapElementWithGuide('Description', `
-            <div class="about-content">
-              <p>${processedConfig.about.description.split('\n\n').join('</p><p>')}</p>
-              <div class="main-btn">
-                <a href="${processedConfig.about.buttonUrl}" style="background-color: ${processedConfig.about.buttonColor || processedConfig.global.primaryColor}; color: ${processedConfig.about.buttonTextColor || '#ffffff'};">${processedConfig.about.buttonText}</a>
-              </div>
-            </div>
-          `)}
-        </div>
-        <div class="col-md-6">
-          ${wrapElementWithGuide('Image', `
-            <div class="about-image">
-              <img src="${processedConfig.about.image}" alt="About Image" class="img-fluid rounded">
-            </div>
-          `)}
-        </div>
-      </div>
-    </div>
-  </section>
-  `)}
-
   <!-- Portfolio Section -->
   ${wrapWithGuide('Portfolio Section', `
   <section id="5" class="section portfolio-section">
@@ -1390,64 +1608,58 @@ export function generateHTML(config, showGuides = false) {
   </section>
   `)}
 
-  <!-- Contact Section -->
-  ${wrapWithGuide('Contact Section', `
-  <section id="6" class="section contact-section">
+  <!--  -->
+  ${wrapWithGuide('contact', `
+  <contact class="contact" id="6">
     <div class="container">
-      <div class="row mb-5">
-        <div class="col-md-12 text-center">
-          <h2 class="section-title">Contact Us</h2>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          ${wrapElementWithGuide('Map', `
-            <div id="map">
-              <iframe src="${processedConfig.contact.mapEmbed}" width="100%" height="450px" frameborder="0" style="border:0" allowfullscreen></iframe>
+      <div class="row py-5">
+        <div class="col-lg-4">
+          <h5 class="contact-heading">Get In Touch</h5>
+          ${wrapElementWithGuide('Social Links', `
+            <div class="contact-social">
+            ${processedConfig.contact.social?.facebook.visible === true || 
+              processedConfig.contact.social?.facebook.visible === "true" ? 
+            `<a href="${processedConfig.contact.social?.facebook.url}" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-facebook-f"></i>
+              </a>` : ''}
+            ${processedConfig.contact.social?.twitter.visible === true || 
+                 processedConfig.contact.social?.twitter.visible === "true" ? 
+                `<a href="${processedConfig.contact.social?.twitter.url}" target="_blank" rel="noopener noreferrer">
+                   <i class="fab fa-twitter"></i>
+                 </a>` : ''}
+            ${processedConfig.contact.social?.instagram.visible === true || 
+                 processedConfig.contact.social?.instagram.visible === "true" ? 
+                `<a href="${processedConfig.contact.social?.instagram.url}" target="_blank" rel="noopener noreferrer">
+                   <i class="fab fa-instagram"></i>
+                 </a>` : ''}
+            ${processedConfig.contact.social?.linkedin.visible === true || 
+                 processedConfig.contact.social?.linkedin.visible === "true" ? 
+                `<a href="${processedConfig.contact.social?.linkedin.url}" target="_blank" rel="noopener noreferrer">
+                   <i class="fab fa-linkedin-in"></i>
+                 </a>` : ''}
+          </div>
+          `)}
+          ${wrapElementWithGuide('Contact Info', `
+            <div class="contact-contact">
+              ${wrapElementWithGuide('Address', `
+                <p><i class="fas fa-map-marker-alt me-2"></i> ${processedConfig.contact.address}</p>
+              `)}
+              ${wrapElementWithGuide('Phone', `
+                <p><i class="fas fa-phone me-2"></i> <a href="tel:${processedConfig.contact.phone.replace(/[^0-9+]/g, '')}">${processedConfig.contact.phone}</a></p>
+              `)}
+              ${wrapElementWithGuide('Email', `
+                <p><i class="fas fa-envelope me-2"></i> <a href="mailto:${processedConfig.contact.email}">${processedConfig.contact.email}</a></p>
+              `)}
             </div>
           `)}
         </div>
-        <div class="col-md-6">
-          ${wrapElementWithGuide('Contact Form', `
-            <form id="contact" action="" method="post">
-              <div class="row">
-                ${safeMapItems(formFields, (field, index) => `
-                  <div class="col-md-12">
-                    <fieldset>
-                      ${field.type === 'textarea' ? 
-                        `<textarea name="${field.name}" rows="${field.rows}" class="form-control" id="${field.name}" placeholder="${field.placeholder}" ${field.required ? 'required' : ''}></textarea>` : 
-                        `<input name="${field.name}" type="${field.type}" class="form-control" id="${field.name}" placeholder="${field.placeholder}" ${field.required ? 'required' : ''}>`
-                      }
-                    </fieldset>
-                  </div>
-                `)}
-                <div class="col-md-12">
-                  <fieldset>
-                    <button type="submit" id="form-submit" class="btn">${processedConfig.contact.buttonText}</button>
-                  </fieldset>
-                </div>
-              </div>
-            </form>
-          `)}
-        </div>
+      </div>
+      
+      <div class="contact-bottom">
+        <p>Made with ❤️ by ${processedConfig.contact.copyright}</p>
       </div>
     </div>
-  </section>
-  `)}
-
-  <!-- Footer -->
-  ${wrapWithGuide('Footer', `
-  <footer class="footer">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12 text-center">
-          ${wrapElementWithGuide('Copyright', `
-            <p>${processedConfig.footer.copyright} . Template: <a rel="nofollow" href="${processedConfig.footer.templateAttribution.url}">${processedConfig.footer.templateAttribution.text}</a></p>
-          `)}
-        </div>
-      </div>
-    </div>
-  </footer>
+  </contact>
   `)}
 
   <!-- Scripts -->
