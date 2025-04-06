@@ -147,10 +147,27 @@ const moonlightTemplate = {
           {
             id: 'authorImage',
             name: 'Author Image',
-            type: 'image',
-            editable: true,
             path: 'home.authorImage',
-            default: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80"
+            children: [
+              {
+                id: 'image',
+                name: 'Image',
+                type: 'image',
+                editable: true,
+                path: 'home.authorImage.image',
+                default: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80",
+              },
+              {
+                id: 'accentColor',
+                name: 'Accent Color',
+                type: 'color',
+                editable: true,
+                path: 'home.authorImage.accentColor',
+                default: '#f5a425',
+                note: 'Uses global.primaryColor by default'
+              }
+            ],
+
           },
           {
             id: 'title',
@@ -169,36 +186,234 @@ const moonlightTemplate = {
             default: "Welcome to Moonlight, a <em>creative portfolio</em> template. This modern design showcases your work with style and elegance. <em>Perfect for creatives</em> who want to make a lasting impression."
           },
           {
-            id: 'mainButtonText',
-            name: 'Main Button Text',
-            type: 'text',
-            editable: true,
-            path: 'home.mainButtonText',
-            default: "Discover More"
+            id: 'background',
+            name: 'Background',
+            children: [
+              {
+                id: 'color',
+                name: 'Color',
+                type: 'color',
+                editable: true,
+                path: 'home.background.color',
+                default: '#1f2638',
+                note: 'Uses global.secondaryColor by default'
+              }
+            ]
           },
           {
-            id: 'mainButtonUrl',
-            name: 'Main Button URL',
-            type: 'url',
+            id: 'textColor',
+            name: 'Text Color',
+            type: 'color',
             editable: true,
-            path: 'home.mainButtonUrl',
-            default: "#2"
+            path: 'home.textColor',
+            default: "#ffffff"
           },
           {
-            id: 'secondaryButtonText',
-            name: 'Secondary Button Text',
-            type: 'text',
-            editable: true,
-            path: 'home.secondaryButtonText',
-            default: "Contact Us"
+            id: 'mainButton',
+            name: 'Main Button',
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                editable: true,
+                path: 'home.mainButton.text',
+                default: 'Get Started'
+              },  
+              {
+                id: 'color',
+                name: 'Color',
+                type: 'color',
+                editable: true,
+                path: 'home.mainButton.color',
+                default: '#4a90e2',
+                note: 'Uses global.primaryColor by default'
+              },
+              {
+                id: 'textColor',
+                name: 'Text Color',
+                type: 'color',
+                editable: true,
+                path: 'home.mainButton.textColor',
+                default: '#ffffff'
+              },
+              {
+                id: 'url',  
+                name: 'URL',
+                type: 'url',
+                editable: true,
+                path: 'home.mainButton.url',
+                default: "#2"
+              }
+            ]
+          },  
+          {
+            id: 'secondaryButton',
+            name: 'Secondary Button',
+            children: [
+              {
+                id: 'text',
+                name: 'Text',
+                type: 'text',
+                editable: true,
+                path: 'home.secondaryButton.text',
+                default: "Contact Us"
+              },
+              {
+                id: 'color',
+                name: 'Color',
+                type: 'color',
+                editable: true,
+                path: 'home.secondaryButton.color',
+                default: '#f5a425',
+                note: 'Uses global.primaryColor by default'
+              },
+              {
+                id: 'textColor',
+                name: 'Text Color',
+                type: 'color',
+                editable: true,
+                path: 'home.secondaryButton.textColor',
+                default: '#ffffff'
+              },
+              {
+                id: 'url',
+                name: 'URL',
+                type: 'url',
+                editable: true,
+                path: 'home.secondaryButton.url',
+                default: "#6"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'services',
+        name: 'Services',
+        children: [
+          {
+            id: 'background',
+            name: 'Background',
+            children: [
+              {
+                id: 'color',
+                name: 'Color',
+                type: 'color',
+                editable: true,
+                path: 'services.background.color',
+                default: '#f5f5f5',
+                note: 'Uses global.secondaryColor by default'
+              }
+            ]
           },
           {
-            id: 'secondaryButtonUrl',
-            name: 'Secondary Button URL',
-            type: 'url',
+            id: 'textColor',
+            name: 'Text Color',
+            type: 'color',
             editable: true,
-            path: 'home.secondaryButtonUrl',
-            default: "#6"
+            path: 'services.textColor',
+            default: "#000000"
+          },
+          {
+            id: 'firstService',
+            name: 'First Service',
+            children: [
+              {
+                id: 'title',
+                name: 'Title',
+                type: 'text',
+                editable: true,
+                path: 'services.firstService.title',
+                default: "UI/UX Design"
+              },
+              {
+                id: 'description',
+                name: 'Description',
+                type: 'text',
+                editable: true,
+                path: 'services.firstService.description',
+                default: "We create intuitive, beautiful interfaces that delight users and enhance usability. Our design process focuses on real users' needs, ensuring your digital products are not just visually stunning but also functional and easy to navigate."
+              },
+              {
+                id: 'image',
+                name: 'Image',
+                type: 'image',
+                editable: true,
+                path: 'services.firstService.image',
+                default: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                id: 'background',
+                name: 'Background',
+                children: [
+                  {
+                    id: 'color',
+                    name: 'Color',
+                    type: 'color',
+                    editable: true,
+                    path: 'services.firstService.background.color',
+                  }
+                ]
+              },
+              {
+                id: 'textColor',
+                name: 'Text Color',
+                type: 'color',
+                editable: true,
+                path: 'services.firstService.textColor',
+              }
+            ]
+          },
+          {
+            id: 'secondService',
+            name: 'Second Service',
+            children: [
+              {
+                id: 'title',
+                name: 'Title',
+                type: 'text',
+                editable: true,
+                path: 'services.secondService.title',
+                default: "Digital Marketing"
+              },
+              {
+                id: 'description',
+                name: 'Description',
+                type: 'text',
+                editable: true,
+                path: 'services.secondService.description',
+                default: "Reach your target audience with our strategic digital marketing services. From social media campaigns to SEO optimization, we help you build a strong online presence that converts visitors into loyal customers and drives sustainable business growth."
+              },
+              {
+                id: 'image',
+                name: 'Image',
+                type: 'image',
+                editable: true,
+                path: 'services.secondService.image',
+                default: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                id: 'background',
+                name: 'Background',
+                children: [
+                  {
+                    id: 'color',
+                    name: 'Color',
+                    type: 'color',
+                    editable: true,
+                    path: 'services.secondService.background.color',
+                  }
+                ]
+              },
+              {
+                id: 'textColor',
+                name: 'Text Color',
+                type: 'color',
+                editable: true,
+                path: 'services.secondService.textColor',
+              }
+            ]
           }
         ]
       },
@@ -245,104 +460,6 @@ const moonlightTemplate = {
             editable: true,
             path: 'about.buttonUrl',
             default: "#2"
-          }
-        ]
-      },
-      {
-        id: 'services',
-        name: 'Services',
-        children: [
-          {
-            id: 'firstService',
-            name: 'First Service',
-            children: [
-              {
-                id: 'title',
-                name: 'Title',
-                type: 'text',
-                editable: true,
-                path: 'services.firstService.title',
-                default: "UI/UX Design"
-              },
-              {
-                id: 'description',
-                name: 'Description',
-                type: 'text',
-                editable: true,
-                path: 'services.firstService.description',
-                default: "We create intuitive, beautiful interfaces that delight users and enhance usability. Our design process focuses on real users' needs, ensuring your digital products are not just visually stunning but also functional and easy to navigate."
-              },
-              {
-                id: 'image',
-                name: 'Image',
-                type: 'image',
-                editable: true,
-                path: 'services.firstService.image',
-                default: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-              },
-              {
-                id: 'buttonText',
-                name: 'Button Text',
-                type: 'text',
-                editable: true,
-                path: 'services.firstService.buttonText',
-                default: "Learn More"
-              },
-              {
-                id: 'buttonUrl',
-                name: 'Button URL',
-                type: 'url',
-                editable: true,
-                path: 'services.firstService.buttonUrl',
-                default: "#5"
-              }
-            ]
-          },
-          {
-            id: 'secondService',
-            name: 'Second Service',
-            children: [
-              {
-                id: 'title',
-                name: 'Title',
-                type: 'text',
-                editable: true,
-                path: 'services.secondService.title',
-                default: "Digital Marketing"
-              },
-              {
-                id: 'description',
-                name: 'Description',
-                type: 'text',
-                editable: true,
-                path: 'services.secondService.description',
-                default: "Reach your target audience with our strategic digital marketing services. From social media campaigns to SEO optimization, we help you build a strong online presence that converts visitors into loyal customers and drives sustainable business growth."
-              },
-              {
-                id: 'image',
-                name: 'Image',
-                type: 'image',
-                editable: true,
-                path: 'services.secondService.image',
-                default: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-              },
-              {
-                id: 'buttonText',
-                name: 'Button Text',
-                type: 'text',
-                editable: true,
-                path: 'services.secondService.buttonText',
-                default: "Learn More"
-              },
-              {
-                id: 'buttonUrl',
-                name: 'Button URL',
-                type: 'url',
-                editable: true,
-                path: 'services.secondService.buttonUrl',
-                default: "#5"
-              }
-            ]
           }
         ]
       },
@@ -640,7 +757,7 @@ export function generateHTML(config, showGuides = false) {
       left: 0;
       width: 100%;
       z-index: 999;
-      background-color: rgba(22, 34, 57, 0.95);
+      background-color: ${processedConfig.header.background ? processedConfig.header.background.color : processedConfig.global.secondaryColor};
       box-shadow: 0px 5px 15px rgba(0,0,0,0.5);
       transition: all 0.3s ease;
       height: 80px; /* Fixed height for header */
@@ -744,7 +861,7 @@ export function generateHTML(config, showGuides = false) {
     
     /* Home Section */
     .home-section {
-      background-color: #1f2638;
+      background-color: ${processedConfig.home.background ? processedConfig.home.background.color : processedConfig.global.secondaryColor};
       background-image: linear-gradient(rgba(31, 38, 56, 0.95), rgba(31, 38, 56, 0.95)), url(img/bg-pattern.png);
       background-repeat: repeat;
       background-position: center center;
@@ -757,6 +874,7 @@ export function generateHTML(config, showGuides = false) {
       margin-top: 0;
       position: relative;
       z-index: 1;
+      color: ${processedConfig.home.textColor || processedConfig.global.textColor};
     }
     
     .home-section::before {
@@ -777,20 +895,21 @@ export function generateHTML(config, showGuides = false) {
     .home-section .author-image img {
       max-width: 220px;
       border-radius: 50%;
-      border: 5px solid ${processedConfig.global.primaryColor};
+      border: 5px solid ${processedConfig.home.authorImage && processedConfig.home.authorImage.accentColor ? 
+        processedConfig.home.authorImage.accentColor : processedConfig.global.primaryColor};
       box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
     }
     
     .home-section h1 {
       font-size: 46px;
       font-weight: 700;
-      color: ${processedConfig.global.textColor};
+      color: ${processedConfig.home.textColor || processedConfig.global.textColor};
       margin-bottom: 20px;
     }
     
     .home-section p {
       font-size: 18px;
-      color: ${processedConfig.global.textColor};
+      color: ${processedConfig.home.textColor || processedConfig.global.textColor};
       line-height: 1.6;
       opacity: 0.9;
       margin-bottom: 40px;
@@ -805,8 +924,10 @@ export function generateHTML(config, showGuides = false) {
     .home-section .fb-btn a {
       display: inline-block;
       padding: 12px 25px;
-      background-color: ${processedConfig.global.primaryColor};
-      color: #fff;
+      background-color: ${processedConfig.home.mainButton && processedConfig.home.mainButton.color ? 
+        processedConfig.home.mainButton.color : processedConfig.global.primaryColor};
+      color: ${processedConfig.home.mainButton && processedConfig.home.mainButton.textColor ? 
+        processedConfig.home.mainButton.textColor : "#ffffff"};
       text-decoration: none;
       font-weight: 600;
       border-radius: 3px;
@@ -816,7 +937,10 @@ export function generateHTML(config, showGuides = false) {
     }
     
     .home-section .fb-btn a {
-      background-color: ${processedConfig.global.accentColor};
+      background-color: ${processedConfig.home.secondaryButton && processedConfig.home.secondaryButton.color ? 
+        processedConfig.home.secondaryButton.color : processedConfig.global.accentColor};
+      color: ${processedConfig.home.secondaryButton && processedConfig.home.secondaryButton.textColor ? 
+        processedConfig.home.secondaryButton.textColor : "#ffffff"};
     }
     
     .home-section .main-btn a:hover,
@@ -827,7 +951,10 @@ export function generateHTML(config, showGuides = false) {
     
     /* About Section Styles */
     .about-section {
-      background-color: #fff;
+      background-color: ${processedConfig.about && processedConfig.about.background && processedConfig.about.background.color ? 
+        processedConfig.about.background.color : "#ffffff"};
+      color: ${processedConfig.about && processedConfig.about.textColor ? 
+        processedConfig.about.textColor : "#5a6a7c"};
     }
     
     .about-section .about-content {
@@ -835,10 +962,11 @@ export function generateHTML(config, showGuides = false) {
     }
     
     .about-section p {
-      color: #5a6a7c;
+      color: inherit;
       line-height: 1.8;
       margin-bottom: 20px;
       font-size: 16px;
+      opacity: 0.9;
     }
     
     .about-section .about-content a {
@@ -873,45 +1001,25 @@ export function generateHTML(config, showGuides = false) {
     
     /* Services Section Styles */
     .services-section {
-      background-color: #f5f5f5;
+      background-color: ${processedConfig.services && processedConfig.services.background && processedConfig.services.background.color ? 
+        processedConfig.services.background.color : "#f5f5f5"};
+      color: ${processedConfig.services.textColor || processedConfig.global.textColor};
     }
-    
+
     .services-section .service-content {
       padding: 30px;
       margin-bottom: 30px;
+      border-radius: 5px;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
     }
-    
-    .services-section h3 {
-      font-size: 24px;
-      color: #1f2638;
-      margin-bottom: 20px;
-      font-weight: 700;
+
+    .services-section .service-content h3 {
+      color: ${processedConfig.services.textColor};
     }
-    
-    .services-section p {
-      color: #5a6a7c;
-      line-height: 1.8;
-      margin-bottom: 30px;
+    .services-section .service-content p {
+      color: ${processedConfig.services.textColor};
     }
-    
-    .services-section .main-btn a {
-      display: inline-block;
-      padding: 12px 25px;
-      background-color: ${processedConfig.global.primaryColor};
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      border-radius: 3px;
-      transition: all 0.3s;
-      font-size: 14px;
-      text-transform: uppercase;
-    }
-    
-    .services-section .main-btn a:hover {
-      transform: translateY(-3px);
-      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-    }
-    
+
     .services-section .service-image img {
       width: 100%;
       border-radius: 5px;
@@ -920,7 +1028,10 @@ export function generateHTML(config, showGuides = false) {
     
     /* Portfolio Section Styles */
     .portfolio-section {
-      background-color: #fff;
+      background-color: ${processedConfig.portfolio && processedConfig.portfolio.background && processedConfig.portfolio.background.color ? 
+        processedConfig.portfolio.background.color : "#ffffff"};
+      color: ${processedConfig.portfolio && processedConfig.portfolio.textColor ? 
+        processedConfig.portfolio.textColor : processedConfig.global.textColor};
     }
     
     .portfolio-section .item {
@@ -982,7 +1093,10 @@ export function generateHTML(config, showGuides = false) {
     
     /* Contact Section Styles */
     .contact-section {
-      background-color: #f5f5f5;
+      background-color: ${processedConfig.contact && processedConfig.contact.background && processedConfig.contact.background.color ? 
+        processedConfig.contact.background.color : "#f5f5f5"};
+      color: ${processedConfig.contact && processedConfig.contact.textColor ? 
+        processedConfig.contact.textColor : processedConfig.global.textColor};
     }
     
     .contact-section #map {
@@ -1061,7 +1175,7 @@ export function generateHTML(config, showGuides = false) {
 
     section.section h2.section-title {
       font-size: 36px;
-      color: #1f2638;
+      color: inherit;
       text-align: center;
       margin-bottom: 50px;
       font-weight: 700;
@@ -1107,7 +1221,8 @@ export function generateHTML(config, showGuides = false) {
         <div class="col-md-4 text-center">
           ${wrapElementWithGuide('Author Image', `
             <div class="author-image">
-              <img src="${processedConfig.home.authorImage}" alt="Author">
+              <img src="${processedConfig.home.authorImage && processedConfig.home.authorImage.image ? 
+                processedConfig.home.authorImage.image : ''}" alt="Author">
             </div>
           `)}
         </div>
@@ -1121,12 +1236,16 @@ export function generateHTML(config, showGuides = false) {
           <div class="d-flex flex-wrap">
             ${wrapElementWithGuide('Main Button', `
               <div class="main-btn">
-                <a href="${processedConfig.home.mainButtonUrl}">${processedConfig.home.mainButtonText}</a>
+                <a href="${processedConfig.home.mainButton && processedConfig.home.mainButton.url ? 
+                  processedConfig.home.mainButton.url : '#'}">${processedConfig.home.mainButton && processedConfig.home.mainButton.text ? 
+                  processedConfig.home.mainButton.text : 'Learn More'}</a>
               </div>
             `)}
             ${wrapElementWithGuide('Secondary Button', `
               <div class="fb-btn">
-                <a href="${processedConfig.home.secondaryButtonUrl}" rel="nofollow">${processedConfig.home.secondaryButtonText}</a>
+                <a href="${processedConfig.home.secondaryButton && processedConfig.home.secondaryButton.url ? 
+                  processedConfig.home.secondaryButton.url : '#'}" rel="nofollow">${processedConfig.home.secondaryButton && processedConfig.home.secondaryButton.text ? 
+                  processedConfig.home.secondaryButton.text : 'Contact Us'}</a>
               </div>
             `)}
           </div>
@@ -1148,12 +1267,19 @@ export function generateHTML(config, showGuides = false) {
       <div class="row mb-5">
         <div class="col-md-6">
           ${wrapElementWithGuide('First Service Content', `
-            <div class="service-content">
-              <h3>${processedConfig.services.firstService.title}</h3>
-              <p>${processedConfig.services.firstService.description}</p>
-              <div class="main-btn">
-                <a href="${processedConfig.services.firstService.buttonUrl}">${processedConfig.services.firstService.buttonText}</a>
-              </div>
+            <div class="service-content" 
+              style="${processedConfig.services.firstService.background && processedConfig.services.firstService.background.color ? 
+                `background-color: ${processedConfig.services.firstService.background.color};` : ''}
+                ${processedConfig.services.firstService.textColor ? 
+                `color: ${processedConfig.services.firstService.textColor};` : ''}">
+              ${wrapElementWithGuide('Title', `
+                <h3 style="${processedConfig.services.firstService.textColor ? 
+                  `color: ${processedConfig.services.firstService.textColor};` : ''}">${processedConfig.services.firstService.title}</h3>
+              `)}
+              ${wrapElementWithGuide('Description', `
+                <p style="${processedConfig.services.firstService.textColor ? 
+                  `color: ${processedConfig.services.firstService.textColor};` : ''}">${processedConfig.services.firstService.description}</p>
+              `)}
             </div>
           `)}
         </div>
@@ -1168,12 +1294,19 @@ export function generateHTML(config, showGuides = false) {
       <div class="row">
         <div class="col-md-6 order-md-2">
           ${wrapElementWithGuide('Second Service Content', `
-            <div class="service-content">
-              <h3>${processedConfig.services.secondService.title}</h3>
-              <p>${processedConfig.services.secondService.description}</p>
-              <div class="main-btn">
-                <a href="${processedConfig.services.secondService.buttonUrl}">${processedConfig.services.secondService.buttonText}</a>
-              </div>
+            <div class="service-content" 
+              style="${processedConfig.services.secondService.background && processedConfig.services.secondService.background.color ? 
+                `background-color: ${processedConfig.services.secondService.background.color};` : ''}
+                ${processedConfig.services.secondService.textColor ? 
+                `color: ${processedConfig.services.secondService.textColor};` : ''}">
+              ${wrapElementWithGuide('Title', `
+                <h3 style="${processedConfig.services.secondService.textColor ? 
+                  `color: ${processedConfig.services.secondService.textColor};` : ''}">${processedConfig.services.secondService.title}</h3>
+              `)}
+              ${wrapElementWithGuide('Description', `
+                <p style="${processedConfig.services.secondService.textColor ? 
+                  `color: ${processedConfig.services.secondService.textColor};` : ''}">${processedConfig.services.secondService.description}</p>
+              `)}
             </div>
           `)}
         </div>
@@ -1204,7 +1337,7 @@ export function generateHTML(config, showGuides = false) {
             <div class="about-content">
               <p>${processedConfig.about.description.split('\n\n').join('</p><p>')}</p>
               <div class="main-btn">
-                <a href="${processedConfig.about.buttonUrl}">${processedConfig.about.buttonText}</a>
+                <a href="${processedConfig.about.buttonUrl}" style="background-color: ${processedConfig.about.buttonColor || processedConfig.global.primaryColor}; color: ${processedConfig.about.buttonTextColor || '#ffffff'};">${processedConfig.about.buttonText}</a>
               </div>
             </div>
           `)}
