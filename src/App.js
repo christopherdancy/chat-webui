@@ -6,25 +6,32 @@ import Header from './components/Header';
 import { getTemplateRegistry, createNewTemplate, getTemplateRegistryById } from './templates/templateRegistry';
 import './styles.css';
 
-// Updated Template Selector Component to use the registry
-const TemplateSelector = ({ currentTemplate, onTemplateSelect, getCurrentTemplateId }) => {
+// Updated to separate controls into a dedicated toolbar
+const PreviewToolbar = ({ currentTemplate, onTemplateSelect, getCurrentTemplateId, websiteConfig }) => {
   const templates = getTemplateRegistry();
   
   return (
-    <div className="template-selector-minimal">
-      <span className="template-label">Template:</span>
-      <select 
-        value={getCurrentTemplateId()} 
-        onChange={(e) => {
-          const templateId = e.target.value;
-          const newTemplate = createNewTemplate(templateId);
-          onTemplateSelect(newTemplate, templateId);
-        }}
-      >
-        {templates.map(t => (
-          <option key={t.id} value={t.id}>{t.name}</option>
-        ))}
-      </select>
+    <div className="preview-toolbar">
+      <div className="toolbar-group">
+        <span className="toolbar-label">Template:</span>
+        <select 
+          className="template-select"
+          value={getCurrentTemplateId()} 
+          onChange={(e) => {
+            const templateId = e.target.value;
+            const newTemplate = createNewTemplate(templateId);
+            onTemplateSelect(newTemplate, templateId);
+          }}
+        >
+          {templates.map(t => (
+            <option key={t.id} value={t.id}>{t.name}</option>
+          ))}
+        </select>
+      </div>
+      
+      <div className="toolbar-group">
+        <DeployButton websiteConfig={websiteConfig} />
+      </div>
     </div>
   );
 };
@@ -133,15 +140,15 @@ function App() {
           </div>
           
           <div className="right-panel">
-            <TemplateSelector 
+            <PreviewToolbar 
               currentTemplate={config} 
               onTemplateSelect={handleTemplateSelect}
               getCurrentTemplateId={getCurrentTemplateId}
+              websiteConfig={config}
             />
             <div className="preview-container">
               <WebsitePreview config={config} setConfig={setConfig} />
             </div>
-            <DeployButton websiteConfig={config} />
           </div>
         </main>
       </div>

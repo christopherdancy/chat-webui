@@ -63,31 +63,7 @@
   }
   
   .template-selector-minimal {
-    padding: 8px 12px;
-    text-align: right;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 8px;
-    background: #e0e0e0;
-  }
-  
-  .template-label {
-    font-family: 'VT323', monospace;
-    font-size: 12px;
-    color: #333;
-  }
-  
-  .template-selector-minimal select {
-    font-family: 'VT323', monospace;
-    font-size: 12px;
-    padding: 4px 8px;
-    border-radius: 3px;
-    background: #e0e0e0;
-    border: 1px solid #808080;
-    box-shadow: inset 1px 1px #ffffff, inset -1px -1px #808080;
-    cursor: pointer;
-    min-width: 150px;
+    display: none;
   }
   
   .app-content {
@@ -168,24 +144,43 @@
     cursor: pointer;
   }
   
+  /* Update preview reset button with retro red style */
   .preview-reset-button {
     font-family: 'VT323', monospace;
     font-size: 12px;
     padding: 4px 8px;
-    background: #e0e0e0;
-    border: 1px solid #808080;
-    box-shadow: inset 1px 1px #ffffff, inset -1px -1px #808080;
+    background: #371414;
+    color: #ff3333;
+    border: 1px solid #521f1f;
+    box-shadow: inset 1px 1px #702a2a, inset -1px -1px #200a0a;
     cursor: pointer;
+    text-shadow: 0 0 2px #ff3333;
+    transition: all 0.1s ease;
+  }
+  
+  .preview-reset-button:hover {
+    background: #421a1a;
+    text-shadow: 0 0 4px #ff3333;
+    box-shadow: inset 1px 1px #702a2a, inset -1px -1px #200a0a, 0 0 5px rgba(255, 51, 51, 0.3);
   }
   
   .preview-reset-button:active {
-    box-shadow: inset 1px 1px #808080, inset -1px -1px #ffffff;
+    background: #290f0f;
+    box-shadow: inset 1px 1px #200a0a, inset -1px -1px #702a2a;
+    text-shadow: 0 0 4px #ff3333;
+  }
+  
+  .preview-reset-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #371414;
+    text-shadow: none;
+    box-shadow: none;
   }
   
   .preview-content {
     flex: 1;
     overflow: auto;
-    border: 1px solid #808080;
     background: #ffffff;
     box-shadow: inset 1px 1px #808080, inset -1px -1px #ffffff;
   }
@@ -425,9 +420,9 @@
   .preview-container {
     flex: 1;
     overflow: auto;
-    min-height: 500px;
     background: #ffffff;
     box-shadow: inset 1px 1px #808080, inset -1px -1px #ffffff;
+    border-top: none;
   }
   
   .command-guide {
@@ -1172,4 +1167,220 @@
   
   .toggle-button:hover:not(.active) {
     background-color: #e9e9e9;
+  }
+
+  /* Updated Deploy Button Styles */
+  .deploy-button-minimal {
+    font-family: 'VT323', monospace;
+    font-size: 12px;
+    padding: 4px 12px;
+    background: #143714;
+    color: #33ff33;
+    border: 1px solid #1f521f;
+    box-shadow: inset 1px 1px #2a702a, inset -1px -1px #0a200a;
+    cursor: pointer;
+    white-space: nowrap;
+    text-shadow: 0 0 2px #33ff33;
+    transition: all 0.1s ease;
+  }
+
+  .deploy-button-minimal:hover {
+    background: #1a421a;
+    text-shadow: 0 0 4px #33ff33;
+    box-shadow: inset 1px 1px #2a702a, inset -1px -1px #0a200a, 0 0 5px rgba(51, 255, 51, 0.3);
+  }
+
+  .deploy-button-minimal:active {
+    background: #0f290f;
+    box-shadow: inset 1px 1px #0a200a, inset -1px -1px #2a702a;
+    text-shadow: 0 0 4px #33ff33;
+  }
+
+  .deploy-button-minimal:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #143714;
+    text-shadow: none;
+    box-shadow: none;
+  }
+
+  /* Update modal styles to match when showing deployment status */
+  .deploy-status {
+    padding: 12px;
+    background: #143714;
+    border: 1px solid #1f521f;
+    margin-bottom: 16px;
+    color: #33ff33;
+    text-shadow: 0 0 2px #33ff33;
+    font-family: 'VT323', monospace;
+  }
+
+  .deploy-status.deploy-error {
+    background: #3f1414;
+    border-color: #521f1f;
+    color: #ff3333;
+    text-shadow: 0 0 2px #ff3333;
+  }
+
+  .deploy-url {
+    padding: 12px;
+    background: #143714;
+    border: 1px solid #1f521f;
+    color: #33ff33;
+    text-shadow: 0 0 2px #33ff33;
+    font-family: 'VT323', monospace;
+  }
+
+  .retro-link {
+    color: #33ff33;
+    text-decoration: none;
+    border-bottom: 1px solid #33ff33;
+    text-shadow: 0 0 2px #33ff33;
+  }
+
+  .retro-link:hover {
+    color: #66ff66;
+    border-bottom-color: #66ff66;
+    text-shadow: 0 0 4px #33ff33;
+  }
+
+  .deploy-note {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #2a702a;
+    text-shadow: none;
+  }
+
+  /* Preview Toolbar Styles */
+  .preview-toolbar {
+    padding: 8px 12px;
+    background: #c0c0c0;
+    border-bottom: 1px solid #808080;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: inset 1px 1px #ffffff, inset -1px -1px #404040;
+  }
+
+  .toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toolbar-label {
+    font-family: 'VT323', monospace;
+    font-size: 12px;
+    color: #000000;
+  }
+
+  .template-select {
+    font-family: 'VT323', monospace;
+    font-size: 12px;
+    padding: 4px 8px;
+    background: #e0e0e0;
+    border: 1px solid #808080;
+    box-shadow: inset 1px 1px #ffffff, inset -1px -1px #808080;
+    cursor: pointer;
+    min-width: 150px;
+  }
+
+  .template-select:focus {
+    outline: none;
+    border-color: #000080;
+  }
+
+  /* Retro Modal Styles */
+  .retro-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    font-family: 'VT323', monospace;
+  }
+
+  .retro-modal {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    box-shadow: 0 0 20px rgba(51, 255, 51, 0.2);
+    width: 90%;
+    max-width: 500px;
+  }
+
+  .retro-modal-header {
+    background: #143714;
+    color: #33ff33;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #1f521f;
+    text-shadow: 0 0 2px #33ff33;
+  }
+
+  .retro-modal-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: normal;
+  }
+
+  .retro-close-button {
+    background: none;
+    border: none;
+    color: #33ff33;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 4px;
+    text-shadow: 0 0 2px #33ff33;
+  }
+
+  .retro-close-button:hover {
+    color: #66ff66;
+    text-shadow: 0 0 4px #33ff33;
+  }
+
+  .retro-modal-content {
+    padding: 16px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    margin: 8px;
+  }
+
+  .retro-modal-footer {
+    padding: 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    border-top: 1px solid #333;
+  }
+
+  .retro-button {
+    font-family: 'VT323', monospace;
+    font-size: 14px;
+    padding: 6px 12px;
+    background: #143714;
+    color: #33ff33;
+    border: 1px solid #1f521f;
+    box-shadow: inset 1px 1px #2a702a, inset -1px -1px #0a200a;
+    cursor: pointer;
+    text-decoration: none;
+    text-shadow: 0 0 2px #33ff33;
+    transition: all 0.1s ease;
+  }
+
+  .retro-button:hover {
+    background: #1a421a;
+    text-shadow: 0 0 4px #33ff33;
+    box-shadow: inset 1px 1px #2a702a, inset -1px -1px #0a200a, 0 0 5px rgba(51, 255, 51, 0.3);
+  }
+
+  .retro-button:active {
+    background: #0f290f;
+    box-shadow: inset 1px 1px #0a200a, inset -1px -1px #2a702a;
   }
