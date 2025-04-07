@@ -2,28 +2,36 @@ import React, { useState, useEffect } from 'react';
 import Chat from './components/Chat';
 import WebsitePreview from './components/WebsitePreview';
 import DeployButton from './components/DeployButton';
+import Header from './components/Header';
 import { getTemplateRegistry, createNewTemplate, getTemplateRegistryById } from './templates/templateRegistry';
 import './styles.css';
 
-// Updated Template Selector Component to use the registry
-const TemplateSelector = ({ currentTemplate, onTemplateSelect }) => {
+// Updated to separate controls into a dedicated toolbar
+const PreviewToolbar = ({ currentTemplate, onTemplateSelect, getCurrentTemplateId, websiteConfig }) => {
   const templates = getTemplateRegistry();
   
   return (
-    <div className="template-selector">
-      <label>Choose Template: </label>
-      <select 
-        value={currentTemplate.id || 'basic'} 
-        onChange={(e) => {
-          const templateId = e.target.value;
-          const newTemplate = createNewTemplate(templateId);
-          onTemplateSelect(newTemplate, templateId);
-        }}
-      >
-        {templates.map(t => (
-          <option key={t.id} value={t.id}>{t.name}</option>
-        ))}
-      </select>
+    <div className="preview-toolbar">
+      <div className="toolbar-group">
+        <span className="toolbar-label">Template:</span>
+        <select 
+          className="template-select"
+          value={getCurrentTemplateId()} 
+          onChange={(e) => {
+            const templateId = e.target.value;
+            const newTemplate = createNewTemplate(templateId);
+            onTemplateSelect(newTemplate, templateId);
+          }}
+        >
+          {templates.map(t => (
+            <option key={t.id} value={t.id}>{t.name}</option>
+          ))}
+        </select>
+      </div>
+      
+      <div className="toolbar-group">
+        <DeployButton websiteConfig={websiteConfig} />
+      </div>
     </div>
   );
 };
@@ -103,7 +111,6 @@ function App() {
       // Double check template ID is set
       templateConfig._templateId = id;
       
-      console.log('Setting template:', templateConfig);
       setConfig(templateConfig);
       localStorage.setItem('websiteConfig', JSON.stringify(templateConfig));
     }
@@ -121,31 +128,30 @@ function App() {
 
   return (
     <div className="app-container">
-      <header className="app-header">
-        <h1>VibeSite</h1>
-        <p>Edit your website through chat and deploy it with one click</p>
-        <TemplateSelector 
-          currentTemplate={{ id: getCurrentTemplateId() }} 
-          onTemplateSelect={handleTemplateSelect} 
-        />
-      </header>
-      
-      <main className="app-content">
-        <div className="left-panel" style={{ height: 'calc(100vh - 150px)', display: 'flex', flexDirection: 'column' }}>
-          <Chat 
-            onPreviewUpdate={handlePreviewUpdate}
-            websiteConfig={config}
-            setConfig={setConfig}
-          />
-        </div>
-        
-        <div className="right-panel" style={{ height: 'calc(100vh - 150px)', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ flex: 1, overflow: 'auto', minHeight: '500px' }}>
-            <WebsitePreview config={config} setConfig={setConfig} />
+      <Header />
+      <div className="app-main">
+        <main className="app-content">
+          <div className="left-panel">
+            <Chat 
+              onPreviewUpdate={handlePreviewUpdate}
+              websiteConfig={config}
+              setConfig={setConfig}
+            />
           </div>
-          <DeployButton websiteConfig={config} />
-        </div>
-      </main>
+          
+          <div className="right-panel">
+            <PreviewToolbar 
+              currentTemplate={config} 
+              onTemplateSelect={handleTemplateSelect}
+              getCurrentTemplateId={getCurrentTemplateId}
+              websiteConfig={config}
+            />
+            <div className="preview-container">
+              <WebsitePreview config={config} setConfig={setConfig} />
+            </div>
+          </div>
+        </main>
+      </div>
       
       <footer className="app-footer">
         <p>VibeSite POC &copy; 2025</p>
