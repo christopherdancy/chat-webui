@@ -4,7 +4,7 @@ import WebsitePreview from './components/WebsitePreview';
 import DeployButton from './components/DeployButton';
 import { getTemplateRegistry, createNewTemplate, getTemplateRegistryById } from './templates/templateRegistry';
 import './styles.css';
-
+import Header from './components/Header';
 // Updated Template Selector Component to use the registry
 const TemplateSelector = ({ currentTemplate, onTemplateSelect }) => {
   const templates = getTemplateRegistry();
@@ -121,14 +121,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <header className="app-header">
-        <h1>VibeSite</h1>
-        <p>Edit your website through chat and deploy it with one click</p>
-        <TemplateSelector 
-          currentTemplate={{ id: getCurrentTemplateId() }} 
-          onTemplateSelect={handleTemplateSelect} 
-        />
-      </header>
+      <Header />  
       
       <main className="app-content">
         <div className="left-panel" style={{ height: 'calc(100vh - 150px)', display: 'flex', flexDirection: 'column' }}>
