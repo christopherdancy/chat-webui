@@ -104,11 +104,6 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Function to get current context description
-  const getContextDescription = () => {
-    return navigationStack.map(node => node.name).join(' → ');
-  };
-
   // Function to go back one step
   const handleBack = () => {
     if (commandCompleted) return; // Prevent going back after command completion
@@ -416,11 +411,11 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
   const currentNode = navigationStack.length > 0 ? navigationStack[navigationStack.length - 1] : null;
 
   return (
-    <div style={styles.chatContainer}>
-      <div style={styles.chatNavigation}>
+    <div className="chat-container">
+      <div className="chat-navigation">
         {navigationStack.length > 0 && !commandCompleted && !isInitialScreen && (
           <button 
-            style={styles.navButton} 
+            className="nav-button"
             onClick={handleBack}
             title="Go back one step"
           >
@@ -428,17 +423,12 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
           </button>
         )}
         <button 
-          style={styles.navButton} 
+          className="nav-button"
           onClick={handleMainMenu}
           title="Return to main menu"
         >
-          🏠 Main Menu
+          Main Menu
         </button>
-        {navigationStack.length > 0 && (
-          <div style={styles.contextBreadcrumb}>
-            Current: {getContextDescription()}
-          </div>
-        )}
       </div>
 
       <div className="chat-messages">
@@ -504,43 +494,6 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
       />
     </div>
   );
-};
-
-// Navigation and UI styles
-const styles = {
-  chatContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%'
-  },
-  chatNavigation: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '10px',
-    borderBottom: '1px solid #eee',
-    background: '#f8f9fa'
-  },
-  navButton: {
-    padding: '8px 12px',
-    marginRight: '10px',
-    border: 'none',
-    borderRadius: '4px',
-    background: '#007bff',
-    color: 'white',
-    cursor: 'pointer',
-    fontSize: '14px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '5px'
-  },
-  navButtonHover: {
-    background: '#0056b3'
-  },
-  contextBreadcrumb: {
-    fontSize: '14px',
-    color: '#6c757d',
-    marginLeft: 'auto'
-  }
 };
 
 export default Chat;

@@ -122,7 +122,6 @@ function App() {
   return (
     <div className="app-container">
       <Header />  
-      
       <main className="app-content">
         <div className="left-panel" style={{ height: 'calc(100vh - 150px)', display: 'flex', flexDirection: 'column' }}>
           <Chat 
