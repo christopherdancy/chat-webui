@@ -2,18 +2,19 @@ import React, { useState, useEffect } from 'react';
 import Chat from './components/Chat';
 import WebsitePreview from './components/WebsitePreview';
 import DeployButton from './components/DeployButton';
+import Header from './components/Header';
 import { getTemplateRegistry, createNewTemplate, getTemplateRegistryById } from './templates/templateRegistry';
 import './styles.css';
-import Header from './components/Header';
+
 // Updated Template Selector Component to use the registry
-const TemplateSelector = ({ currentTemplate, onTemplateSelect }) => {
+const TemplateSelector = ({ currentTemplate, onTemplateSelect, getCurrentTemplateId }) => {
   const templates = getTemplateRegistry();
   
   return (
-    <div className="template-selector">
-      <label>Choose Template: </label>
+    <div className="template-selector-minimal">
+      <span className="template-label">Template:</span>
       <select 
-        value={currentTemplate.id || 'basic'} 
+        value={getCurrentTemplateId()} 
         onChange={(e) => {
           const templateId = e.target.value;
           const newTemplate = createNewTemplate(templateId);
@@ -103,7 +104,6 @@ function App() {
       // Double check template ID is set
       templateConfig._templateId = id;
       
-      console.log('Setting template:', templateConfig);
       setConfig(templateConfig);
       localStorage.setItem('websiteConfig', JSON.stringify(templateConfig));
     }
@@ -121,23 +121,30 @@ function App() {
 
   return (
     <div className="app-container">
-      <Header />  
-      <main className="app-content">
-        <div className="left-panel" style={{ height: 'calc(100vh - 150px)', display: 'flex', flexDirection: 'column' }}>
-          <Chat 
-            onPreviewUpdate={handlePreviewUpdate}
-            websiteConfig={config}
-            setConfig={setConfig}
-          />
-        </div>
-        
-        <div className="right-panel" style={{ height: 'calc(100vh - 150px)', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ flex: 1, overflow: 'auto', minHeight: '500px' }}>
-            <WebsitePreview config={config} setConfig={setConfig} />
+      <Header />
+      <div className="app-main">
+        <main className="app-content">
+          <div className="left-panel">
+            <Chat 
+              onPreviewUpdate={handlePreviewUpdate}
+              websiteConfig={config}
+              setConfig={setConfig}
+            />
           </div>
-          <DeployButton websiteConfig={config} />
-        </div>
-      </main>
+          
+          <div className="right-panel">
+            <TemplateSelector 
+              currentTemplate={config} 
+              onTemplateSelect={handleTemplateSelect}
+              getCurrentTemplateId={getCurrentTemplateId}
+            />
+            <div className="preview-container">
+              <WebsitePreview config={config} setConfig={setConfig} />
+            </div>
+            <DeployButton websiteConfig={config} />
+          </div>
+        </main>
+      </div>
       
       <footer className="app-footer">
         <p>VibeSite POC &copy; 2025</p>

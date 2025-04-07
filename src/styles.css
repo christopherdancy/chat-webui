@@ -56,6 +56,40 @@
     object-fit: cover;
   }
   
+  .app-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .template-selector-minimal {
+    padding: 8px 12px;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    background: #e0e0e0;
+  }
+  
+  .template-label {
+    font-family: 'VT323', monospace;
+    font-size: 12px;
+    color: #333;
+  }
+  
+  .template-selector-minimal select {
+    font-family: 'VT323', monospace;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 3px;
+    background: #e0e0e0;
+    border: 1px solid #808080;
+    box-shadow: inset 1px 1px #ffffff, inset -1px -1px #808080;
+    cursor: pointer;
+    min-width: 150px;
+  }
+  
   .app-content {
     flex: 1;
     display: grid;
@@ -74,7 +108,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 120px);
+    height: calc(100vh - 150px);
   }
   
   .right-panel {
@@ -84,13 +118,83 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 120px);
+    height: calc(100vh - 150px);
   }
   
   .website-preview-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .preview-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid #808080;
+    background: #f0f0f0;
+  }
+  
+  .preview-label {
+    font-family: 'VT323', monospace;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+  }
+  
+  .preview-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .preview-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'VT323', monospace;
+    font-size: 12px;
+    color: #333;
+  }
+  
+  .preview-toggle input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    border: 1px solid #808080;
+    background: #ffffff;
+    box-shadow: inset 1px 1px #808080, inset -1px -1px #ffffff;
+    cursor: pointer;
+  }
+  
+  .preview-reset-button {
+    font-family: 'VT323', monospace;
+    font-size: 12px;
+    padding: 4px 8px;
+    background: #e0e0e0;
+    border: 1px solid #808080;
+    box-shadow: inset 1px 1px #ffffff, inset -1px -1px #808080;
+    cursor: pointer;
+  }
+  
+  .preview-reset-button:active {
+    box-shadow: inset 1px 1px #808080, inset -1px -1px #ffffff;
+  }
+  
+  .preview-content {
     flex: 1;
     overflow: auto;
-    padding: 1rem;
+    border: 1px solid #808080;
+    background: #ffffff;
+    box-shadow: inset 1px 1px #808080, inset -1px -1px #ffffff;
+  }
+  
+  .preview-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #ffffff;
   }
   
   .deploy-button-container {
@@ -282,10 +386,6 @@
     border-bottom: 1px solid #ddd;
   }
   
-  .preview-content {
-    padding: 1rem;
-  }
-  
   .preview-section {
     margin-bottom: 1.5rem;
   }
@@ -322,17 +422,12 @@
     border-radius: 5px;
   }
   
-  .preview-iframe {
-    width: 100%;
-    height: 500px;
-    border: none;
-  }
-  
   .preview-container {
-    margin-top: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: hidden;
+    flex: 1;
+    overflow: auto;
+    min-height: 500px;
+    background: #ffffff;
+    box-shadow: inset 1px 1px #808080, inset -1px -1px #ffffff;
   }
   
   .command-guide {
@@ -1077,213 +1172,4 @@
   
   .toggle-button:hover:not(.active) {
     background-color: #e9e9e9;
-  }
-
-  /* Chat Input Styles */
-  .chat-input-form {
-    display: flex;
-    padding: 8px;
-    background: #e0e0e0;
-    border-top: 1px solid #c0c0c0;
-  }
-
-  .input-container {
-    flex: 1;
-    margin-right: 8px;
-    position: relative;
-  }
-
-  .chat-input {
-    width: 100%;
-    padding: 6px 8px;
-    border: 1px solid #808080;
-    border-radius: 0;
-    background: #fff;
-    font-family: "SF Mono", "Monaco", "Inconsolata", "Fira Mono", "Droid Sans Mono", "Source Code Pro", monospace;
-    font-size: 13px;
-    box-shadow: inset 1px 1px #1a1a1a, inset -1px -1px #fff;
-  }
-
-  .chat-input:focus {
-    outline: 1px dotted #000;
-    outline-offset: -4px;
-  }
-
-  .chat-submit-button {
-    padding: 4px 12px;
-    background: #d0d0d0;
-    border: 1px solid #808080;
-    color: #000;
-    font-family: "SF Mono", "Monaco", "Inconsolata", "Fira Mono", "Droid Sans Mono", "Source Code Pro", monospace;
-    font-size: 13px;
-    cursor: pointer;
-    box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff;
-  }
-
-  .chat-submit-button:hover:not(:disabled) {
-    background: #c0c0c0;
-  }
-
-  .chat-submit-button:active:not(:disabled) {
-    box-shadow: inset 1px 1px #0a0a0a,inset -1px -1px #fff;
-  }
-
-  .chat-submit-button:disabled {
-    background: #d0d0d0;
-    color: #808080;
-    cursor: not-allowed;
-  }
-
-  /* Picker Modal Styles */
-  .picker-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #c0c0c0;
-    border: 1px solid #808080;
-    box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff;
-    padding: 2px;
-    z-index: 1000;
-    max-width: 400px;
-    width: 90%;
-  }
-
-  .picker-header {
-    background: #000080;
-    color: #fff;
-    padding: 3px 6px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-    font-weight: bold;
-  }
-
-  .picker-close-button {
-    background: #c0c0c0;
-    border: 1px solid #808080;
-    box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff;
-    width: 16px;
-    height: 16px;
-    font-size: 14px;
-    line-height: 14px;
-    text-align: center;
-    color: #000;
-    cursor: pointer;
-  }
-
-  .picker-close-button:active {
-    box-shadow: inset 1px 1px #0a0a0a,inset -1px -1px #fff;
-  }
-
-  .picker-content {
-    background: #c0c0c0;
-    padding: 8px;
-  }
-
-  /* Search inputs in pickers */
-  .picker-search {
-    margin-bottom: 8px;
-  }
-
-  .picker-search-input {
-    width: 100%;
-    padding: 4px 8px;
-    border: 1px solid #808080;
-    box-shadow: inset 1px 1px #1a1a1a, inset -1px -1px #fff;
-    font-family: "SF Mono", "Monaco", "Inconsolata", "Fira Mono", "Droid Sans Mono", "Source Code Pro", monospace;
-    font-size: 13px;
-  }
-
-  .picker-search-input:focus {
-    outline: 1px dotted #000;
-    outline-offset: -4px;
-  }
-
-  /* Grid layouts in pickers */
-  .picker-grid {
-    display: grid;
-    gap: 4px;
-    padding: 4px;
-    background: #fff;
-    border: inset 2px;
-    max-height: 300px;
-    overflow-y: auto;
-  }
-
-  .picker-grid::-webkit-scrollbar {
-    width: 16px;
-  }
-
-  .picker-grid::-webkit-scrollbar-track {
-    background: #c0c0c0;
-    box-shadow: inset 1px 1px #1a1a1a, inset -1px -1px #fff;
-  }
-
-  .picker-grid::-webkit-scrollbar-thumb {
-    background: #c0c0c0;
-    border: 1px solid #808080;
-    box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff;
-  }
-
-  .picker-grid::-webkit-scrollbar-button {
-    background: #c0c0c0;
-    border: 1px solid #808080;
-    box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff;
-    height: 16px;
-  }
-
-  .picker-grid::-webkit-scrollbar-button:vertical:start {
-    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 4L4 8H12L8 4Z' fill='black'/%3E%3C/svg%3E");
-  }
-
-  .picker-grid::-webkit-scrollbar-button:vertical:end {
-    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 12L12 8H4L8 12Z' fill='black'/%3E%3C/svg%3E");
-  }
-
-  /* Picker item styles */
-  .picker-item {
-    padding: 4px 8px;
-    background: #c0c0c0;
-    border: 1px solid #808080;
-    box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff;
-    cursor: pointer;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .picker-item:hover {
-    background: #d0d0d0;
-  }
-
-  .picker-item:active {
-    box-shadow: inset 1px 1px #0a0a0a,inset -1px -1px #fff;
-  }
-
-  /* File input styles */
-  .file-input-container {
-    margin: 8px 0;
-  }
-
-  .file-input-label {
-    display: inline-block;
-    padding: 4px 8px;
-    background: #d0d0d0;
-    border: 1px solid #808080;
-    box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff;
-    cursor: pointer;
-    font-size: 13px;
-  }
-
-  .file-input-label:active {
-    box-shadow: inset 1px 1px #0a0a0a,inset -1px -1px #fff;
-  }
-
-  .file-name {
-    margin-left: 8px;
-    font-size: 13px;
-    color: #000;
   }

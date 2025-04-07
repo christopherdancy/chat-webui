@@ -65,43 +65,32 @@ const WebsitePreview = ({ config, setConfig }) => {
   };
   
   return (
-    <div className="website-preview-container" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-        <h2>Website Preview</h2>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+    <div className="website-preview-container">
+      <div className="preview-controls">
+        <span className="preview-label">Preview</span>
+        <div className="preview-actions">
+          <label className="preview-toggle">
+            <input 
+              type="checkbox" 
+              checked={showGuides} 
+              onChange={() => setShowGuides(!showGuides)}
+            />
+            <span>Show Section Guides</span>
+          </label>
           <button 
             onClick={handleReset}
-            style={{ 
-              padding: '5px 10px', 
-              background: 'transparent', 
-              color: '#666', 
-              border: '1px solid #ccc', 
-              borderRadius: '4px',
-              fontSize: '12px',
-              cursor: 'pointer'
-            }}
+            className="preview-reset-button"
             title="Reset to default template"
           >
             Reset
           </button>
-          <div className="guide-toggle">
-            <label className="switch" style={{ display: 'flex', alignItems: 'center' }}>
-              <input 
-                type="checkbox" 
-                checked={showGuides} 
-                onChange={() => setShowGuides(!showGuides)}
-              />
-              <span style={{ marginLeft: '8px' }}>Show Section Guides</span>
-            </label>
-          </div>
         </div>
       </div>
-      <div className="preview-content" style={{ overflow: 'auto', border: '1px solid #ddd', borderRadius: '4px', flexGrow: 1 }}>
+      <div className="preview-content">
         <iframe 
           ref={iframeRef}
           title="Website Preview"
           className="preview-iframe"
-          style={{ width: '100%', height: '100%', border: 'none' }}
         />
       </div>
     </div>
