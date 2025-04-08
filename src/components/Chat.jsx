@@ -80,8 +80,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
           else if (isSuccessMessage) {
             // Get available sections for this template
             const sections = getTemplateSections(websiteConfig);
-            console.log('sections', sections);
-            
+
             // Update the last message's buttons without changing the message text
             const updatedMessage = {
               ...lastMessage,
