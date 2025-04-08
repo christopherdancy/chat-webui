@@ -3,6 +3,7 @@ import Chat from './components/Chat';
 import WebsitePreview from './components/WebsitePreview';
 import DeployButton from './components/DeployButton';
 import Header from './components/Header';
+import MobileTabs from './components/MobileTabs';
 import { getTemplateRegistry, createNewTemplate, getTemplateRegistryById } from './templates/templateRegistry';
 import './styles.css';
 
@@ -38,29 +39,24 @@ const PreviewToolbar = ({ currentTemplate, onTemplateSelect, getCurrentTemplateI
 
 function App() {
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('chat');
   const [config, setConfig] = useState(() => {
     try {
       const savedConfig = localStorage.getItem('websiteConfig');
-      // If there's a saved config, use it
       if (savedConfig) {
         const parsedConfig = JSON.parse(savedConfig);
-        
-        // Ensure it has the correct structure
         if (!parsedConfig._structure && parsedConfig._templateId) {
           console.log('Adding missing structure to saved config');
           const template = getTemplateRegistryById(parsedConfig._templateId);
           if (template && template.template._structure) {
             parsedConfig._structure = JSON.parse(JSON.stringify(template.template._structure));
           } else {
-            // Use createNewTemplate to generate a fallback structure
             const newTemplate = createNewTemplate(parsedConfig._templateId);
             parsedConfig._structure = newTemplate._structure;
           }
         }
-        
         return parsedConfig;
       }
-      // Otherwise create a new template from the default
       return createNewTemplate('landing_business');
     } catch (err) {
       console.error('Error loading config:', err);
@@ -116,6 +112,10 @@ function App() {
     }
   };
   
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
+
   if (error) {
     return (
       <div style={{ padding: '20px', color: 'red' }}>
@@ -131,7 +131,8 @@ function App() {
       <Header />
       <div className="app-main">
         <main className="app-content">
-          <div className="left-panel">
+          <MobileTabs activeTab={activeTab} onTabChange={handleTabChange} />
+          <div className={`left-panel ${activeTab === 'chat' ? 'active' : ''}`}>
             <Chat 
               onPreviewUpdate={handlePreviewUpdate}
               websiteConfig={config}
@@ -139,7 +140,7 @@ function App() {
             />
           </div>
           
-          <div className="right-panel">
+          <div className={`right-panel ${activeTab === 'preview' ? 'active' : ''}`}>
             <PreviewToolbar 
               currentTemplate={config} 
               onTemplateSelect={handleTemplateSelect}

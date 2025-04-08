@@ -4,6 +4,7 @@ import { getTemplateRegistryById, getTemplateRegistry, createNewTemplate } from 
 const WebsitePreview = ({ config, setConfig }) => {
   const iframeRef = useRef(null);
   const [showGuides, setShowGuides] = useState(true);
+  const [viewportSize, setViewportSize] = useState('desktop'); // 'desktop' or 'mobile'
   
   // Get template renderer from registry based on template type or properties
   const getTemplateRenderer = (config) => {
@@ -41,15 +42,24 @@ const WebsitePreview = ({ config, setConfig }) => {
     // Save the generated HTML to localStorage
     localStorage.setItem('websiteHTML', html);
     
-    // Update the iframe content
+    // Update the iframe content and size
     const iframe = iframeRef.current;
     if (iframe) {
       const doc = iframe.contentDocument || iframe.contentWindow.document;
       doc.open();
       doc.write(html);
       doc.close();
+
+      // Apply viewport size
+      if (viewportSize === 'mobile') {
+        iframe.style.width = '375px'; // iPhone-like width
+        iframe.style.margin = '0 auto';
+      } else {
+        iframe.style.width = '100%';
+        iframe.style.margin = '0';
+      }
     }
-  }, [config, showGuides]);
+  }, [config, showGuides, viewportSize]);
   
   const handleReset = () => {
     if (window.confirm('Are you sure you want to reset to the default template? All your changes will be lost.')) {
@@ -69,6 +79,22 @@ const WebsitePreview = ({ config, setConfig }) => {
       <div className="preview-controls">
         <span className="preview-label">Preview</span>
         <div className="preview-actions">
+          <div className="viewport-controls">
+            <button 
+              className={`viewport-button ${viewportSize === 'desktop' ? 'active' : ''}`}
+              onClick={() => setViewportSize('desktop')}
+              title="Desktop view"
+            >
+              <i className="fas fa-desktop"></i>
+            </button>
+            <button 
+              className={`viewport-button ${viewportSize === 'mobile' ? 'active' : ''}`}
+              onClick={() => setViewportSize('mobile')}
+              title="Mobile view"
+            >
+              <i className="fas fa-mobile-alt"></i>
+            </button>
+          </div>
           <label className="preview-toggle">
             <input 
               type="checkbox" 
@@ -86,7 +112,7 @@ const WebsitePreview = ({ config, setConfig }) => {
           </button>
         </div>
       </div>
-      <div className="preview-content">
+      <div className={`preview-content ${viewportSize === 'mobile' ? 'mobile-view' : ''}`}>
         <iframe 
           ref={iframeRef}
           title="Website Preview"
