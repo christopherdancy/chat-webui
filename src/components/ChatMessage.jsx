@@ -13,11 +13,35 @@ const ChatMessage = ({ message, isUser, onOptionClick, isLatestMessage = false }
     minute: '2-digit'
   });
 
+  // Format message text to handle long URLs
+  const formatMessageText = (text) => {
+    // Check if this is a success message with a long URL
+    if (text.includes('✅') && text.includes('https://')) {
+      // Find the URL within quotes
+      const urlMatch = text.match(/"(https:\/\/[^"]+)"/);
+      if (urlMatch && urlMatch[1]) {
+        const url = urlMatch[1];
+        // Split the message around the URL
+        const parts = text.split(url);
+        return (
+          <>
+            {parts[0]}
+            <span className="truncated-url" title={url}>
+              {url.substring(0, 25)}...{url.substring(url.length - 15)}
+            </span>
+            {parts[1]}
+          </>
+        );
+      }
+    }
+    return text;
+  };
+
   return (
     <div className={`chat-message ${isUser ? 'user-message' : 'bot-message'}`}>
       {!isUser && <div className="bot-avatar">🤖</div>}
       <div className="message-content">
-        <p>{message.text}</p>
+        <p>{formatMessageText(message.text)}</p>
         {message.buttons && (
           <div className="message-buttons">
             {message.buttons.map((button, index) => (
