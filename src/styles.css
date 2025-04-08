@@ -234,6 +234,12 @@
     .right-panel {
       height: auto;
       min-height: 400px;
+      display: none;
+    }
+    
+    .left-panel.active,
+    .right-panel.active {
+      display: flex;
     }
   }
   
@@ -788,6 +794,65 @@
   .close-color-picker:active {
     box-shadow: inset 1px 1px #404040, inset -1px -1px #ffffff;
     padding: 3px 5px 1px 7px;
+  }
+  
+  /* Mobile Tabs */
+  .mobile-tabs {
+    display: none;
+    background: #c0c0c0;
+    border-bottom: 1px solid #808080;
+    padding: 4px;
+    box-shadow: inset 1px 1px #ffffff, inset -1px -1px #404040;
+  }
+  
+  .tab-button {
+    font-family: 'VT323', monospace;
+    font-size: 12px;
+    padding: 6px 12px;
+    background: #c0c0c0;
+    border: 1px solid #808080;
+    box-shadow: inset 1px 1px #ffffff, inset -1px -1px #404040;
+    cursor: pointer;
+    color: #000000;
+    margin-right: 8px;
+  }
+  
+  .tab-button:last-child {
+    margin-right: 0;
+  }
+  
+  .tab-button.active {
+    background: #c0c0c0;
+    box-shadow: inset 1px 1px #404040, inset -1px -1px #ffffff;
+  }
+  
+  .tab-button:hover:not(.active) {
+    background: #d0d0d0;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .mobile-tabs {
+      display: flex;
+      justify-content: center;
+    }
+    
+    .app-content {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+    }
+    
+    .left-panel,
+    .right-panel {
+      height: auto;
+      min-height: 400px;
+      display: none;
+    }
+    
+    .left-panel.active,
+    .right-panel.active {
+      display: flex;
+    }
   }
   
   /* Color Hint */
