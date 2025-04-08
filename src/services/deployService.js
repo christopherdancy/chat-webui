@@ -6,50 +6,41 @@ const API_URL = process.env.NODE_ENV === 'production'
   ? '/api' 
   : 'http://localhost:3001/api';
 
-// Generate a unique site ID that will persist across updates
-function generateSiteId() {
-  return `site-${Math.random().toString(36).substring(2, 9)}`;
-}
-
 // For the POC, we'll simulate deployment without actually deploying
 // In a real implementation, this would connect to Netlify, Vercel, or another hosting service API
-export async function deployWebsite(websiteConfig, userEmail) {
+export async function deployWebsite(websiteConfig) {
   try {
     // Get the appropriate template registry entry for this config
     const templateEntry = getTemplateRegistryByConfig(websiteConfig);
     
-    // Use existing site ID or generate a new one
-    const siteName = websiteConfig._siteId || generateSiteId();
-    console.log('siteName', siteName);
+    // TODO: title should be based on user input
+    // Determine website title based on template type
+    let siteTitle = 'Website';
+    if (templateEntry.id === 'landing_business') {
+      siteTitle = websiteConfig.header?.title || 'Basic Website';
+    } else if (templateEntry.id === 'portfolio_moonlight') {
+      siteTitle = websiteConfig.home?.title || 'Moonlight Website';
+    }
+    
+    // Sanitize the site name for the URL
+    const siteName = siteTitle.toLowerCase().replace(/[^a-z0-9]/g, '-');
     
     // Generate the deployable HTML using the identified template function
+    // Always pass false for showGuides to ensure guides are not included in deployed version
     const html = templateEntry.generateHTML(websiteConfig, false);
     
     // Call the backend API
     const response = await axios.post(`${API_URL}/deploy`, {
       html: html,
       siteName: siteName,
-      templateId: templateEntry.id,
-      userEmail: userEmail,
-      isUpdate: !!websiteConfig._siteId
+      templateId: templateEntry.id
     });
-    
-    // Ensure the siteId is saved in the config for future updates
-    if (!websiteConfig._siteId) {
-      websiteConfig._siteId = siteName;
-      // You might want to trigger a config update here to persist the siteId
-      if (typeof websiteConfig.onConfigUpdate === 'function') {
-        websiteConfig.onConfigUpdate(websiteConfig);
-      }
-    }
     
     return {
       success: true,
       url: response.data.url,
       deploymentId: response.data.id,
-      templateUsed: templateEntry.name,
-      siteId: siteName,
-      isUpdate: !!websiteConfig._siteId
+      templateUsed: templateEntry.name
     };
   } catch (error) {
     console.error('Deployment failed:', error.response?.data || error.message);

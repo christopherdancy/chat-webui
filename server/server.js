@@ -3,13 +3,9 @@ const cors = require('cors');
 const axios = require('axios');
 require('dotenv').config();
 const path = require('path');
-const sgMail = require('@sendgrid/mail');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-
-// Initialize SendGrid
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Middleware
 app.use(cors());
@@ -17,9 +13,9 @@ app.use(express.json({ limit: '5mb' })); // Increased limit for HTML content
 
 // Deployment endpoint
 app.post('/api/deploy', async (req, res) => {
-  const { html, siteName, templateId, userEmail } = req.body;
-
   try {
+    const { html, siteName } = req.body;
+    
     if (!html || !siteName) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
@@ -122,28 +118,6 @@ app.post('/api/deploy', async (req, res) => {
     const productionUrl = response.data.alias && response.data.alias.length > 0
       ? `https://${response.data.alias[0]}`
       : response.data.url;
-
-    // Send email notification in the background
-    if (process.env.SENDGRID_API_KEY && process.env.SENDGRID_FROM_EMAIL) {
-      try {
-        const msg = {
-          to: process.env.INTERNAL_TEAM_EMAIL,
-          from: process.env.SENDGRID_FROM_EMAIL,
-          subject: 'New Website Deployment',
-          html: `
-            <h2>New Website Deployment</h2>
-            <p><strong>User Email:</strong> ${userEmail}</p>
-            <p><strong>Website URL:</strong> <a href="${productionUrl}">${productionUrl}</a></p>
-            <p><strong>Template Used:</strong> ${templateId}</p>
-            <p><strong>Deployment Time:</strong> ${new Date().toLocaleString()}</p>
-          `
-        };
-        await sgMail.send(msg);
-      } catch (emailError) {
-        // Log email error but don't affect the deployment response
-        console.error('Failed to send deployment notification email:', emailError);
-      }
-    }
 
     res.json({
       id: response.data.id,
