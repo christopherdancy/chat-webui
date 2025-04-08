@@ -1446,7 +1446,7 @@
 
   .retro-modal {
     background: #1a1a1a;
-    border: 1px solid #333;
+    border: 1px solid #33ff33;
     box-shadow: 0 0 20px rgba(51, 255, 51, 0.2);
     width: 90%;
     max-width: 500px;
@@ -1487,8 +1487,9 @@
   .retro-modal-content {
     padding: 16px;
     background: #1a1a1a;
-    border: 1px solid #333;
-    margin: 8px;
+    color: #33ff33;
+    border: none;
+    margin: 0;
   }
 
   .retro-modal-footer {
@@ -1799,4 +1800,55 @@
   .preview-container {
     overflow: auto;
     background: #ffffff;
+  }
+
+  .retro-input {
+    width: 100%;
+    padding: 8px 10px;
+    font-family: 'VT323', monospace;
+    font-size: 14px;
+    background: #0a0a0a;
+    border: 1px solid #1f521f;
+    color: #33ff33;
+    text-shadow: 0 0 2px #33ff33;
+    box-shadow: inset 1px 1px #0a200a, inset -1px -1px #2a702a;
+    margin-top: 10px;
+  }
+
+  .retro-input:focus {
+    outline: none;
+    border-color: #33ff33;
+    box-shadow: inset 1px 1px #0a200a, inset -1px -1px #2a702a, 0 0 5px rgba(51, 255, 51, 0.3);
+  }
+
+  .retro-input::placeholder {
+    color: #1f521f;
+    text-shadow: none;
+  }
+
+  .email-form {
+    padding: 16px;
+    text-align: left;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    margin-bottom: 16px;
+  }
+
+  .email-form p {
+    margin-bottom: 10px;
+    color: #33ff33;
+    text-shadow: 0 0 2px #33ff33;
+    font-size: 14px;
+    font-family: 'VT323', monospace;
+  }
+
+  .error-details {
+    color: #ff3333;
+    margin-top: 10px;
+    font-size: 14px;
+    font-family: 'VT323', monospace;
+    text-shadow: 0 0 2px #ff3333;
+    padding: 8px;
+    background: #3f1414;
+    border: 1px solid #521f1f;
   }
