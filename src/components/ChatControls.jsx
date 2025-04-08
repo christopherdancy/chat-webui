@@ -44,7 +44,6 @@ const ChatControls = ({
     
     return currentNode?.name || '';
   };
-  console.log('currentToggleContext', currentToggleContext);
   
   return (
     <>

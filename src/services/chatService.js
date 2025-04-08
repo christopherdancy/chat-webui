@@ -36,7 +36,6 @@ export async function processMessage(message, currentConfig) {
         .map(part => part.charAt(0).toUpperCase() + part.slice(1))
         .join(' ');
 
-        console.log('updatedConfig', updatedConfig);
       
       return {
         message: `I've updated the ${formattedPath} to "${value}".`,
@@ -64,7 +63,6 @@ export async function processMessage(message, currentConfig) {
 function setValueByPath(obj, path, value) {
   if (!path) return false;
   
-  console.log(`Setting value by path: ${path} = ${value}`);
   
   const parts = path.split('.');
   const lastPart = parts[parts.length - 1];
