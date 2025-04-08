@@ -8,7 +8,7 @@ const API_URL = process.env.NODE_ENV === 'production'
 
 // For the POC, we'll simulate deployment without actually deploying
 // In a real implementation, this would connect to Netlify, Vercel, or another hosting service API
-export async function deployWebsite(websiteConfig) {
+export async function deployWebsite(websiteConfig, userEmail) {
   try {
     // Get the appropriate template registry entry for this config
     const templateEntry = getTemplateRegistryByConfig(websiteConfig);
@@ -33,7 +33,8 @@ export async function deployWebsite(websiteConfig) {
     const response = await axios.post(`${API_URL}/deploy`, {
       html: html,
       siteName: siteName,
-      templateId: templateEntry.id
+      templateId: templateEntry.id,
+      userEmail: userEmail
     });
     
     return {

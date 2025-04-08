@@ -1,5 +1,9 @@
 const axios = require('axios');
+const sgMail = require('@sendgrid/mail');
 require('dotenv').config();
+
+// Initialize SendGrid
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Serverless function for Vercel
 module.exports = async (req, res) => {
@@ -23,7 +27,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { html, siteName } = req.body;
+    const { html, siteName, templateId, userEmail } = req.body;
     
     if (!html || !siteName) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -121,6 +125,29 @@ module.exports = async (req, res) => {
     const productionUrl = response.data.alias && response.data.alias.length > 0
       ? `https://${response.data.alias[0]}`
       : response.data.url;
+
+    // Send email notification in the background
+    if (process.env.SENDGRID_API_KEY && process.env.SENDGRID_FROM_EMAIL) {
+      try {
+        const msg = {
+          to: process.env.INTERNAL_TEAM_EMAIL,
+          from: process.env.SENDGRID_FROM_EMAIL,
+          subject: 'New Website Deployment',
+          html: `
+            <h2>New Website Deployment</h2>
+            <p><strong>User Email:</strong> ${userEmail}</p>
+            <p><strong>Website URL:</strong> <a href="${productionUrl}">${productionUrl}</a></p>
+            <p><strong>Template Used:</strong> ${templateId}</p>
+            <p><strong>Deployment Time:</strong> ${new Date().toLocaleString()}</p>
+          `
+        };
+        await sgMail.send(msg);
+        console.log('Deployment notification email sent successfully');
+      } catch (emailError) {
+        // Log email error but don't affect the deployment response
+        console.error('Failed to send deployment notification email:', emailError);
+      }
+    }
 
     return res.json({
       id: response.data.id,

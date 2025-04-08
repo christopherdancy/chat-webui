@@ -7,15 +7,20 @@ function DeployButton({ websiteConfig }) {
   const [deployUrl, setDeployUrl] = useState('');
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [email, setEmail] = useState('');
   
   const handleDeploy = async () => {
+    if (!email || !email.includes('@')) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
     setIsDeploying(true);
     setDeployStatus('Deploying your website...');
     setError(null);
-    setShowModal(true);
     
     try {
-      const result = await deployWebsite(websiteConfig);
+      const result = await deployWebsite(websiteConfig, email);
       console.log('Deployment result:', result);
       
       setDeployStatus('Website deployed successfully!');
@@ -34,13 +39,14 @@ function DeployButton({ websiteConfig }) {
     setDeployStatus(null);
     setDeployUrl('');
     setError(null);
+    setEmail('');
   };
   
   return (
     <>
       <button 
         className="deploy-button-minimal"
-        onClick={handleDeploy}
+        onClick={() => setShowModal(true)}
         disabled={isDeploying}
       >
         {isDeploying ? 'Publishing...' : 'Publish'}
@@ -54,10 +60,26 @@ function DeployButton({ websiteConfig }) {
               <button className="retro-close-button" onClick={handleCloseModal}>×</button>
             </div>
             <div className="retro-modal-content">
-              <div className={`deploy-status ${error ? 'deploy-error' : ''}`}>
-                {deployStatus}
-                {error && <p className="error-details">{error}</p>}
-              </div>
+              {(!deployUrl && !deployStatus) && (
+                <div className="email-form">
+                  <p>Please enter your email to proceed with deployment:</p>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="retro-input"
+                  />
+                  {error && <p className="error-details">{error}</p>}
+                </div>
+              )}
+              
+              {(deployStatus) && (
+                <div className={`deploy-status ${error ? 'deploy-error' : ''}`}>
+                  {deployStatus}
+                  {error && <p className="error-details">{error}</p>}
+                </div>
+              )}
               
               {deployUrl && (
                 <div className="deploy-url">
@@ -78,6 +100,15 @@ function DeployButton({ websiteConfig }) {
               >
                 Close
               </button>
+              {!deployUrl && (
+                <button 
+                  className="retro-button"
+                  onClick={handleDeploy}
+                  disabled={isDeploying}
+                >
+                  {isDeploying ? 'Publishing...' : 'Publish'}
+                </button>
+              )}
               {deployUrl && (
                 <a 
                   href={deployUrl} 
