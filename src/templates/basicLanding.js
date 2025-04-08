@@ -1347,7 +1347,7 @@ export function generateHTML(config, showGuides = false) {
   `)}
 
   <!-- Footer -->
-  ${wrapWithGuide('Footer Section', `
+  ${wrapWithGuide('Footer', `
   <footer id="footer">
     <div class="container">
       <div class="row">

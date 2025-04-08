@@ -135,7 +135,6 @@ const moonlightTemplate = {
             },
             default: [
               { text: "Services", url: "#2", icon: "fa fa-cogs" },
-              { text: "About", url: "#3", icon: "fa fa-user" },
               { text: "Portfolio", url: "#5", icon: "fa fa-image" },
               { text: "Contact", url: "#6", icon: "fa fa-envelope" }
             ]
@@ -897,7 +896,6 @@ export function generateHTML(config, showGuides = false) {
     /* Home Section */
     .home-section {
       background-color: ${processedConfig.home.background.color};
-      background-image: linear-gradient(rgba(31, 38, 56, 0.95), rgba(31, 38, 56, 0.95)), url(img/bg-pattern.png);
       background-repeat: repeat;
       background-position: center center;
       height: 100vh;
@@ -1464,7 +1462,7 @@ export function generateHTML(config, showGuides = false) {
   `)}
 
   <!-- Home Section -->
-  ${wrapWithGuide('Home Section', `
+  ${wrapWithGuide('Home', `
   <section id="1" class="section home-section">
     <div class="container">
       <div class="row align-items-center">
@@ -1506,7 +1504,7 @@ export function generateHTML(config, showGuides = false) {
   `)}
 
   <!-- Services Section -->
-  ${wrapWithGuide('Services Section', `
+  ${wrapWithGuide('Services', `
   <section id="2" class="section services-section">
     <div class="container">
       <div class="row mb-5">
@@ -1573,7 +1571,7 @@ export function generateHTML(config, showGuides = false) {
   `)}
 
   <!-- Portfolio Section -->
-  ${wrapWithGuide('Portfolio Section', `
+  ${wrapWithGuide('Portfolio', `
   <section id="5" class="section portfolio-section">
     <div class="container">
       <div class="row mb-5">
@@ -1609,7 +1607,7 @@ export function generateHTML(config, showGuides = false) {
   `)}
 
   <!--  -->
-  ${wrapWithGuide('contact', `
+  ${wrapWithGuide('Contact', `
   <contact class="contact" id="6">
     <div class="container">
       <div class="row py-5">
