@@ -22,15 +22,15 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://insights.hotjar.com"
+          "value": "https://rs.fullstory.com"
         },
         {
           "key": "Access-Control-Allow-Methods",
-          "value": "GET, OPTIONS"
+          "value": "GET, POST, OPTIONS"
         },
         {
           "key": "Access-Control-Allow-Headers",
-          "value": "X-Requested-With"
+          "value": "X-Requested-With, Content-Type"
         }
       ]
     }
