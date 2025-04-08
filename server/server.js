@@ -139,7 +139,6 @@ app.post('/api/deploy', async (req, res) => {
           `
         };
         await sgMail.send(msg);
-        console.log('Deployment notification email sent successfully');
       } catch (emailError) {
         // Log email error but don't affect the deployment response
         console.error('Failed to send deployment notification email:', emailError);

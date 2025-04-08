@@ -45,6 +45,9 @@ function App() {
       const savedConfig = localStorage.getItem('websiteConfig');
       if (savedConfig) {
         const parsedConfig = JSON.parse(savedConfig);
+        // Preserve _siteId if it exists
+        const siteId = parsedConfig._siteId;
+        
         if (!parsedConfig._structure && parsedConfig._templateId) {
           console.log('Adding missing structure to saved config');
           const template = getTemplateRegistryById(parsedConfig._templateId);
@@ -54,6 +57,10 @@ function App() {
             const newTemplate = createNewTemplate(parsedConfig._templateId);
             parsedConfig._structure = newTemplate._structure;
           }
+        }
+        // Ensure siteId is preserved
+        if (siteId) {
+          parsedConfig._siteId = siteId;
         }
         return parsedConfig;
       }
@@ -82,6 +89,11 @@ function App() {
   }, []);
 
   const handlePreviewUpdate = (updatedConfig) => {
+    // Preserve the _siteId when updating config
+    if (config._siteId && !updatedConfig._siteId) {
+      updatedConfig._siteId = config._siteId;
+    }
+    
     // Make sure we don't lose the _structure field if it exists in the current config
     if (config._structure && !updatedConfig._structure) {
       console.log('Preserving _structure field in updated config');
@@ -106,6 +118,9 @@ function App() {
       
       // Double check template ID is set
       templateConfig._templateId = id;
+      
+      // Remove any existing siteId to force generation of a new one on next deploy
+      delete templateConfig._siteId;
       
       setConfig(templateConfig);
       localStorage.setItem('websiteConfig', JSON.stringify(templateConfig));
