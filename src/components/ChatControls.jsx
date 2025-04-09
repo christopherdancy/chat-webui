@@ -110,13 +110,13 @@ const ChatControls = ({
           </div>
           <div className="toggle-buttons">
             <button 
-              className={`toggle-button ${currentToggleContext?.currentValue ? 'active' : ''}`}
+              className={`toggle-button ${currentToggleContext?.currentValue === true ? 'active' : ''}`}
               onClick={() => onToggleSelect(true)}
             >
               Show
             </button>
             <button 
-              className={`toggle-button ${!currentToggleContext?.currentValue ? 'active' : ''}`}
+              className={`toggle-button ${currentToggleContext?.currentValue === false ? 'active' : ''}`}
               onClick={() => onToggleSelect(false)}
             >
               Hide

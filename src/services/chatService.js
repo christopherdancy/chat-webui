@@ -35,6 +35,7 @@ export async function processMessage(message, currentConfig) {
         .split(' ')
         .map(part => part.charAt(0).toUpperCase() + part.slice(1))
         .join(' ');
+
       
       return {
         message: `I've updated the ${formattedPath} to "${value}".`,
@@ -62,7 +63,6 @@ export async function processMessage(message, currentConfig) {
 function setValueByPath(obj, path, value) {
   if (!path) return false;
   
-  console.log(`Setting value by path: ${path} = ${value}`);
   
   const parts = path.split('.');
   const lastPart = parts[parts.length - 1];
@@ -139,7 +139,12 @@ function setValueByPath(obj, path, value) {
           return true;
         }
         
-        // Otherwise, move to the next part
+        // If the array item doesn't exist or isn't an object, initialize it
+        if (!current[arrayName][index] || typeof current[arrayName][index] !== 'object') {
+          current[arrayName][index] = {};
+        }
+        
+        // Move to the next part
         current = current[arrayName][index];
         continue;
       }

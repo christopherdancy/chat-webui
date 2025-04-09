@@ -474,11 +474,19 @@ const moonlightTemplate = {
                   pathTemplate: 'portfolio.items[INDEX].thumbnail'
                 },
                 {
-                  id: 'fullImage',
-                  name: 'Full Image',
-                  type: 'image',
+                  id: 'visible',
+                  name: 'Show/Hide',
+                  type: 'boolean',
                   editable: true,
-                  pathTemplate: 'portfolio.items[INDEX].fullImage'
+                  pathTemplate: 'portfolio.items[INDEX].visible',
+                  default: true
+                },
+                {
+                  id: 'url',
+                  name: 'URL',
+                  type: 'url',
+                  editable: true,
+                  pathTemplate: 'portfolio.items[INDEX].url'
                 }
               ]
             },
@@ -487,37 +495,43 @@ const moonlightTemplate = {
                 title: "Brand Identity",
                 description: "Complete brand identity redesign for a tech startup in the fintech space.",
                 thumbnail: "https://images.unsplash.com/photo-1542744094-3a31f272c490?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-                fullImage: "https://images.unsplash.com/photo-1542744094-3a31f272c490?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+                visible: true,
+                url: "https://www.google.com"
               },
               {
                 title: "Mobile App",
                 description: "User experience and interface design for a health and wellness mobile application.",
                 thumbnail: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-                fullImage: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+                visible: true,
+                url: "https://www.google.com"
               },
               {
                 title: "Web Design",
                 description: "Modern e-commerce website with an intuitive shopping experience and streamlined checkout.",
                 thumbnail: "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-                fullImage: "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+                visible: true,
+                url: "https://www.google.com"
               },
               {
                 title: "Marketing Campaign",
                 description: "Integrated digital marketing campaign that increased client conversion rates by 40%.",
                 thumbnail: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-                fullImage: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+                visible: true,
+                url: "https://www.google.com"
               },
               {
                 title: "Product Design",
                 description: "Physical product design and packaging for a premium cosmetics brand.",
                 thumbnail: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-                fullImage: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+                visible: true,
+                url: "https://www.google.com"
               },
               {
                 title: "Social Media",
                 description: "Creative content strategy and visual identity for a fashion brand's social media presence.",
                 thumbnail: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-                fullImage: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+                visible: true,
+                url: "https://www.google.com"
               }
             ]
           }
@@ -552,6 +566,14 @@ const moonlightTemplate = {
             default: "info@yourcompany.com"
           },
           {
+            id: 'accentColor',
+            name: 'Accent Color',
+            type: 'color',
+            editable: true,
+            path: 'contact.accentColor',
+            default: '#f5a425',
+          },
+          {
             id: 'social',
             name: 'Socials',
             children: [
@@ -569,7 +591,7 @@ const moonlightTemplate = {
                   },
                   {
                     id: 'visible',
-                    name: 'Visible',
+                    name: 'Show/Hide',
                     type: 'boolean',
                     editable: true,
                     path: 'contact.social.facebook.visible',
@@ -591,7 +613,7 @@ const moonlightTemplate = {
                   },
                   {
                     id: 'visible',
-                    name: 'Visible',
+                    name: 'Show/Hide',
                     type: 'boolean',
                     editable: true,
                     path: 'contact.social.twitter.visible',
@@ -613,7 +635,7 @@ const moonlightTemplate = {
                   },
                   {
                     id: 'visible',
-                    name: 'Visible',
+                    name: 'Show/Hide',
                     type: 'boolean',
                     editable: true,
                     path: 'contact.social.instagram.visible',
@@ -635,7 +657,7 @@ const moonlightTemplate = {
                   },
                   {
                     id: 'visible',
-                    name: 'Visible',
+                    name: 'Show/Hide',
                     type: 'boolean',
                     editable: true,
                     path: 'contact.social.linkedin.visible',
@@ -982,56 +1004,6 @@ export function generateHTML(config, showGuides = false) {
       box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
     }
     
-    /* About Section Styles */
-    .about-section {
-      background-color: ${processedConfig.about && processedConfig.about.background && processedConfig.about.background.color ? 
-        processedConfig.about.background.color : "#ffffff"};
-      color: ${processedConfig.about && processedConfig.about.textColor ? 
-        processedConfig.about.textColor : "#5a6a7c"};
-    }
-    
-    .about-section .about-content {
-      padding-right: 30px;
-    }
-    
-    .about-section p {
-      color: inherit;
-      line-height: 1.8;
-      margin-bottom: 20px;
-      font-size: 16px;
-      opacity: 0.9;
-    }
-    
-    .about-section .about-content a {
-      color: ${processedConfig.global.primaryColor};
-      text-decoration: none;
-    }
-    
-    .about-section .main-btn a {
-      display: inline-block;
-      padding: 12px 25px;
-      background-color: ${processedConfig.global.primaryColor};
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      border-radius: 3px;
-      transition: all 0.3s;
-      font-size: 14px;
-      text-transform: uppercase;
-      margin-top: 20px;
-    }
-    
-    .about-section .main-btn a:hover {
-      transform: translateY(-3px);
-      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .about-section .about-image img {
-      width: 100%;
-      border-radius: 5px;
-      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-    }
-    
     /* Services Section Styles */
     .services-section {
       background-color: ${processedConfig.services && processedConfig.services.background && processedConfig.services.background.color ? 
@@ -1069,18 +1041,27 @@ export function generateHTML(config, showGuides = false) {
     
     .portfolio-section .item {
       margin-bottom: 30px;
+      height: 100%; /* Ensure consistent height */
     }
     
     .portfolio-section .thumb {
       position: relative;
       overflow: hidden;
       border-radius: 5px;
+      /* Add consistent aspect ratio container */
+      padding-top: 75%; /* This creates a 4:3 aspect ratio */
+      width: 100%;
     }
     
     .portfolio-section .thumb img {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
+      height: 100%;
       border-radius: 5px;
       transition: all 0.3s;
+      object-fit: cover; /* This ensures images cover the area without distortion */
     }
     
     .portfolio-section .hover-effect {
@@ -1098,21 +1079,45 @@ export function generateHTML(config, showGuides = false) {
       align-items: center;
       justify-content: center;
       text-align: center;
+      z-index: 2;
     }
     
     .portfolio-section .hover-content {
       padding: 20px;
+      z-index: 3;
+      width: 100%; /* Ensure it takes full width */
+      max-width: 90%; /* Give some margin on sides */
     }
     
     .portfolio-section .hover-content h2 {
-      font-size: 22px;
+      font-size: 18px; /* Reduced from 22px */
       color: #fff;
       margin-bottom: 10px;
+      transform: translateY(20px);
+      transition: transform 0.3s;
+      line-height: 1.3;
+      overflow-wrap: break-word; /* Handle long titles */
     }
     
     .portfolio-section .hover-content p {
       color: #fff;
       opacity: 0.8;
+      transform: translateY(20px);
+      transition: transform 0.3s;
+      font-size: 14px; /* Add specific size */
+      line-height: 1.4;
+      margin: 0;
+      overflow-wrap: break-word; /* Handle long descriptions */
+      display: -webkit-box;
+      -webkit-line-clamp: 4; /* Limit to 4 lines */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .portfolio-section .thumb:hover .hover-content h2,
+    .portfolio-section .thumb:hover .hover-content p {
+      transform: translateY(0);
     }
     
     .portfolio-section .thumb:hover .hover-effect {
@@ -1142,7 +1147,7 @@ export function generateHTML(config, showGuides = false) {
     .contact-section .title-underline {
       width: 80px;
       height: 4px;
-      background-color: ${processedConfig.global.primaryColor};
+      background-color: ${processedConfig.contact.accentColor};
       margin: 0 auto 20px;
       border-radius: 2px;
     }
@@ -1183,7 +1188,7 @@ export function generateHTML(config, showGuides = false) {
       width: 50px;
       height: 50px;
       border-radius: 50%;
-      background-color: ${processedConfig.global.primaryColor}10;
+      background-color: ${processedConfig.contact.accentColor}10;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1191,7 +1196,7 @@ export function generateHTML(config, showGuides = false) {
     }
 
     .icon-wrapper i {
-      color: ${processedConfig.global.primaryColor};
+      color: ${processedConfig.contact.accentColor};
       font-size: 20px;
     }
 
@@ -1211,7 +1216,7 @@ export function generateHTML(config, showGuides = false) {
     }
 
     .contact-link:hover {
-      color: ${processedConfig.global.primaryColor};
+      color: ${processedConfig.contact.accentColor};
     }
 
     .social-links {
@@ -1238,9 +1243,9 @@ export function generateHTML(config, showGuides = false) {
     }
 
     .social-icon:hover {
-      background: ${processedConfig.global.primaryColor};
+      background: ${processedConfig.contact.accentColor};
       color: #fff;
-      border-color: ${processedConfig.global.primaryColor};
+      border-color: ${processedConfig.contact.accentColor};
       transform: translateY(-3px);
     }
 
@@ -1310,7 +1315,7 @@ export function generateHTML(config, showGuides = false) {
       bottom: 0;
       width: 40px;
       height: 2px;
-      background-color: ${processedConfig.global.primaryColor};
+      background-color: ${processedConfig.contact.accentColor};
     }
 
     .contact-social {
@@ -1326,7 +1331,7 @@ export function generateHTML(config, showGuides = false) {
     }
 
     .contact-social a:hover {
-      color: ${processedConfig.global.primaryColor};
+      color: ${processedConfig.contact.accentColor};
       transform: translateY(-3px);
     }
 
@@ -1348,7 +1353,7 @@ export function generateHTML(config, showGuides = false) {
     }
 
     .contact-links a:hover {
-      color: ${processedConfig.global.primaryColor};
+      color: ${processedConfig.contact.accentColor};
       padding-left: 5px;
     }
 
@@ -1365,11 +1370,11 @@ export function generateHTML(config, showGuides = false) {
     }
 
     .contact-contact a:hover {
-      color: ${processedConfig.global.primaryColor};
+      color: ${processedConfig.contact.accentColor};
     }
 
     .contact-contact i {
-      color: ${processedConfig.global.primaryColor};
+      color: ${processedConfig.contact.accentColor};
       width: 20px;
       text-align: center;
     }
@@ -1387,7 +1392,7 @@ export function generateHTML(config, showGuides = false) {
     }
 
     .contact-bottom a {
-      color: ${processedConfig.global.primaryColor};
+      color: ${processedConfig.contact.accentColor};
       text-decoration: none;
     }
 
@@ -1581,25 +1586,27 @@ export function generateHTML(config, showGuides = false) {
       </div>
       <div class="row">
         ${safeMapItems(portfolioItems, (item, index) => `
-          <div class="col-md-4 col-sm-6">
-            ${wrapElementWithGuide(`Portfolio Item ${index + 1}`, `
-              <div class="item">
-                <div class="thumb">
-                  <a href="${item.fullImage}" data-lightbox="image-1">
-                    <div class="hover-effect">
-                      <div class="hover-content">
-                        <h2>${item.title}</h2>
-                        <p>${item.description}</p>
+          ${item.visible === true || item.visible === "true" ? `
+            <div class="col-md-4 col-sm-6">
+              ${wrapElementWithGuide(`Portfolio Item ${index + 1}`, `
+                <div class="item">
+                  <div class="thumb">
+                    <a href="${item.url}" target="_blank" rel="noopener noreferrer">
+                      <div class="hover-effect">
+                        <div class="hover-content">
+                          <h2>${item.title}</h2>
+                          <p>${item.description}</p>
+                        </div>
                       </div>
-                    </div>
-                  </a>
-                  <div class="image">
-                    <img src="${item.thumbnail}" alt="${item.title}">
+                      <div class="image">
+                        <img src="${item.thumbnail}" alt="${item.title}">
+                      </div>
+                    </a>
                   </div>
                 </div>
-              </div>
-            `)}
-          </div>
+              `)}
+            </div>
+          ` : ''}
         `)}
       </div>
     </div>

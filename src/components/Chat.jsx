@@ -80,8 +80,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
           else if (isSuccessMessage) {
             // Get available sections for this template
             const sections = getTemplateSections(websiteConfig);
-            console.log('sections', sections);
-            
+
             // Update the last message's buttons without changing the message text
             const updatedMessage = {
               ...lastMessage,
@@ -224,11 +223,28 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
             break;
           case 'boolean':
             // Show toggle UI
-            const currentValue = getCurrentValue(websiteConfig, selectedNode.path) || false;
+            let index = 0;
+            // Extract index from currentPath (e.g., "portfolio.items[2]")
+            const matches = currentPath.match(/\[(\d+)\]/);
+            if (matches) {
+              index = parseInt(matches[1]);
+            }
+            
+            const path = selectedNode.pathTemplate ? 
+              selectedNode.pathTemplate.replace('[INDEX]', `[${index}]`) : 
+              selectedNode.path;
+            
+            // Get the raw value
+            const rawValue = getCurrentValue(websiteConfig, path);
+            // Convert to proper boolean (handle both boolean and string values)
+            const booleanValue = rawValue === true || 
+                                (typeof rawValue === 'string' && rawValue.toLowerCase() === 'true');
+            
+            console.log('currentValue', booleanValue);
             setShowToggle(true);
             setCurrentToggleContext({
-              path: selectedNode.path,
-              currentValue: currentValue
+              path: path,
+              currentValue: booleanValue // Use properly converted boolean value
             });
             break;
           default:
