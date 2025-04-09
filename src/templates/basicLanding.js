@@ -553,7 +553,7 @@ const basicTemplate = {
           },
           {
             id: 'social',
-            name: 'Social Links',
+            name: 'Socials',
             children: [
               {
                 id: 'facebook',
@@ -1357,7 +1357,7 @@ export function generateHTML(config, showGuides = false) {
             <p>${processedConfig.footer.description?.text}</p>
           `)}
           <div class="social-links">
-            ${wrapElementWithGuide('Social Links', `
+            ${wrapElementWithGuide('Socials', `
               ${processedConfig.footer.social?.facebook.visible === true || 
                  processedConfig.footer.social?.facebook.visible === "true" ? 
                 `<a href="${processedConfig.footer.social?.facebook.url}" target="_blank" rel="noopener noreferrer">
