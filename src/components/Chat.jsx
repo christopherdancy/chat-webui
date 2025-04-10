@@ -52,7 +52,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
           
           // Reset messages for new template
           setMessages([{
-            text: "Hi, I'm your website editor assistant. Below you can find what you can modify.",
+            text: "Hi, I'm your website editor assistant. Modify your website by clicking the buttons below.",
             buttons: sections,
             commandId: commandId + 1
           }]);
@@ -71,7 +71,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
             
             // Update initial message buttons with available sections
             setMessages([{
-              text: "Hi, I'm your website editor assistant. Below you can find what you can modify.",
+              text: "Hi, I'm your website editor assistant. Modify your website by clicking the buttons below.",
               buttons: sections,
               commandId: 0
             }]);
@@ -148,7 +148,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
     const sections = getTemplateSections(websiteConfig);
       // Otherwise just show the standard greeting
       setMessages([{
-        text: "Hi, I'm your website editor assistant. Below you can find what you can modify.",
+        text: "Hi, I'm your website editor assistant. Modify your website by clicking the buttons below.",
         buttons: sections,
         commandId: commandId + 1
       }]);

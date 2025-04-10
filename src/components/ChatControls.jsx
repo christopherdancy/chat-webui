@@ -27,30 +27,13 @@ const ChatControls = ({
   onCloseImageUploader,
   onCloseToggle
 }) => {
-  // Helper to get display name 
-  const getNodeDisplayName = () => {
-    if (currentIconContext?.path) {
-      return currentIconContext.path.split('.').pop();
-    }
-    if (currentColorContext?.path) {
-      return currentColorContext.path.split('.').pop();
-    }
-    if (currentImageContext?.path) {
-      return currentImageContext.path.split('.').pop();
-    }
-    if (currentToggleContext?.path) {
-      return currentToggleContext.path.split('.').pop();
-    }
-    
-    return currentNode?.name || '';
-  };
   
   return (
     <>
       {showIconPicker && (
         <div className="icon-picker-container">
           <div className="icon-picker-header">
-            <h4>Select an icon for {getNodeDisplayName()}</h4>
+            <h4>Select an icon</h4>
             <button 
               className="close-icon-picker"
               onClick={onCloseIconPicker}
@@ -65,7 +48,7 @@ const ChatControls = ({
       {showImageUploader && (
         <div className="image-uploader-container">
           <div className="image-uploader-header">
-            <h4>Upload Image for {getNodeDisplayName()}</h4>
+            <h4>Upload Image</h4>
             <button 
               className="close-image-uploader"
               onClick={onCloseImageUploader}
@@ -84,7 +67,7 @@ const ChatControls = ({
         <div className="color-picker-container">
           <div className="color-picker-header">
             <h4>
-              Select a color for {getNodeDisplayName()}
+              Select a color
             </h4>
             <button 
               className="close-color-picker"
@@ -100,7 +83,7 @@ const ChatControls = ({
       {showToggle && (
         <div className="toggle-container">
           <div className="toggle-header">
-            <h4>Toggle {getNodeDisplayName()}</h4>
+            <h4>Toggle</h4>
             <button 
               className="close-toggle"
               onClick={onCloseToggle}

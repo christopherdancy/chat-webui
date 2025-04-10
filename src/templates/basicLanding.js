@@ -419,6 +419,13 @@ const basicTemplate = {
             ]
           },
           {
+            id: 'textColor',
+            name: 'Text Color',
+            type: 'color',
+            editable: true,
+            path: 'features.textColor',
+          },
+          {
             id: 'items',
             name: 'Items',
             type: 'array',
@@ -461,7 +468,7 @@ const basicTemplate = {
       },
       {
         id: 'cta',
-        name: 'Call to Action',
+        name: 'CTA',
         children: [
           { 
             id: 'title', 
@@ -569,7 +576,7 @@ const basicTemplate = {
                   },
                   {
                     id: 'visible',
-                    name: 'Visible',
+                    name: 'Show/Hide',
                     type: 'boolean',
                     editable: true,
                     path: 'footer.social.facebook.visible',
@@ -591,7 +598,7 @@ const basicTemplate = {
                   },
                   {
                     id: 'visible',
-                    name: 'Visible',
+                    name: 'Show/Hide',
                     type: 'boolean',
                     editable: true,
                     path: 'footer.social.twitter.visible',
@@ -613,7 +620,7 @@ const basicTemplate = {
                   },
                   {
                     id: 'visible',
-                    name: 'Visible',
+                    name: 'Show/Hide',
                     type: 'boolean',
                     editable: true,
                     path: 'footer.social.instagram.visible',
@@ -635,7 +642,7 @@ const basicTemplate = {
                   },
                   {
                     id: 'visible',
-                    name: 'Visible',
+                    name: 'Show/Hide',
                     type: 'boolean',
                     editable: true,
                     path: 'footer.social.linkedin.visible',
@@ -856,7 +863,7 @@ export function generateHTML(config, showGuides = false) {
     }
     
     .navbar-nav .nav-link {
-      color: ${processedConfig.header.textColor};
+      color: ${processedConfig.header.textColor} !important;
       opacity: 0.8;
       transition: opacity 0.3s;
     }
@@ -1273,10 +1280,10 @@ export function generateHTML(config, showGuides = false) {
                   </div>
                 `)}
                 ${wrapElementWithGuide(`Title`, `
-                  <h4>${item.title}</h4>
+                  <h4 style="color: ${processedConfig.benefits.textColor};">${item.title}</h4>
                 `)}
                 ${wrapElementWithGuide(`Description`, `
-                  <p>${item.description}</p>
+                  <p style="color: ${processedConfig.benefits.textColor};">${item.description}</p>
                 `)}
               </div>
             `)}
@@ -1328,7 +1335,7 @@ export function generateHTML(config, showGuides = false) {
   `)}
 
   <!-- Call to Action -->
-  ${wrapWithGuide('cta', `
+  ${wrapWithGuide('CTA', `
   <section class="cta">
     <div class="container">
       <div class="section-title">
@@ -1382,7 +1389,6 @@ export function generateHTML(config, showGuides = false) {
           </div>
         </div>
         <div class="col-lg-4 mb-4 mb-lg-0">
-          <h5>Quick Links</h5>
           <ul class="footer-links">
             ${safeMapItems(footerLinks, (link, index) => `
                 <li><a href="${link.url}">${link.text}</a></li>

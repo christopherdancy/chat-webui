@@ -671,7 +671,7 @@ const moonlightTemplate = {
             id: 'copyright',
             name: 'Copyright Text',
             type: 'text',
-            editable: true,
+            editable: false,
             path: 'contact.copyright',
             default: "VibeSite"
           },
@@ -843,7 +843,7 @@ export function generateHTML(config, showGuides = false) {
     }
     
     .navbar-toggler {
-      color: ${processedConfig.header.textColor};
+      color: ${processedConfig.header.textColor} ;
       border-color: rgba(255,255,255,0.1);
     }
     
@@ -860,7 +860,7 @@ export function generateHTML(config, showGuides = false) {
     }
     
     .navbar-nav .nav-link {
-      color: ${processedConfig.header.textColor};
+      color: ${processedConfig.header.textColor} !important;
       padding: 28px 15px;
       text-decoration: none;
       transition: all 0.3s;
@@ -870,7 +870,6 @@ export function generateHTML(config, showGuides = false) {
     .navbar-nav .nav-link:hover,
     .navbar-nav .nav-link.active {
       background-color: rgba(250, 250, 250, 0.1);
-      border-bottom: 3px solid ${processedConfig.global.primaryColor};
     }
     
     .navbar-nav .nav-link i {
@@ -891,7 +890,7 @@ export function generateHTML(config, showGuides = false) {
       }
       
       .navbar-collapse {
-        background-color: rgba(22, 34, 57, 0.98);
+        background-color: ${processedConfig.header.background.color} !important;
         position: absolute;
         top: 100%;
         left: 0;
@@ -1439,7 +1438,7 @@ export function generateHTML(config, showGuides = false) {
 </head>
 <body>
   <!-- Header -->
-  ${wrapWithGuide('header', `
+  ${wrapWithGuide('Header', `
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
       ${wrapElementWithGuide('Logo', `
@@ -1456,7 +1455,7 @@ export function generateHTML(config, showGuides = false) {
           ${safeMapItems(headerItems, (item, index) => `
             <li class="nav-item">
               <a href="${item.url}" class="nav-link ${index === 0 ? 'active' : ''}">
-                <i class="${item.icon}"></i> <em>${item.text}</em>
+                <em>${item.text}</em>
               </a>
             </li>
           `)}
