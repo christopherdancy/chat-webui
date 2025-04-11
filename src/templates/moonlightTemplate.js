@@ -58,41 +58,29 @@ const moonlightTemplate = {
         name: 'Header',
         children: [
           {
-            id: 'logo',
-            name: 'Logo',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'header.logo.text',
-                default: 'Moonlight'
-              },
-              {
-                id: 'image',
-                name: 'Image',
-                type: 'image',
-                editable: true,
-                path: 'header.logo.image',
-                default: 'https://images.unsplash.com/photo-1581276879432-15e50529f34b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80'
-              }
-            ]
+            id: 'logoText',
+            name: 'Logo Text',
+            type: 'text',
+            editable: true,
+            path: 'header.logo.text',
+            default: 'Moonlight'
+          },
+          {
+            id: 'logoImage',
+            name: 'Logo Image',
+            type: 'image',
+            editable: true,
+            path: 'header.logo.image',
+            default: 'https://images.unsplash.com/photo-1581276879432-15e50529f34b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80'
           },
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'header.background.color',
-                default: '#1f2638',
-                note: 'Uses global.secondaryColor by default'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'header.background.color',
+            default: '#1f2638',
+            note: 'Uses global.secondaryColor by default'
           },
           {
             id: 'textColor',
@@ -114,21 +102,21 @@ const moonlightTemplate = {
                   id: 'text',
                   name: 'Text',
                   type: 'text',
-                  editable: true,
+                  editable: false,
                   pathTemplate: 'header.items[INDEX].text'
                 },
                 {
                   id: 'url',
                   name: 'URL',
                   type: 'url',
-                  editable: true,
+                  editable: false,
                   pathTemplate: 'header.items[INDEX].url'
                 },
                 {
                   id: 'icon',
                   name: 'Icon',
                   type: 'icon',
-                  editable: true,
+                  editable: false,
                   pathTemplate: 'header.items[INDEX].icon'
                 }
               ]
@@ -189,17 +177,11 @@ const moonlightTemplate = {
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'home.background.color',
-                default: '#1f2638',
-                note: 'Uses global.secondaryColor by default'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'home.background.color',
+            default: '#1f2638',
+            note: 'Uses global.secondaryColor by default'
           },
           {
             id: 'textColor',
@@ -245,6 +227,14 @@ const moonlightTemplate = {
                 editable: true,
                 path: 'home.mainButton.url',
                 default: "#2"
+              },
+              {
+                id: 'visible',
+                name: 'Show/Hide',
+                type: 'boolean',
+                editable: true,
+                path: 'home.mainButton.visible',
+                default: true
               }
             ]
           },  
@@ -284,6 +274,14 @@ const moonlightTemplate = {
                 editable: true,
                 path: 'home.secondaryButton.url',
                 default: "#6"
+              },
+              {
+                id: 'visible',
+                name: 'Show/Hide',
+                type: 'boolean',
+                editable: true,
+                path: 'home.secondaryButton.visible',
+                default: true
               }
             ]
           }
@@ -296,17 +294,11 @@ const moonlightTemplate = {
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'services.background.color',
-                default: '#f5f5f5',
-                note: 'Uses global.secondaryColor by default'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'services.background.color',
+            default: '#f5f5f5',
+            note: 'Uses global.secondaryColor by default'
           },
           {
             id: 'textColor',
@@ -347,15 +339,9 @@ const moonlightTemplate = {
               {
                 id: 'background',
                 name: 'Background',
-                children: [
-                  {
-                    id: 'color',
-                    name: 'Color',
-                    type: 'color',
-                    editable: true,
-                    path: 'services.firstService.background.color',
-                  }
-                ]
+                type: 'color',
+                editable: true,
+                path: 'services.firstService.background.color',
               },
               {
                 id: 'textColor',
@@ -397,15 +383,9 @@ const moonlightTemplate = {
               {
                 id: 'background',
                 name: 'Background',
-                children: [
-                  {
-                    id: 'color',
-                    name: 'Color',
-                    type: 'color',
-                    editable: true,
-                    path: 'services.secondService.background.color',
-                  }
-                ]
+                type: 'color',
+                editable: true,
+                path: 'services.secondService.background.color',
               },
               {
                 id: 'textColor',
@@ -425,16 +405,10 @@ const moonlightTemplate = {
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'portfolio.background.color',
-                default: "#ffffff"
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'portfolio.background.color',
+            default: "#ffffff"
           },
           {
             id: 'textColor',
@@ -671,7 +645,7 @@ const moonlightTemplate = {
             id: 'copyright',
             name: 'Copyright Text',
             type: 'text',
-            editable: true,
+            editable: false,
             path: 'contact.copyright',
             default: "VibeSite"
           },
@@ -813,7 +787,7 @@ export function generateHTML(config, showGuides = false) {
       left: 0;
       width: 100%;
       z-index: 999;
-      background-color: ${processedConfig.header.background ? processedConfig.header.background.color : processedConfig.global.secondaryColor};
+      background-color: ${processedConfig.header.background ? processedConfig.header.background : processedConfig.global.secondaryColor};
       box-shadow: 0px 5px 15px rgba(0,0,0,0.5);
       transition: all 0.3s ease;
       height: 80px; /* Fixed height for header */
@@ -843,7 +817,7 @@ export function generateHTML(config, showGuides = false) {
     }
     
     .navbar-toggler {
-      color: ${processedConfig.header.textColor};
+      color: ${processedConfig.header.textColor} ;
       border-color: rgba(255,255,255,0.1);
     }
     
@@ -860,7 +834,7 @@ export function generateHTML(config, showGuides = false) {
     }
     
     .navbar-nav .nav-link {
-      color: ${processedConfig.header.textColor};
+      color: ${processedConfig.header.textColor} !important;
       padding: 28px 15px;
       text-decoration: none;
       transition: all 0.3s;
@@ -870,7 +844,6 @@ export function generateHTML(config, showGuides = false) {
     .navbar-nav .nav-link:hover,
     .navbar-nav .nav-link.active {
       background-color: rgba(250, 250, 250, 0.1);
-      border-bottom: 3px solid ${processedConfig.global.primaryColor};
     }
     
     .navbar-nav .nav-link i {
@@ -891,7 +864,7 @@ export function generateHTML(config, showGuides = false) {
       }
       
       .navbar-collapse {
-        background-color: rgba(22, 34, 57, 0.98);
+        background-color: ${processedConfig.header.background} !important;
         position: absolute;
         top: 100%;
         left: 0;
@@ -917,7 +890,7 @@ export function generateHTML(config, showGuides = false) {
     
     /* Home Section */
     .home-section {
-      background-color: ${processedConfig.home.background.color};
+      background-color: ${processedConfig.home.background ? processedConfig.home.background : processedConfig.global.secondaryColor};
       background-repeat: repeat;
       background-position: center center;
       height: 100vh;
@@ -1006,8 +979,8 @@ export function generateHTML(config, showGuides = false) {
     
     /* Services Section Styles */
     .services-section {
-      background-color: ${processedConfig.services && processedConfig.services.background && processedConfig.services.background.color ? 
-        processedConfig.services.background.color : "#f5f5f5"};
+      background-color: ${processedConfig.services && processedConfig.services.background ?
+        processedConfig.services.background : "#f5f5f5"};
       color: ${processedConfig.services.textColor || processedConfig.global.textColor};
     }
 
@@ -1025,16 +998,29 @@ export function generateHTML(config, showGuides = false) {
       color: ${processedConfig.services.textColor};
     }
 
-    .services-section .service-image img {
-      width: 100%;
+    .services-section .service-image {
+      position: relative;
+      overflow: hidden;
       border-radius: 5px;
+      padding-top: 75%; /* This creates a 4:3 aspect ratio */
+      width: 100%;
+    }
+
+    .services-section .service-image img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
+      object-fit: cover; /* This ensures images cover the area without distortion */
       box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
     }
     
     /* Portfolio Section Styles */
     .portfolio-section {
-      background-color: ${processedConfig.portfolio && processedConfig.portfolio.background && processedConfig.portfolio.background.color ? 
-        processedConfig.portfolio.background.color : "#ffffff"};
+      background-color: ${processedConfig.portfolio && processedConfig.portfolio.background ? 
+        processedConfig.portfolio.background : "#ffffff"};
       color: ${processedConfig.portfolio && processedConfig.portfolio.textColor ? 
         processedConfig.portfolio.textColor : processedConfig.global.textColor};
     }
@@ -1131,8 +1117,8 @@ export function generateHTML(config, showGuides = false) {
     
     /* Contact Section Styles */
     .contact-section {
-      background-color: ${processedConfig.contact && processedConfig.contact.background && processedConfig.contact.background.color ? 
-        processedConfig.contact.background.color : "#f8f9fa"};
+      background-color: ${processedConfig.contact && processedConfig.contact.background ? 
+        processedConfig.contact.background : "#f8f9fa"};
       padding: 100px 0;
     }
 
@@ -1280,8 +1266,8 @@ export function generateHTML(config, showGuides = false) {
     
     /* contact Styles */
     .contact {
-      background-color: ${processedConfig.contact && processedConfig.contact.background && processedConfig.contact.background.color ? 
-        processedConfig.contact.background.color : "#1f2638"};
+      background-color: ${processedConfig.contact && processedConfig.contact.background ? 
+        processedConfig.contact.background : "#1f2638"};
       color: #fff;
       padding: 0;
     }
@@ -1439,13 +1425,13 @@ export function generateHTML(config, showGuides = false) {
 </head>
 <body>
   <!-- Header -->
-  ${wrapWithGuide('header', `
+  ${wrapWithGuide('Header', `
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
       ${wrapElementWithGuide('Logo', `
         <a class="navbar-brand" href="#">
-          <img src="${processedConfig.header.logo.image}" alt="Logo" class="logo-image">
-          <span>${processedConfig.header.logo.text}</span>
+          <img src="${processedConfig.header.logoImage}" alt="Logo" class="logo-image">
+          <span>${processedConfig.header.logoText}</span>
         </a>
       `)}
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -1456,7 +1442,7 @@ export function generateHTML(config, showGuides = false) {
           ${safeMapItems(headerItems, (item, index) => `
             <li class="nav-item">
               <a href="${item.url}" class="nav-link ${index === 0 ? 'active' : ''}">
-                <i class="${item.icon}"></i> <em>${item.text}</em>
+                <em>${item.text}</em>
               </a>
             </li>
           `)}
@@ -1487,20 +1473,24 @@ export function generateHTML(config, showGuides = false) {
             <p>${processedConfig.home.description}</p>
           `)}
           <div class="d-flex flex-wrap">
-            ${wrapElementWithGuide('Main Button', `
+            ${processedConfig.home.mainButton?.visible === true || 
+               processedConfig.home.mainButton?.visible === "true" ? 
+            wrapElementWithGuide('Main Button', `
               <div class="main-btn">
                 <a href="${processedConfig.home.mainButton && processedConfig.home.mainButton.url ? 
                   processedConfig.home.mainButton.url : '#'}">${processedConfig.home.mainButton && processedConfig.home.mainButton.text ? 
                   processedConfig.home.mainButton.text : 'Learn More'}</a>
               </div>
-            `)}
-            ${wrapElementWithGuide('Secondary Button', `
+            `) : ''}
+            ${processedConfig.home.secondaryButton?.visible === true || 
+               processedConfig.home.secondaryButton?.visible === "true" ? 
+            wrapElementWithGuide('Secondary Button', `
               <div class="fb-btn">
                 <a href="${processedConfig.home.secondaryButton && processedConfig.home.secondaryButton.url ? 
                   processedConfig.home.secondaryButton.url : '#'}" rel="nofollow">${processedConfig.home.secondaryButton && processedConfig.home.secondaryButton.text ? 
                   processedConfig.home.secondaryButton.text : 'Contact Us'}</a>
               </div>
-            `)}
+            `) : ''}
           </div>
         </div>
       </div>
@@ -1521,8 +1511,8 @@ export function generateHTML(config, showGuides = false) {
         <div class="col-md-6">
           ${wrapElementWithGuide('First Service Content', `
             <div class="service-content" 
-              style="${processedConfig.services.firstService.background && processedConfig.services.firstService.background.color ? 
-                `background-color: ${processedConfig.services.firstService.background.color};` : ''}
+              style="${processedConfig.services.firstService.background ? 
+                `background-color: ${processedConfig.services.firstService.background};` : ''}
                 ${processedConfig.services.firstService.textColor ? 
                 `color: ${processedConfig.services.firstService.textColor};` : ''}">
               ${wrapElementWithGuide('Title', `
@@ -1548,8 +1538,8 @@ export function generateHTML(config, showGuides = false) {
         <div class="col-md-6 order-md-2">
           ${wrapElementWithGuide('Second Service Content', `
             <div class="service-content" 
-              style="${processedConfig.services.secondService.background && processedConfig.services.secondService.background.color ? 
-                `background-color: ${processedConfig.services.secondService.background.color};` : ''}
+              style="${processedConfig.services.secondService.background ? 
+                `background-color: ${processedConfig.services.secondService.background};` : ''}
                 ${processedConfig.services.secondService.textColor ? 
                 `color: ${processedConfig.services.secondService.textColor};` : ''}">
               ${wrapElementWithGuide('Title', `

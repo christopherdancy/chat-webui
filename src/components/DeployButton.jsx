@@ -62,7 +62,7 @@ function DeployButton({ websiteConfig }) {
             <div className="retro-modal-content">
               {(!deployUrl && !deployStatus) && (
                 <div className="email-form">
-                  <p>Please enter your email to proceed with deployment:</p>
+                  <p>Please enter your email to access your website link:</p>
                   <input
                     type="email"
                     value={email}

@@ -55,41 +55,29 @@ const basicTemplate = {
         name: 'Header',
         children: [
           {
-            id: 'logo',
-            name: 'Logo',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'header.logo.text',
-                default: 'YourBrand'
-              },
-              {
-                id: 'image',
-                name: 'Image',
-                type: 'image',
-                editable: true,
-                path: 'header.logo.image',
-                default: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80'
-              }
-            ]
+            id: 'logoText',
+            name: 'Logo Text',
+            type: 'text',
+            editable: true,
+            path: 'header.logoText',
+            default: 'YourBrand'
+          },
+          {
+            id: 'logoImage',
+            name: 'Logo Image',
+            type: 'image',
+            editable: true,
+            path: 'header.logoImage',
+            default: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80'
           },
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'header.background.color',
-                default: '#4a90e2',
-                note: 'Uses global.primaryColor by default'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'header.background.color',
+            default: '#4a90e2',
+            note: 'Uses global.primaryColor by default'
           },
           {
             id: 'textColor',
@@ -124,45 +112,27 @@ const basicTemplate = {
           {
             id: 'title',
             name: 'Title',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'hero.title.text',
-                default: 'Transform Your Business Today'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'hero.title.text',
+            default: 'Transform Your Business Today'
           },
           {
             id: 'subtitle',
             name: 'Subtitle',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'hero.subtitle.text',
-                default: 'We help companies achieve their goals with innovative solutions and strategic planning'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'hero.subtitle.text',
+            default: 'We help companies achieve their goals with innovative solutions and strategic planning'
           },
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'hero.background.color',
-                default: '#f8f9fa',
-                note: 'Uses global.secondaryColor by default'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'hero.background.color',
+            default: '#f8f9fa',
+            note: 'Uses global.secondaryColor by default'
           },
           {
             id: 'textColor',
@@ -209,6 +179,14 @@ const basicTemplate = {
                 editable: true,
                 path: 'hero.button.url',
                 default: '#'
+              },
+              {
+                id: 'visible',
+                name: 'Show/Hide',
+                type: 'boolean',
+                editable: true,
+                path: 'hero.button.visible',
+                default: true
               }
             ]
           }
@@ -221,44 +199,26 @@ const basicTemplate = {
           {
             id: 'title',
             name: 'Title',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'benefits.title.text',
-                default: 'Why Choose Us'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'benefits.title.text',
+            default: 'Why Choose Us'
           },
           {
             id: 'subtitle',
             name: 'Subtitle',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'benefits.subtitle.text',
-                default: 'What makes us different'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'benefits.subtitle.text',
+            default: 'What makes us different'
           },
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'benefits.background.color',
-                default: '#ffffff'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'benefits.background.color',
+            default: '#ffffff'
           },
           {
             id: 'textColor',
@@ -315,21 +275,6 @@ const basicTemplate = {
                   default: '#4a90e2',
                   note: 'Uses global.primaryColor by default'
                 },
-                {
-                  id: 'background',
-                  name: 'Background',
-                  children: [
-                    {
-                      id: 'color',
-                      name: 'Color',
-                      type: 'color',
-                      editable: true,
-                      pathTemplate: 'benefits.items[INDEX].background.color',
-                      default: null,
-                      note: 'Individual card background color (null means use global)'
-                    }
-                  ]
-                }
               ]
             },
             default: [
@@ -365,58 +310,41 @@ const basicTemplate = {
           {
             id: 'title',
             name: 'Title',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'features.title.text',
-                default: 'Our Features'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'features.title.text',
+            default: 'Our Features'
           },
           {
             id: 'subtitle',
             name: 'Subtitle',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'features.subtitle.text',
-                default: 'What we offer'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'features.subtitle.text',
+            default: 'What we offer'
           },
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'features.background.color',
-                default: '#f8f9fa'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'features.background.color',
+            default: '#f8f9fa'
           },
           {
             id: 'image',
             name: 'Image',
-            children: [
-              {
-                id: 'upload',
-                name: 'Upload',
-                type: 'image',
-                editable: true,
-                path: 'features.image.upload',
-                default: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c'
-              }
-            ]
+            type: 'image',
+            editable: true,
+            path: 'features.image.upload',
+            default: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c'
+          },
+          {
+            id: 'textColor',
+            name: 'Text Color',
+            type: 'color',
+            editable: true,
+            path: 'features.textColor',
           },
           {
             id: 'items',
@@ -461,21 +389,23 @@ const basicTemplate = {
       },
       {
         id: 'cta',
-        name: 'Call to Action',
+        name: 'CTA',
         children: [
           { 
             id: 'title', 
             name: 'Title',
-            children: [
-              { id: 'text', name: 'Text', type: 'text', editable: true, default: 'Ready to get started?' }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'cta.title',
+            default: 'Ready to get started?'
           },
           {
             id: 'subtitle',
             name: 'Subtitle',
-            children: [
-              { id: 'text', name: 'Text', type: 'text', editable: true, default: 'Contact us today to transform your business' }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'cta.subtitle',
+            default: 'Contact us today to transform your business'
           },
           {
             id: 'textColor',
@@ -484,6 +414,14 @@ const basicTemplate = {
             editable: true,
             path: 'cta.textColor',
             default: '#ffffff'
+          },
+          { 
+            id: 'background', 
+            name: 'Background',
+            type: 'color',
+            editable: true,
+            path: 'cta.background.color',
+            default: "#4a90e2"
           },
           { 
             id: 'button', 
@@ -500,13 +438,14 @@ const basicTemplate = {
                 path: 'cta.button.textColor',
                 default: '#ffffff'
               },
-            ]
-          },
-          { 
-            id: 'background', 
-            name: 'Background',
-            children: [
-              { id: 'color', name: 'Color', type: 'color', editable: true }
+              {
+                id: 'visible',
+                name: 'Show/Hide',
+                type: 'boolean',
+                editable: true,
+                path: 'cta.button.visible',
+                default: true
+              }
             ]
           }
         ]
@@ -518,30 +457,18 @@ const basicTemplate = {
           {
             id: 'description',
             name: 'Description',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'footer.description.text',
-                default: 'About Us'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'footer.description.text',
+            default: 'About Us'
           },
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'footer.background.color',
-                default: '#2d3748'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'footer.background.color',
+            default: '#2d3748'
           },
           {
             id: 'textColor',
@@ -569,7 +496,7 @@ const basicTemplate = {
                   },
                   {
                     id: 'visible',
-                    name: 'Visible',
+                    name: 'Show/Hide',
                     type: 'boolean',
                     editable: true,
                     path: 'footer.social.facebook.visible',
@@ -591,7 +518,7 @@ const basicTemplate = {
                   },
                   {
                     id: 'visible',
-                    name: 'Visible',
+                    name: 'Show/Hide',
                     type: 'boolean',
                     editable: true,
                     path: 'footer.social.twitter.visible',
@@ -613,7 +540,7 @@ const basicTemplate = {
                   },
                   {
                     id: 'visible',
-                    name: 'Visible',
+                    name: 'Show/Hide',
                     type: 'boolean',
                     editable: true,
                     path: 'footer.social.instagram.visible',
@@ -635,7 +562,7 @@ const basicTemplate = {
                   },
                   {
                     id: 'visible',
-                    name: 'Visible',
+                    name: 'Show/Hide',
                     type: 'boolean',
                     editable: true,
                     path: 'footer.social.linkedin.visible',
@@ -648,44 +575,26 @@ const basicTemplate = {
           {
             id: 'address',
             name: 'Address',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'footer.address.text',
-                default: '123 Business Street, New York, NY'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'footer.address.text',
+            default: '123 Business Street, New York, NY'
           },
           {
             id: 'email',
             name: 'Email',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'footer.email.text',
-                default: 'info@yourbrand.com'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'footer.email.text',
+            default: 'info@yourbrand.com'
           },
           {
             id: 'phone',
             name: 'Phone',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'footer.phone.text',
-                default: '(123) 456-7890'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'footer.phone.text',
+            default: '(123) 456-7890'
           }
         ]
       }
@@ -704,6 +613,7 @@ Object.assign(basicTemplate, initializedTemplate);
 export function generateHTML(config, showGuides = false) {
   // Simple deep merge of user config with defaults
   const processedConfig = config ? deepMerge(basicTemplate, config) : {...basicTemplate};
+  console.log('processedConfig', processedConfig);
   
   // Add explicit safety check for common arrays
   const headerMenuItems = Array.isArray(processedConfig.header?.menuItems) 
@@ -830,7 +740,7 @@ export function generateHTML(config, showGuides = false) {
     
     /* Header Styles */
     .navbar {
-      background-color: ${processedConfig.header.background?.color || processedConfig.global.primaryColor};
+      background-color: ${processedConfig.header.background || processedConfig.global.primaryColor};
       padding: 1rem 2rem;
     }
     
@@ -856,7 +766,7 @@ export function generateHTML(config, showGuides = false) {
     }
     
     .navbar-nav .nav-link {
-      color: ${processedConfig.header.textColor};
+      color: ${processedConfig.header.textColor} !important;
       opacity: 0.8;
       transition: opacity 0.3s;
     }
@@ -872,7 +782,7 @@ export function generateHTML(config, showGuides = false) {
       padding: 5rem 0;
       position: relative;
       overflow: hidden;
-      background-color: ${processedConfig.hero.background?.color || processedConfig.global.secondaryColor};
+      background-color: ${processedConfig.hero.background || processedConfig.global.secondaryColor};
     }
     
     .hero-content {
@@ -943,7 +853,7 @@ export function generateHTML(config, showGuides = false) {
     /* Benefits Section */
     .benefits {
       padding: 4rem 0;
-      background-color: ${processedConfig.benefits.background?.color || processedConfig.global.secondaryColor};
+      background-color: ${processedConfig.benefits.background || processedConfig.global.secondaryColor};
     }
     
     .benefits .section-title {
@@ -997,7 +907,7 @@ export function generateHTML(config, showGuides = false) {
     /* Features Section */
     .features {
       padding: 5rem 0;
-      background-color: ${processedConfig.features.background?.color || processedConfig.global.secondaryColor};
+      background-color: ${processedConfig.features.background || processedConfig.global.secondaryColor};
     }
 
     .features .section-title {
@@ -1061,7 +971,7 @@ export function generateHTML(config, showGuides = false) {
     
     /* Call to Action */
     .cta {
-      background-color: ${processedConfig.cta.background?.color || processedConfig.global.primaryColor};
+      background-color: ${processedConfig.cta.background || processedConfig.global.primaryColor};
       color: ${processedConfig.cta.textColor || processedConfig.global.textColor};
       padding: 3rem 0;
       text-align: center;
@@ -1107,7 +1017,7 @@ export function generateHTML(config, showGuides = false) {
     
     /* Footer */
     #footer {
-      background-color: ${processedConfig.footer.background?.color || processedConfig.global.primaryColor};
+      background-color: ${processedConfig.footer.background || processedConfig.global.primaryColor};
       color: ${processedConfig.footer.textColor || processedConfig.global.textColor};
       padding: 4rem 0 2rem;
     }
@@ -1204,9 +1114,9 @@ export function generateHTML(config, showGuides = false) {
     <div class="container">
       ${wrapElementWithGuide('Logo', `
         <a class="navbar-brand" href="#">
-          ${processedConfig.header.logo?.image ? 
-            `<img src="${processedConfig.header.logo?.image}" alt="Logo" class="logo-image">` : ''}
-          <span class="logo-text">${processedConfig.header.logo?.text || processedConfig.header.logo}</span>
+          ${processedConfig.header.logoImage ? 
+            `<img src="${processedConfig.header.logoImage}" alt="Logo" class="logo-image">` : ''}
+          <span class="logo-text">${processedConfig.header.logoText}</span>
         </a>
       `)}
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -1235,14 +1145,16 @@ export function generateHTML(config, showGuides = false) {
         <div class="col-lg-8">
           <div class="hero-content">
             ${wrapElementWithGuide('Title', `
-              <h1>${processedConfig.hero.title?.text}</h1>
+              <h1>${processedConfig.hero.title}</h1>
             `)}
             ${wrapElementWithGuide('Subtitle', `
-              <p>${processedConfig.hero.subtitle?.text}</p>
+              <p>${processedConfig.hero.subtitle}</p>
             `)}
-            ${wrapElementWithGuide('Button', `
-              <a href="${processedConfig.hero.button?.url}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">${processedConfig.hero.button?.text}</a>
-            `)}
+            ${processedConfig.hero.button?.visible === true || 
+               processedConfig.hero.button?.visible === "true" ? 
+            wrapElementWithGuide('Button', `
+                <a href="${processedConfig.hero.button?.url}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">${processedConfig.hero.button?.text}</a>
+            `) : ''}
           </div>
         </div>
       </div>
@@ -1256,10 +1168,10 @@ export function generateHTML(config, showGuides = false) {
     <div class="container">
       <div class="section-title">
         ${wrapElementWithGuide('Title', `
-          <h2>${processedConfig.benefits.title?.text}</h2>
+          <h2>${processedConfig.benefits.title}</h2>
         `)}
         ${wrapElementWithGuide('Subtitle', `
-          <p>${processedConfig.benefits.subtitle?.text}</p>
+          <p>${processedConfig.benefits.subtitle}</p>
         `)}
       </div>
       <div class="row">
@@ -1273,10 +1185,10 @@ export function generateHTML(config, showGuides = false) {
                   </div>
                 `)}
                 ${wrapElementWithGuide(`Title`, `
-                  <h4>${item.title}</h4>
+                  <h4 style="color: ${processedConfig.benefits.textColor};">${item.title}</h4>
                 `)}
                 ${wrapElementWithGuide(`Description`, `
-                  <p>${item.description}</p>
+                  <p style="color: ${processedConfig.benefits.textColor};">${item.description}</p>
                 `)}
               </div>
             `)}
@@ -1293,17 +1205,17 @@ export function generateHTML(config, showGuides = false) {
     <div class="container">
       <div class="section-title">
         ${wrapElementWithGuide('Title', `
-          <h2>${processedConfig.features.title?.text}</h2>
+          <h2>${processedConfig.features.title}</h2>
         `)}
         ${wrapElementWithGuide('Subtitle', `
-          <p>${processedConfig.features.subtitle?.text}</p>
+          <p>${processedConfig.features.subtitle}</p>
         `)}
       </div>
       
       <div class="row">
         <div class="col-lg-6 mb-4 mb-lg-0">
           ${wrapElementWithGuide('Image', `
-            <img src="${processedConfig.features.image?.upload}" alt="Features" class="img-fluid feature-image">
+            <img src="${processedConfig.features.image}" alt="Features" class="img-fluid feature-image">
           `)}
         </div>
         <div class="col-lg-6">
@@ -1328,20 +1240,22 @@ export function generateHTML(config, showGuides = false) {
   `)}
 
   <!-- Call to Action -->
-  ${wrapWithGuide('cta', `
+  ${wrapWithGuide('CTA', `
   <section class="cta">
     <div class="container">
       <div class="section-title">
         ${wrapElementWithGuide('Title', `
-          <h2>${processedConfig.cta.title?.text}</h2>
+          <h2>${processedConfig.cta.title}</h2>
         `)}
         ${wrapElementWithGuide('Subtitle', `
-          <p>${processedConfig.cta.subtitle?.text}</p>
+          <p>${processedConfig.cta.subtitle}</p>
         `)}
       </div>
-      ${wrapElementWithGuide('Button', `
+      ${processedConfig.cta.button?.visible === true ||
+         processedConfig.cta.button?.visible === "true" ? 
+      wrapElementWithGuide('Button', `
         <a href="${processedConfig.cta.button?.url}" class="btn" target="_blank" rel="noopener noreferrer">${processedConfig.cta.button?.text}</a>
-      `)}
+      `) : ''}
     </div>
   </section>
   `)}
@@ -1354,7 +1268,7 @@ export function generateHTML(config, showGuides = false) {
         <div class="col-lg-4 mb-4 mb-lg-0">
           <h5>About Us</h5>
           ${wrapElementWithGuide('Description', `
-            <p>${processedConfig.footer.description?.text}</p>
+            <p>${processedConfig.footer.description}</p>
           `)}
           <div class="social-links">
             ${wrapElementWithGuide('Socials', `
@@ -1382,7 +1296,6 @@ export function generateHTML(config, showGuides = false) {
           </div>
         </div>
         <div class="col-lg-4 mb-4 mb-lg-0">
-          <h5>Quick Links</h5>
           <ul class="footer-links">
             ${safeMapItems(footerLinks, (link, index) => `
                 <li><a href="${link.url}">${link.text}</a></li>
@@ -1392,18 +1305,18 @@ export function generateHTML(config, showGuides = false) {
         <div class="col-lg-4">
           <h5>Contact Info</h5>
           ${wrapElementWithGuide('Address', `
-            <p><i class="fas fa-map-marker-alt mr-2"></i> ${processedConfig.footer.address?.text}</p>
+            <p><i class="fas fa-map-marker-alt mr-2"></i> ${processedConfig.footer.address}</p>
           `)}
           ${wrapElementWithGuide('Phone', `
-            <p><i class="fas fa-phone mr-2"></i> ${processedConfig.footer.phone?.text}</p>
+            <p><i class="fas fa-phone mr-2"></i> ${processedConfig.footer.phone}</p>
           `)}
           ${wrapElementWithGuide('Email', `
-            <p><i class="fas fa-envelope mr-2"></i> ${processedConfig.footer.email?.text}</p>
+            <p><i class="fas fa-envelope mr-2"></i> ${processedConfig.footer.email}</p>
           `)}
         </div>
       </div>
       <div class="copyright">
-        <p>© 2025 ${processedConfig.header.logo?.text}. All rights reserved.</p>
+        <p>Made with ❤️ by VibeSite</p>
       </div>
     </div>
   </footer>

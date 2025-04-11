@@ -52,7 +52,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
           
           // Reset messages for new template
           setMessages([{
-            text: "Hi, I'm your website editor assistant. Below you can find what you can modify.",
+            text: "Hi, I'm your website editor assistant. Modify your website by clicking the buttons below.",
             buttons: sections,
             commandId: commandId + 1
           }]);
@@ -71,7 +71,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
             
             // Update initial message buttons with available sections
             setMessages([{
-              text: "Hi, I'm your website editor assistant. Below you can find what you can modify.",
+              text: "Hi, I'm your website editor assistant. Modify your website by clicking the buttons below.",
               buttons: sections,
               commandId: 0
             }]);
@@ -148,7 +148,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
     const sections = getTemplateSections(websiteConfig);
       // Otherwise just show the standard greeting
       setMessages([{
-        text: "Hi, I'm your website editor assistant. Below you can find what you can modify.",
+        text: "Hi, I'm your website editor assistant. Modify your website by clicking the buttons below.",
         buttons: sections,
         commandId: commandId + 1
       }]);
@@ -169,12 +169,58 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
     setMessages(prev => [...prev, { text: option, isUser: true, commandId }]);
     
     try {
-      // Get the path to the selected node
-      const nodePath = getNodePath(websiteConfig, currentPath, option);
-      if (!nodePath) return;
-      // Find the selected node
-      const selectedNode = findNodeByPath(websiteConfig._structure, nodePath);
-      if (!selectedNode) return;
+      let nodePath;
+      let selectedNode;
+      
+      // Check if we're dealing with an array item
+      if (option.startsWith('Item ')) {
+        const itemIndex = parseInt(option.split(' ')[1]) - 1;
+        // Get the current array node from the navigation stack
+        const currentArrayNode = navigationStack[navigationStack.length - 1];
+        
+        if (currentArrayNode && currentArrayNode.itemStructure) {
+          // Use the array item structure for the selected node
+          selectedNode = {
+            ...currentArrayNode.itemStructure,
+            id: `${currentArrayNode.id}[${itemIndex}]`,
+            children: currentArrayNode.itemStructure.children,
+            type: 'object' // Mark as object type to show children
+          };
+          nodePath = `${currentPath}[${itemIndex}]`;
+        }
+      } else {
+        // Check if we're inside an array item by looking at the current path
+        const isInArrayItem = currentPath.includes('[');
+        if (isInArrayItem) {
+          // Get the current array item index
+          const matches = currentPath.match(/\[(\d+)\]/);
+          const itemIndex = matches ? parseInt(matches[1]) : 0;
+          
+          // Get the array node from navigation stack
+          const arrayNode = navigationStack.find(node => node.type === 'array');
+          if (arrayNode && arrayNode.itemStructure) {
+            // Find the child node in the item structure that matches the option
+            const childNode = arrayNode.itemStructure.children.find(child => child.name === option);
+            if (childNode) {
+              selectedNode = {
+                ...childNode,
+                id: childNode.id,
+                pathTemplate: childNode.pathTemplate
+              };
+              // Use the template path with the current index
+              nodePath = childNode.pathTemplate.replace('[INDEX]', `[${itemIndex}]`);
+            }
+          }
+        }
+        
+        // If not in array item or no matching child found, do regular lookup
+        if (!selectedNode) {
+          nodePath = getNodePath(websiteConfig, currentPath, option);
+          if (!nodePath) return;
+          selectedNode = findNodeByPath(websiteConfig._structure, nodePath);
+          if (!selectedNode) return;
+        }
+      }
       
       // Add this node to the navigation stack along with current state
       const newStack = [...navigationStack, { 
@@ -206,19 +252,19 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
           case 'color':
             setShowColorPicker(true);
             setCurrentColorContext({
-              path: selectedNode.path
+              path: selectedNode.path || nodePath
             });
             break;
           case 'icon':
             setShowIconPicker(true);
             setCurrentIconContext({
-              path: selectedNode.path
+              path: selectedNode.path || nodePath
             });
             break;
           case 'image':
             setShowImageUploader(true);
             setCurrentImageContext({
-              path: selectedNode.path
+              path: selectedNode.path || nodePath
             });
             break;
           case 'boolean':
@@ -232,7 +278,7 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
             
             const path = selectedNode.pathTemplate ? 
               selectedNode.pathTemplate.replace('[INDEX]', `[${index}]`) : 
-              selectedNode.path;
+              selectedNode.path || nodePath;
             
             // Get the raw value
             const rawValue = getCurrentValue(websiteConfig, path);
@@ -240,7 +286,6 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
             const booleanValue = rawValue === true || 
                                 (typeof rawValue === 'string' && rawValue.toLowerCase() === 'true');
             
-            console.log('currentValue', booleanValue);
             setShowToggle(true);
             setCurrentToggleContext({
               path: path,
@@ -257,9 +302,9 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
             }]);
             break;
         }
-      } else {
+      } else if (selectedNode.children) {
         // Get child options for this node
-        const childOptions = getChildNodes(websiteConfig, nodePath);
+        const childOptions = selectedNode.children.map(child => child.name);
         // Display child options
         setMessages(prev => [...prev, {
           text: `What would you like to modify in ${option}?`,
@@ -286,15 +331,9 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
       
       // Get current node from navigation stack
       const currentNode = navigationStack[navigationStack.length - 1];
-      
       if (!currentNode) {
         setIsProcessing(false);
         return;
-      }
-      
-      // Use the current path directly since it already has the correct brackets
-      if (currentNode.pathTemplate) {
-        console.log('PathTemplate:', currentNode.pathTemplate);
       }
       
       // Create command using the current path which already has the correct syntax
@@ -307,27 +346,61 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
         onPreviewUpdate(response.updatedConfig);
       }
       
-      // Reset navigation
-      setNavigationStack([]);
-      setCurrentPath('');
-      setShowInput(false);
-      setShowColorPicker(false);
-      setShowIconPicker(false);
-      setShowImageUploader(false);
-      
-      // Get sections for next options
-      const sections = getTemplateSections(websiteConfig);
-      
-      // Format success message to be more visible
-      const successMessage = `✅ ${response.message} What would you like to modify next?`;
-      
-      // Clear previous messages and show only success message with options
-      setMessages([{
-        text: successMessage,
-        buttons: sections,
-        commandId: commandId + 1,
-        isSuccess: true // Mark as success message
-      }]);
+      // Instead of resetting completely, go back one step
+      if (navigationStack.length > 1) {
+        // Get the parent node's state
+        const parentNode = navigationStack[navigationStack.length - 2];
+        const { previousState } = parentNode;
+        
+        // Restore the parent state
+        if (previousState) {
+          setMessages(previousState.messages);
+          setShowInput(previousState.showInput);
+          setShowColorPicker(previousState.showColorPicker || false);
+          setShowIconPicker(previousState.showIconPicker || false);
+          setShowImageUploader(previousState.showImageUploader || false);
+        }
+        
+        // Update the navigation stack
+        setNavigationStack(prev => prev.slice(0, -1));
+        
+        // Update current path
+        const newStack = navigationStack.slice(0, -1);
+        const parentPath = newStack.length > 0 
+          ? newStack.map(n => n.id).join('.') 
+          : '';
+        setCurrentPath(parentPath);
+          
+        // Format success message to be more visible
+        const successMessage = `✅ ${response.message} What would you like to modify next?`;
+        
+        // Get the parent node from navigation stack instead of looking it up
+        const parentNodeStructure = parentNode;
+        
+        // If parent is an array, show array items
+        let nextOptions = [];
+        if (parentNodeStructure && parentNodeStructure.type === 'array') {
+          const items = parentNodeStructure.default || [];
+          nextOptions = items.map((_, index) => `Item ${index + 1}`);
+        } else if (parentNodeStructure && parentNodeStructure.children) {
+          // Use children directly from the parent node
+          nextOptions = parentNodeStructure.children.map(child => child.name);
+        } else {
+          // Fallback to getting child nodes
+          nextOptions = getChildNodes(websiteConfig, parentPath);
+        }
+        
+        // Add success message to the restored messages
+        setMessages(prev => [...prev, {
+          text: successMessage,
+          buttons: nextOptions,
+          commandId: commandId + 1,
+          isSuccess: true
+        }]);
+      } else {
+        // If we're at the root level, show main menu
+        handleMainMenu();
+      }
       
       // Increment command ID for next interaction
       setCommandId(prev => prev + 1);
@@ -367,28 +440,62 @@ const Chat = ({ onPreviewUpdate, websiteConfig, updateWebsiteConfig }) => {
         onPreviewUpdate(response.updatedConfig);
       }
       
-      // Reset navigation
-      setNavigationStack([]);
-      setCurrentPath('');
-      setShowInput(false);
-      setShowColorPicker(false);
-      setShowIconPicker(false);
-      setShowImageUploader(false);
-      setShowToggle(false);
-      
-      // Get sections for next options
-      const sections = getTemplateSections(websiteConfig);
-      
-      // Format success message to be more visible
-      const successMessage = `✅ ${response.message} What would you like to modify next?`;
-      
-      // Clear previous messages and show only success message with options
-      setMessages([{
-        text: successMessage,
-        buttons: sections,
-        commandId: commandId + 1,
-        isSuccess: true // Mark as success message
-      }]);
+      // Instead of resetting completely, go back one step
+      if (navigationStack.length > 1) {
+        // Get the parent node's state
+        const parentNode = navigationStack[navigationStack.length - 2];
+        const { previousState } = parentNode;
+        
+        // Restore the parent state
+        if (previousState) {
+          setMessages(previousState.messages);
+          setShowInput(previousState.showInput);
+          setShowColorPicker(previousState.showColorPicker || false);
+          setShowIconPicker(previousState.showIconPicker || false);
+          setShowImageUploader(previousState.showImageUploader || false);
+          setShowToggle(false);
+        }
+        
+        // Update the navigation stack
+        setNavigationStack(prev => prev.slice(0, -1));
+        
+        // Update current path
+        const newStack = navigationStack.slice(0, -1);
+        const parentPath = newStack.length > 0 
+          ? newStack.map(n => n.id).join('.') 
+          : '';
+        setCurrentPath(parentPath);
+          
+        // Format success message to be more visible
+        const successMessage = `✅ ${response.message} What would you like to modify next?`;
+        
+        // Get the parent node from navigation stack instead of looking it up
+        const parentNodeStructure = parentNode;
+        
+        // If parent is an array, show array items
+        let nextOptions = [];
+        if (parentNodeStructure && parentNodeStructure.type === 'array') {
+          const items = parentNodeStructure.default || [];
+          nextOptions = items.map((_, index) => `Item ${index + 1}`);
+        } else if (parentNodeStructure && parentNodeStructure.children) {
+          // Use children directly from the parent node
+          nextOptions = parentNodeStructure.children.map(child => child.name);
+        } else {
+          // Fallback to getting child nodes
+          nextOptions = getChildNodes(websiteConfig, parentPath);
+        }
+        
+        // Add success message to the restored messages
+        setMessages(prev => [...prev, {
+          text: successMessage,
+          buttons: nextOptions,
+          commandId: commandId + 1,
+          isSuccess: true
+        }]);
+      } else {
+        // If we're at the root level, show main menu
+        handleMainMenu();
+      }
       
       // Increment command ID for next interaction
       setCommandId(prev => prev + 1);
