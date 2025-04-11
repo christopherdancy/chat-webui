@@ -76,17 +76,11 @@ const moonlightTemplate = {
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'header.background.color',
-                default: '#1f2638',
-                note: 'Uses global.secondaryColor by default'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'header.background.color',
+            default: '#1f2638',
+            note: 'Uses global.secondaryColor by default'
           },
           {
             id: 'textColor',
@@ -183,17 +177,11 @@ const moonlightTemplate = {
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'home.background.color',
-                default: '#1f2638',
-                note: 'Uses global.secondaryColor by default'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'home.background.color',
+            default: '#1f2638',
+            note: 'Uses global.secondaryColor by default'
           },
           {
             id: 'textColor',
@@ -306,17 +294,11 @@ const moonlightTemplate = {
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'services.background.color',
-                default: '#f5f5f5',
-                note: 'Uses global.secondaryColor by default'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'services.background.color',
+            default: '#f5f5f5',
+            note: 'Uses global.secondaryColor by default'
           },
           {
             id: 'textColor',
@@ -357,15 +339,9 @@ const moonlightTemplate = {
               {
                 id: 'background',
                 name: 'Background',
-                children: [
-                  {
-                    id: 'color',
-                    name: 'Color',
-                    type: 'color',
-                    editable: true,
-                    path: 'services.firstService.background.color',
-                  }
-                ]
+                type: 'color',
+                editable: true,
+                path: 'services.firstService.background.color',
               },
               {
                 id: 'textColor',
@@ -407,15 +383,9 @@ const moonlightTemplate = {
               {
                 id: 'background',
                 name: 'Background',
-                children: [
-                  {
-                    id: 'color',
-                    name: 'Color',
-                    type: 'color',
-                    editable: true,
-                    path: 'services.secondService.background.color',
-                  }
-                ]
+                type: 'color',
+                editable: true,
+                path: 'services.secondService.background.color',
               },
               {
                 id: 'textColor',
@@ -435,16 +405,10 @@ const moonlightTemplate = {
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'portfolio.background.color',
-                default: "#ffffff"
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'portfolio.background.color',
+            default: "#ffffff"
           },
           {
             id: 'textColor',
@@ -926,7 +890,7 @@ export function generateHTML(config, showGuides = false) {
     
     /* Home Section */
     .home-section {
-      background-color: ${processedConfig.home.background.color};
+      background-color: ${processedConfig.home.background ? processedConfig.home.background : processedConfig.global.secondaryColor};
       background-repeat: repeat;
       background-position: center center;
       height: 100vh;
@@ -1015,8 +979,8 @@ export function generateHTML(config, showGuides = false) {
     
     /* Services Section Styles */
     .services-section {
-      background-color: ${processedConfig.services && processedConfig.services.background && processedConfig.services.background.color ? 
-        processedConfig.services.background.color : "#f5f5f5"};
+      background-color: ${processedConfig.services && processedConfig.services.background ?
+        processedConfig.services.background : "#f5f5f5"};
       color: ${processedConfig.services.textColor || processedConfig.global.textColor};
     }
 
@@ -1055,8 +1019,8 @@ export function generateHTML(config, showGuides = false) {
     
     /* Portfolio Section Styles */
     .portfolio-section {
-      background-color: ${processedConfig.portfolio && processedConfig.portfolio.background && processedConfig.portfolio.background.color ? 
-        processedConfig.portfolio.background.color : "#ffffff"};
+      background-color: ${processedConfig.portfolio && processedConfig.portfolio.background ? 
+        processedConfig.portfolio.background : "#ffffff"};
       color: ${processedConfig.portfolio && processedConfig.portfolio.textColor ? 
         processedConfig.portfolio.textColor : processedConfig.global.textColor};
     }
@@ -1153,8 +1117,8 @@ export function generateHTML(config, showGuides = false) {
     
     /* Contact Section Styles */
     .contact-section {
-      background-color: ${processedConfig.contact && processedConfig.contact.background && processedConfig.contact.background.color ? 
-        processedConfig.contact.background.color : "#f8f9fa"};
+      background-color: ${processedConfig.contact && processedConfig.contact.background ? 
+        processedConfig.contact.background : "#f8f9fa"};
       padding: 100px 0;
     }
 
@@ -1302,8 +1266,8 @@ export function generateHTML(config, showGuides = false) {
     
     /* contact Styles */
     .contact {
-      background-color: ${processedConfig.contact && processedConfig.contact.background && processedConfig.contact.background.color ? 
-        processedConfig.contact.background.color : "#1f2638"};
+      background-color: ${processedConfig.contact && processedConfig.contact.background ? 
+        processedConfig.contact.background : "#1f2638"};
       color: #fff;
       padding: 0;
     }
@@ -1547,8 +1511,8 @@ export function generateHTML(config, showGuides = false) {
         <div class="col-md-6">
           ${wrapElementWithGuide('First Service Content', `
             <div class="service-content" 
-              style="${processedConfig.services.firstService.background && processedConfig.services.firstService.background.color ? 
-                `background-color: ${processedConfig.services.firstService.background.color};` : ''}
+              style="${processedConfig.services.firstService.background ? 
+                `background-color: ${processedConfig.services.firstService.background};` : ''}
                 ${processedConfig.services.firstService.textColor ? 
                 `color: ${processedConfig.services.firstService.textColor};` : ''}">
               ${wrapElementWithGuide('Title', `
@@ -1574,8 +1538,8 @@ export function generateHTML(config, showGuides = false) {
         <div class="col-md-6 order-md-2">
           ${wrapElementWithGuide('Second Service Content', `
             <div class="service-content" 
-              style="${processedConfig.services.secondService.background && processedConfig.services.secondService.background.color ? 
-                `background-color: ${processedConfig.services.secondService.background.color};` : ''}
+              style="${processedConfig.services.secondService.background ? 
+                `background-color: ${processedConfig.services.secondService.background};` : ''}
                 ${processedConfig.services.secondService.textColor ? 
                 `color: ${processedConfig.services.secondService.textColor};` : ''}">
               ${wrapElementWithGuide('Title', `

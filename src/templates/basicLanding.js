@@ -73,17 +73,11 @@ const basicTemplate = {
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'header.background.color',
-                default: '#4a90e2',
-                note: 'Uses global.primaryColor by default'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'header.background.color',
+            default: '#4a90e2',
+            note: 'Uses global.primaryColor by default'
           },
           {
             id: 'textColor',
@@ -134,17 +128,11 @@ const basicTemplate = {
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'hero.background.color',
-                default: '#f8f9fa',
-                note: 'Uses global.secondaryColor by default'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'hero.background.color',
+            default: '#f8f9fa',
+            note: 'Uses global.secondaryColor by default'
           },
           {
             id: 'textColor',
@@ -227,16 +215,10 @@ const basicTemplate = {
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'benefits.background.color',
-                default: '#ffffff'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'benefits.background.color',
+            default: '#ffffff'
           },
           {
             id: 'textColor',
@@ -293,21 +275,6 @@ const basicTemplate = {
                   default: '#4a90e2',
                   note: 'Uses global.primaryColor by default'
                 },
-                {
-                  id: 'background',
-                  name: 'Background',
-                  children: [
-                    {
-                      id: 'color',
-                      name: 'Color',
-                      type: 'color',
-                      editable: true,
-                      pathTemplate: 'benefits.items[INDEX].background.color',
-                      default: null,
-                      note: 'Individual card background color (null means use global)'
-                    }
-                  ]
-                }
               ]
             },
             default: [
@@ -359,30 +326,18 @@ const basicTemplate = {
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'features.background.color',
-                default: '#f8f9fa'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'features.background.color',
+            default: '#f8f9fa'
           },
           {
             id: 'image',
             name: 'Image',
-            children: [
-              {
-                id: 'upload',
-                name: 'Upload',
-                type: 'image',
-                editable: true,
-                path: 'features.image.upload',
-                default: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c'
-              }
-            ]
+            type: 'image',
+            editable: true,
+            path: 'features.image.upload',
+            default: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c'
           },
           {
             id: 'textColor',
@@ -461,6 +416,14 @@ const basicTemplate = {
             default: '#ffffff'
           },
           { 
+            id: 'background', 
+            name: 'Background',
+            type: 'color',
+            editable: true,
+            path: 'cta.background.color',
+            default: "#4a90e2"
+          },
+          { 
             id: 'button', 
             name: 'Button',
             children: [
@@ -484,13 +447,6 @@ const basicTemplate = {
                 default: true
               }
             ]
-          },
-          { 
-            id: 'background', 
-            name: 'Background',
-            children: [
-              { id: 'color', name: 'Color', type: 'color', editable: true }
-            ]
           }
         ]
       },
@@ -509,16 +465,10 @@ const basicTemplate = {
           {
             id: 'background',
             name: 'Background',
-            children: [
-              {
-                id: 'color',
-                name: 'Color',
-                type: 'color',
-                editable: true,
-                path: 'footer.background.color',
-                default: '#2d3748'
-              }
-            ]
+            type: 'color',
+            editable: true,
+            path: 'footer.background.color',
+            default: '#2d3748'
           },
           {
             id: 'textColor',
@@ -663,6 +613,7 @@ Object.assign(basicTemplate, initializedTemplate);
 export function generateHTML(config, showGuides = false) {
   // Simple deep merge of user config with defaults
   const processedConfig = config ? deepMerge(basicTemplate, config) : {...basicTemplate};
+  console.log('processedConfig', processedConfig);
   
   // Add explicit safety check for common arrays
   const headerMenuItems = Array.isArray(processedConfig.header?.menuItems) 
@@ -789,7 +740,7 @@ export function generateHTML(config, showGuides = false) {
     
     /* Header Styles */
     .navbar {
-      background-color: ${processedConfig.header.background?.color || processedConfig.global.primaryColor};
+      background-color: ${processedConfig.header.background || processedConfig.global.primaryColor};
       padding: 1rem 2rem;
     }
     
@@ -831,7 +782,7 @@ export function generateHTML(config, showGuides = false) {
       padding: 5rem 0;
       position: relative;
       overflow: hidden;
-      background-color: ${processedConfig.hero.background?.color || processedConfig.global.secondaryColor};
+      background-color: ${processedConfig.hero.background || processedConfig.global.secondaryColor};
     }
     
     .hero-content {
@@ -902,7 +853,7 @@ export function generateHTML(config, showGuides = false) {
     /* Benefits Section */
     .benefits {
       padding: 4rem 0;
-      background-color: ${processedConfig.benefits.background?.color || processedConfig.global.secondaryColor};
+      background-color: ${processedConfig.benefits.background || processedConfig.global.secondaryColor};
     }
     
     .benefits .section-title {
@@ -956,7 +907,7 @@ export function generateHTML(config, showGuides = false) {
     /* Features Section */
     .features {
       padding: 5rem 0;
-      background-color: ${processedConfig.features.background?.color || processedConfig.global.secondaryColor};
+      background-color: ${processedConfig.features.background || processedConfig.global.secondaryColor};
     }
 
     .features .section-title {
@@ -1020,7 +971,7 @@ export function generateHTML(config, showGuides = false) {
     
     /* Call to Action */
     .cta {
-      background-color: ${processedConfig.cta.background?.color || processedConfig.global.primaryColor};
+      background-color: ${processedConfig.cta.background || processedConfig.global.primaryColor};
       color: ${processedConfig.cta.textColor || processedConfig.global.textColor};
       padding: 3rem 0;
       text-align: center;
@@ -1066,7 +1017,7 @@ export function generateHTML(config, showGuides = false) {
     
     /* Footer */
     #footer {
-      background-color: ${processedConfig.footer.background?.color || processedConfig.global.primaryColor};
+      background-color: ${processedConfig.footer.background || processedConfig.global.primaryColor};
       color: ${processedConfig.footer.textColor || processedConfig.global.textColor};
       padding: 4rem 0 2rem;
     }
@@ -1264,7 +1215,7 @@ export function generateHTML(config, showGuides = false) {
       <div class="row">
         <div class="col-lg-6 mb-4 mb-lg-0">
           ${wrapElementWithGuide('Image', `
-            <img src="${processedConfig.features.image?.upload}" alt="Features" class="img-fluid feature-image">
+            <img src="${processedConfig.features.image}" alt="Features" class="img-fluid feature-image">
           `)}
         </div>
         <div class="col-lg-6">
