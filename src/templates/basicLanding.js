@@ -209,6 +209,14 @@ const basicTemplate = {
                 editable: true,
                 path: 'hero.button.url',
                 default: '#'
+              },
+              {
+                id: 'visible',
+                name: 'Show/Hide',
+                type: 'boolean',
+                editable: true,
+                path: 'hero.button.visible',
+                default: true
               }
             ]
           }
@@ -507,6 +515,14 @@ const basicTemplate = {
                 path: 'cta.button.textColor',
                 default: '#ffffff'
               },
+              {
+                id: 'visible',
+                name: 'Show/Hide',
+                type: 'boolean',
+                editable: true,
+                path: 'cta.button.visible',
+                default: true
+              }
             ]
           },
           { 
@@ -1247,9 +1263,11 @@ export function generateHTML(config, showGuides = false) {
             ${wrapElementWithGuide('Subtitle', `
               <p>${processedConfig.hero.subtitle?.text}</p>
             `)}
-            ${wrapElementWithGuide('Button', `
-              <a href="${processedConfig.hero.button?.url}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">${processedConfig.hero.button?.text}</a>
-            `)}
+            ${processedConfig.hero.button?.visible === true || 
+               processedConfig.hero.button?.visible === "true" ? 
+            wrapElementWithGuide('Button', `
+                <a href="${processedConfig.hero.button?.url}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">${processedConfig.hero.button?.text}</a>
+            `) : ''}
           </div>
         </div>
       </div>
@@ -1346,9 +1364,11 @@ export function generateHTML(config, showGuides = false) {
           <p>${processedConfig.cta.subtitle?.text}</p>
         `)}
       </div>
-      ${wrapElementWithGuide('Button', `
+      ${processedConfig.cta.button?.visible === true ||
+         processedConfig.cta.button?.visible === "true" ? 
+      wrapElementWithGuide('Button', `
         <a href="${processedConfig.cta.button?.url}" class="btn" target="_blank" rel="noopener noreferrer">${processedConfig.cta.button?.text}</a>
-      `)}
+      `) : ''}
     </div>
   </section>
   `)}

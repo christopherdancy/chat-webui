@@ -245,6 +245,14 @@ const moonlightTemplate = {
                 editable: true,
                 path: 'home.mainButton.url',
                 default: "#2"
+              },
+              {
+                id: 'visible',
+                name: 'Show/Hide',
+                type: 'boolean',
+                editable: true,
+                path: 'home.mainButton.visible',
+                default: true
               }
             ]
           },  
@@ -284,6 +292,14 @@ const moonlightTemplate = {
                 editable: true,
                 path: 'home.secondaryButton.url',
                 default: "#6"
+              },
+              {
+                id: 'visible',
+                name: 'Show/Hide',
+                type: 'boolean',
+                editable: true,
+                path: 'home.secondaryButton.visible',
+                default: true
               }
             ]
           }
@@ -1486,20 +1502,24 @@ export function generateHTML(config, showGuides = false) {
             <p>${processedConfig.home.description}</p>
           `)}
           <div class="d-flex flex-wrap">
-            ${wrapElementWithGuide('Main Button', `
+            ${processedConfig.home.mainButton?.visible === true || 
+               processedConfig.home.mainButton?.visible === "true" ? 
+            wrapElementWithGuide('Main Button', `
               <div class="main-btn">
                 <a href="${processedConfig.home.mainButton && processedConfig.home.mainButton.url ? 
                   processedConfig.home.mainButton.url : '#'}">${processedConfig.home.mainButton && processedConfig.home.mainButton.text ? 
                   processedConfig.home.mainButton.text : 'Learn More'}</a>
               </div>
-            `)}
-            ${wrapElementWithGuide('Secondary Button', `
+            `) : ''}
+            ${processedConfig.home.secondaryButton?.visible === true || 
+               processedConfig.home.secondaryButton?.visible === "true" ? 
+            wrapElementWithGuide('Secondary Button', `
               <div class="fb-btn">
                 <a href="${processedConfig.home.secondaryButton && processedConfig.home.secondaryButton.url ? 
                   processedConfig.home.secondaryButton.url : '#'}" rel="nofollow">${processedConfig.home.secondaryButton && processedConfig.home.secondaryButton.text ? 
                   processedConfig.home.secondaryButton.text : 'Contact Us'}</a>
               </div>
-            `)}
+            `) : ''}
           </div>
         </div>
       </div>
