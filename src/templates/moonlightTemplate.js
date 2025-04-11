@@ -102,21 +102,21 @@ const moonlightTemplate = {
                   id: 'text',
                   name: 'Text',
                   type: 'text',
-                  editable: true,
+                  editable: false,
                   pathTemplate: 'header.items[INDEX].text'
                 },
                 {
                   id: 'url',
                   name: 'URL',
                   type: 'url',
-                  editable: true,
+                  editable: false,
                   pathTemplate: 'header.items[INDEX].url'
                 },
                 {
                   id: 'icon',
                   name: 'Icon',
                   type: 'icon',
-                  editable: true,
+                  editable: false,
                   pathTemplate: 'header.items[INDEX].icon'
                 }
               ]
@@ -787,7 +787,7 @@ export function generateHTML(config, showGuides = false) {
       left: 0;
       width: 100%;
       z-index: 999;
-      background-color: ${processedConfig.header.background ? processedConfig.header.background.color : processedConfig.global.secondaryColor};
+      background-color: ${processedConfig.header.background ? processedConfig.header.background : processedConfig.global.secondaryColor};
       box-shadow: 0px 5px 15px rgba(0,0,0,0.5);
       transition: all 0.3s ease;
       height: 80px; /* Fixed height for header */
@@ -864,7 +864,7 @@ export function generateHTML(config, showGuides = false) {
       }
       
       .navbar-collapse {
-        background-color: ${processedConfig.header.background.color} !important;
+        background-color: ${processedConfig.header.background} !important;
         position: absolute;
         top: 100%;
         left: 0;
