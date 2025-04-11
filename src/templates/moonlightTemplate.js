@@ -58,26 +58,20 @@ const moonlightTemplate = {
         name: 'Header',
         children: [
           {
-            id: 'logo',
-            name: 'Logo',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'header.logo.text',
-                default: 'Moonlight'
-              },
-              {
-                id: 'image',
-                name: 'Image',
-                type: 'image',
-                editable: true,
-                path: 'header.logo.image',
-                default: 'https://images.unsplash.com/photo-1581276879432-15e50529f34b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80'
-              }
-            ]
+            id: 'logoText',
+            name: 'Logo Text',
+            type: 'text',
+            editable: true,
+            path: 'header.logo.text',
+            default: 'Moonlight'
+          },
+          {
+            id: 'logoImage',
+            name: 'Logo Image',
+            type: 'image',
+            editable: true,
+            path: 'header.logo.image',
+            default: 'https://images.unsplash.com/photo-1581276879432-15e50529f34b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&q=80'
           },
           {
             id: 'background',
@@ -1040,9 +1034,22 @@ export function generateHTML(config, showGuides = false) {
       color: ${processedConfig.services.textColor};
     }
 
-    .services-section .service-image img {
-      width: 100%;
+    .services-section .service-image {
+      position: relative;
+      overflow: hidden;
       border-radius: 5px;
+      padding-top: 75%; /* This creates a 4:3 aspect ratio */
+      width: 100%;
+    }
+
+    .services-section .service-image img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
+      object-fit: cover; /* This ensures images cover the area without distortion */
       box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
     }
     
@@ -1459,8 +1466,8 @@ export function generateHTML(config, showGuides = false) {
     <div class="container">
       ${wrapElementWithGuide('Logo', `
         <a class="navbar-brand" href="#">
-          <img src="${processedConfig.header.logo.image}" alt="Logo" class="logo-image">
-          <span>${processedConfig.header.logo.text}</span>
+          <img src="${processedConfig.header.logoImage}" alt="Logo" class="logo-image">
+          <span>${processedConfig.header.logoText}</span>
         </a>
       `)}
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

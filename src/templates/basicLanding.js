@@ -55,26 +55,20 @@ const basicTemplate = {
         name: 'Header',
         children: [
           {
-            id: 'logo',
-            name: 'Logo',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'header.logo.text',
-                default: 'YourBrand'
-              },
-              {
-                id: 'image',
-                name: 'Image',
-                type: 'image',
-                editable: true,
-                path: 'header.logo.image',
-                default: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80'
-              }
-            ]
+            id: 'logoText',
+            name: 'Logo Text',
+            type: 'text',
+            editable: true,
+            path: 'header.logoText',
+            default: 'YourBrand'
+          },
+          {
+            id: 'logoImage',
+            name: 'Logo Image',
+            type: 'image',
+            editable: true,
+            path: 'header.logoImage',
+            default: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80'
           },
           {
             id: 'background',
@@ -124,30 +118,18 @@ const basicTemplate = {
           {
             id: 'title',
             name: 'Title',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'hero.title.text',
-                default: 'Transform Your Business Today'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'hero.title.text',
+            default: 'Transform Your Business Today'
           },
           {
             id: 'subtitle',
             name: 'Subtitle',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'hero.subtitle.text',
-                default: 'We help companies achieve their goals with innovative solutions and strategic planning'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'hero.subtitle.text',
+            default: 'We help companies achieve their goals with innovative solutions and strategic planning'
           },
           {
             id: 'background',
@@ -229,30 +211,18 @@ const basicTemplate = {
           {
             id: 'title',
             name: 'Title',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'benefits.title.text',
-                default: 'Why Choose Us'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'benefits.title.text',
+            default: 'Why Choose Us'
           },
           {
             id: 'subtitle',
             name: 'Subtitle',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'benefits.subtitle.text',
-                default: 'What makes us different'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'benefits.subtitle.text',
+            default: 'What makes us different'
           },
           {
             id: 'background',
@@ -373,30 +343,18 @@ const basicTemplate = {
           {
             id: 'title',
             name: 'Title',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'features.title.text',
-                default: 'Our Features'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'features.title.text',
+            default: 'Our Features'
           },
           {
             id: 'subtitle',
             name: 'Subtitle',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'features.subtitle.text',
-                default: 'What we offer'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'features.subtitle.text',
+            default: 'What we offer'
           },
           {
             id: 'background',
@@ -481,16 +439,18 @@ const basicTemplate = {
           { 
             id: 'title', 
             name: 'Title',
-            children: [
-              { id: 'text', name: 'Text', type: 'text', editable: true, default: 'Ready to get started?' }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'cta.title',
+            default: 'Ready to get started?'
           },
           {
             id: 'subtitle',
             name: 'Subtitle',
-            children: [
-              { id: 'text', name: 'Text', type: 'text', editable: true, default: 'Contact us today to transform your business' }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'cta.subtitle',
+            default: 'Contact us today to transform your business'
           },
           {
             id: 'textColor',
@@ -541,16 +501,10 @@ const basicTemplate = {
           {
             id: 'description',
             name: 'Description',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'footer.description.text',
-                default: 'About Us'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'footer.description.text',
+            default: 'About Us'
           },
           {
             id: 'background',
@@ -671,44 +625,26 @@ const basicTemplate = {
           {
             id: 'address',
             name: 'Address',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'footer.address.text',
-                default: '123 Business Street, New York, NY'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'footer.address.text',
+            default: '123 Business Street, New York, NY'
           },
           {
             id: 'email',
             name: 'Email',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'footer.email.text',
-                default: 'info@yourbrand.com'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'footer.email.text',
+            default: 'info@yourbrand.com'
           },
           {
             id: 'phone',
             name: 'Phone',
-            children: [
-              {
-                id: 'text',
-                name: 'Text',
-                type: 'text',
-                editable: true,
-                path: 'footer.phone.text',
-                default: '(123) 456-7890'
-              }
-            ]
+            type: 'text',
+            editable: true,
+            path: 'footer.phone.text',
+            default: '(123) 456-7890'
           }
         ]
       }
@@ -1227,9 +1163,9 @@ export function generateHTML(config, showGuides = false) {
     <div class="container">
       ${wrapElementWithGuide('Logo', `
         <a class="navbar-brand" href="#">
-          ${processedConfig.header.logo?.image ? 
-            `<img src="${processedConfig.header.logo?.image}" alt="Logo" class="logo-image">` : ''}
-          <span class="logo-text">${processedConfig.header.logo?.text || processedConfig.header.logo}</span>
+          ${processedConfig.header.logoImage ? 
+            `<img src="${processedConfig.header.logoImage}" alt="Logo" class="logo-image">` : ''}
+          <span class="logo-text">${processedConfig.header.logoText}</span>
         </a>
       `)}
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -1258,10 +1194,10 @@ export function generateHTML(config, showGuides = false) {
         <div class="col-lg-8">
           <div class="hero-content">
             ${wrapElementWithGuide('Title', `
-              <h1>${processedConfig.hero.title?.text}</h1>
+              <h1>${processedConfig.hero.title}</h1>
             `)}
             ${wrapElementWithGuide('Subtitle', `
-              <p>${processedConfig.hero.subtitle?.text}</p>
+              <p>${processedConfig.hero.subtitle}</p>
             `)}
             ${processedConfig.hero.button?.visible === true || 
                processedConfig.hero.button?.visible === "true" ? 
@@ -1281,10 +1217,10 @@ export function generateHTML(config, showGuides = false) {
     <div class="container">
       <div class="section-title">
         ${wrapElementWithGuide('Title', `
-          <h2>${processedConfig.benefits.title?.text}</h2>
+          <h2>${processedConfig.benefits.title}</h2>
         `)}
         ${wrapElementWithGuide('Subtitle', `
-          <p>${processedConfig.benefits.subtitle?.text}</p>
+          <p>${processedConfig.benefits.subtitle}</p>
         `)}
       </div>
       <div class="row">
@@ -1318,10 +1254,10 @@ export function generateHTML(config, showGuides = false) {
     <div class="container">
       <div class="section-title">
         ${wrapElementWithGuide('Title', `
-          <h2>${processedConfig.features.title?.text}</h2>
+          <h2>${processedConfig.features.title}</h2>
         `)}
         ${wrapElementWithGuide('Subtitle', `
-          <p>${processedConfig.features.subtitle?.text}</p>
+          <p>${processedConfig.features.subtitle}</p>
         `)}
       </div>
       
@@ -1358,10 +1294,10 @@ export function generateHTML(config, showGuides = false) {
     <div class="container">
       <div class="section-title">
         ${wrapElementWithGuide('Title', `
-          <h2>${processedConfig.cta.title?.text}</h2>
+          <h2>${processedConfig.cta.title}</h2>
         `)}
         ${wrapElementWithGuide('Subtitle', `
-          <p>${processedConfig.cta.subtitle?.text}</p>
+          <p>${processedConfig.cta.subtitle}</p>
         `)}
       </div>
       ${processedConfig.cta.button?.visible === true ||
@@ -1381,7 +1317,7 @@ export function generateHTML(config, showGuides = false) {
         <div class="col-lg-4 mb-4 mb-lg-0">
           <h5>About Us</h5>
           ${wrapElementWithGuide('Description', `
-            <p>${processedConfig.footer.description?.text}</p>
+            <p>${processedConfig.footer.description}</p>
           `)}
           <div class="social-links">
             ${wrapElementWithGuide('Socials', `
@@ -1418,18 +1354,18 @@ export function generateHTML(config, showGuides = false) {
         <div class="col-lg-4">
           <h5>Contact Info</h5>
           ${wrapElementWithGuide('Address', `
-            <p><i class="fas fa-map-marker-alt mr-2"></i> ${processedConfig.footer.address?.text}</p>
+            <p><i class="fas fa-map-marker-alt mr-2"></i> ${processedConfig.footer.address}</p>
           `)}
           ${wrapElementWithGuide('Phone', `
-            <p><i class="fas fa-phone mr-2"></i> ${processedConfig.footer.phone?.text}</p>
+            <p><i class="fas fa-phone mr-2"></i> ${processedConfig.footer.phone}</p>
           `)}
           ${wrapElementWithGuide('Email', `
-            <p><i class="fas fa-envelope mr-2"></i> ${processedConfig.footer.email?.text}</p>
+            <p><i class="fas fa-envelope mr-2"></i> ${processedConfig.footer.email}</p>
           `)}
         </div>
       </div>
       <div class="copyright">
-        <p>© 2025 ${processedConfig.header.logo?.text}. All rights reserved.</p>
+        <p>Made with ❤️ by VibeSite</p>
       </div>
     </div>
   </footer>
